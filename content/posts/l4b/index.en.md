@@ -1,12 +1,12 @@
 ---
 weight: 4
-title: "Basic Markdown Syntax"
+title: "Repository is up!"
 date: 2023-2-01T21:57:40+08:00
 lastmod: 2023-02-01T16:45:40+08:00
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "This article shows the basic Markdown syntax and format."
+description: "This article shows how to make a website with Hugo and cloudflare."
 images: []
 resources:
 - name: "featured-image"
