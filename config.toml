@@ -26,7 +26,7 @@
   description = "unlord l4b"
   # website images for Open Graph and Twitter Cards
   # 网站图片, 用于 Open Graph 和 Twitter Cards
-  images = [unlordlogo.png]
+  images = []
 
   # Header config
   # 页面头部导航栏配置
@@ -42,7 +42,7 @@
     [params.header.title]
       # URL of the LOGO
       # LOGO 的 URL
-      logo = "unlordlogo.png"
+      logo = ""
       # title name
       # 标题名称
       name = "unlord l4b"
