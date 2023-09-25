@@ -1,5 +1,5 @@
 html {
-  font-family: "Century Gothic", Arial, Helvetica, sans-serif;
+  font-family: var(--global-font-family);
   font-weight: var(--global-font-weight);
   font-display: swap;
   font-size: var(--global-font-size);
@@ -32,15 +32,15 @@ html {
 }
 
 ::selection {
-  background-color: #5A6F68;
+  background-color: $selection-color;
 
   [theme=dark] & {
-    background-color: #5A6F68;
+    background-color: $selection-color-dark;
   }
 }
 
 body {
-  background-color: #5A6F68;
+  background-color: $global-background-color;
   color: $global-font-color;
   @include overflow-wrap(break-word);
   scrollbar-color: auto;
