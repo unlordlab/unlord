@@ -19,6 +19,16 @@ https://www.reddit.com/r/NoStupidQuestions/comments/u20xb3/why_did_people_stop_m
 The atlantic: Maybe you missed it, but the Internet 'died' five year ago -->
 https://www.theatlantic.com/technology/archive/2021/08/dead-internet-theory-wrong-but-feels-true/619937/
 
+Another reddit tweet -_>
+https://www.reddit.com/r/CasualConversation/comments/11oknni/does_anyone_remember_when_the_internet_used_to_be/
+
+Deploy website with Hugo and Cloudflare -->
+https://hackernoon.com/deploy-your-personal-web-page-with-hugo-cloudflare-and-github-100percent-for-free
+
+
+
+
+
 A medida que los sistemas operativos con una interfaz gráfica de usuario
 , como Windows y Mac OS , comienzan a surgir y ganar popularidad, se crea
 un entorno que permite que las primeras plataformas de redes sociales 
