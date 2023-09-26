@@ -6,7 +6,7 @@ lastmod: 2023-09-01T16:45:40+08:00
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "¿Por qué la gente dejó de crear su propio sitio web?"
+description: "Imagen de las primeras páginas web en geocities"
 images: []
 resources:
 - name: "featured-image"
@@ -18,7 +18,7 @@ categories: ["webpage"]
 lightgallery: true
 ---
 
-This article offers a sample of basic Markdown syntax that can be used in Hugo content files.
+¿Por qué la gente dejó de crear su propio sitio web?
 
 <!--more-->
 
