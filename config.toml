@@ -25,7 +25,7 @@ baseURL = "https://unlord.xyz"
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
     name = "Posts"
-    url = "/content/content/posts/l4b"
+    url = "/posts/"
     # title will be shown when you hover on this menu link
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
     title = ""
@@ -98,6 +98,16 @@ baseURL = "https://unlord.xyz"
       # whether to use typeit animation for title name
       # 是否为标题显示打字机动画
       typeit = false
+      
+# default amount of posts in each pages
+# 默认每页列表显示的文章数目
+paginate = 12
+# google analytics code [UA-XXXXXXXX-X]
+# 谷歌分析代号 [UA-XXXXXXXX-X]
+googleAnalytics = ""
+# copyright description used only for seo schema
+# 版权描述，仅仅用于 SEO
+copyright = ""
 
   # Footer config
   # 页面底部信息配置
@@ -124,7 +134,8 @@ baseURL = "https://unlord.xyz"
     # license info (HTML format is supported)
     # 许可协议信息 (支持 HTML 格式)
     license= ""
-
+    
+    
   # Section (all posts) page config
   # Section (所有文章) 页面配置
   [params.section]
