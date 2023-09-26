@@ -18,7 +18,7 @@ categories: ["l4b"]
 lightgallery: true
 ---
 
-<b>En esta primera entrada de bienvenida a mi bitácora personal hablaré sobre cómo las personas han dejado de crear su propio sitio en la Web y cómo las plataformas sociales han capitalizado ese espacio en Internet. </b>
+<b>En esta primera entrada de bienvenida a mi bitácora personal hablaré sobre cómo las personas han dejado de crear su propio sitio en la Web y cómo esta práctica ha sido capitalizada por las redes sociales. </b>
 
 <!--more-->
 
