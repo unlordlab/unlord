@@ -1,6 +1,6 @@
 ---
 weight: 4
-title: "¿Por qué la gente dejó de crear su propio sitio web?"
+title: "¿Por qué la gente dejó de crear su propio sitio en internet?"
 date: 2023-9-01T21:57:40+08:00
 lastmod: 2023-09-01T16:45:40+08:00
 draft: false
@@ -18,7 +18,7 @@ categories: ["l4b"]
 lightgallery: true
 ---
 
-<b>¿Por qué las personas dejaron de crear su propio sitio web?</b>
+<b>En esta primera entrada de bienvenida a mi bitácora personal hablare sobre como las personas han dejado de crear su propio sitio en la web y como las plataformas sociales han capitalizado ese espacio en internet. </b>
 
 <!--more-->
 
