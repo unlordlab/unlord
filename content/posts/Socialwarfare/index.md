@@ -10,7 +10,7 @@ description: "This article shows how to make a website with Hugo and cloudflare.
 images: []
 resources:
 - name: "featured-image"
-  src: "featured-image.png"
+  src: "1.jpeg"
 
 tags: ["Markdown", "HTML"]
 categories: ["Markdown"]
