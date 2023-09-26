@@ -1,6 +1,6 @@
 ---
 weight: 4
-title: "Repository is up!"
+title: "Finally, repository is up!"
 date: 2023-9-01T21:57:40+08:00
 lastmod: 2023-09-01T16:45:40+08:00
 draft: false
@@ -12,8 +12,8 @@ resources:
 - name: "featured-image"
   src: "1.jpeg"
 
-tags: ["Markdown", "HTML"]
-categories: ["Markdown"]
+tags: ["unlord", "lab"]
+categories: ["webpage"]
 
 lightgallery: true
 ---
