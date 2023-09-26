@@ -1,12 +1,12 @@
 ---
 weight: 4
-title: "¿Por qué la gente dejó de crear su propio sitio en internet?"
+title: "¿Por qué la gente dejó de crear su propio sitio en Internet?"
 date: 2023-9-01T21:57:40+08:00
 lastmod: 2023-09-01T16:45:40+08:00
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Imagen de las primeras páginas web en geocities"
+description: "Imagen de las primeras páginas web en Geocities"
 images: []
 resources:
 - name: "featured-image"
@@ -18,7 +18,7 @@ categories: ["l4b"]
 lightgallery: true
 ---
 
-<b>En esta primera entrada de bienvenida a mi bitácora personal hablare sobre como las personas han dejado de crear su propio sitio en la web y como las plataformas sociales han capitalizado ese espacio en internet. </b>
+<b>En esta primera entrada de bienvenida a mi bitácora personal hablaré sobre cómo las personas han dejado de crear su propio sitio en la Web y cómo las plataformas sociales han capitalizado ese espacio en Internet. </b>
 
 <!--more-->
 
