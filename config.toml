@@ -237,7 +237,7 @@ copyright = ""
       title = ""
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "Bachelor's degree in Social Education at Open University of Catalonia (UOC). Activist for critical pedagogy and defender of hacker community education. Interested in virtual societies, algorithmic biases and free technologies. <br>Marc Escribà"
+      subtitle = "I'm Marc Escribà. Bachelor's degree in Social Education at Open University of Catalonia (UOC). Activist for critical pedagogy and defender of hacker community education. Interested in virtual societies, algorithmic biases and free technologies."
       # whether to use typeit animation for subtitle
       # 是否为副标题显示打字机动画
       typeit = true
