@@ -18,7 +18,7 @@ categories: ["webpage"]
 lightgallery: true
 ---
 
-¿Por qué la gente dejó de crear su propio sitio web?
+<b>¿Por qué la gente dejó de crear su propio sitio web?</b>
 
 <!--more-->
 
