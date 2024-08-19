@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "content/posts/unlord/RSU.jpg"
 
-tags: ["trading", "", "rsu", ""]
+tags: ["trading","rsu",]
 categories: ["l4b"]
 
 lightgallery: true
