@@ -13,7 +13,7 @@ resources:
   src: "RSU.jpg"
 
 tags: ["trading","RSU",]
-categories: ["l4b"]
+categories: ["unlord"]
 
 lightgallery: true
 ---
