@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "RSU.jpg"
 
-tags: ["trading","rsu",]
+tags: ["trading","RSU",]
 categories: ["l4b"]
 
 lightgallery: true
