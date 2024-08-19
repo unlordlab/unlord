@@ -3,7 +3,7 @@ weight: 4
 title: "Redistribution Strategy Research Unit  (RSU)"
 date: 2024-8-19:57:40+08:00
 lastmod: 2024-08-19T16:45:40+08:00
-draft: false
+draft: true
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "RSU"
@@ -15,7 +15,7 @@ resources:
 tags: ["trading","RSU",]
 categories: ["unlord"]
 
-lightgallery: false
+lightgallery: true
 ---
 
 <b>Este documento se sumerge en las dinámicas del neoliberalismo, enfocándose en cómo este sistema ha concentrado el conocimiento financiero y bursátil
