@@ -7,10 +7,10 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Imagen de las primeras páginas web en Geocities"
-images: ["content/posts/l4b/1.jpeg"]
+images: ["1.jpeg"]
 resources:
 - name: "featured-image"
-  src: "content/posts/l4b/1.jpeg"
+  src: "1.jpeg"
 
 tags: ["unlord", "lab", "webpages", "nostalgia"]
 categories: ["l4b"]
