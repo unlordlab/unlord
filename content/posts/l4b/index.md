@@ -10,7 +10,7 @@ description: "Imagen de las primeras páginas web en Geocities"
 images: ["RSU.jpg"]
 resources:
 - name: "featured-image"
-  src: "rsu.jpg"
+  src: "RSU.jpg"
 
 tags: ["unlord", "lab", "webpages", "nostalgia"]
 categories: ["l4b"]
