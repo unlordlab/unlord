@@ -1,8 +1,8 @@
 ---
 weight: 4
 title: "Redistribution Strategy Research Unit  (RSU)"
-date: 2024-8-2024:57:40+08:00
-lastmod: 2024-08-01T16:45:40+08:00
+date: 2024-8-19:57:40+08:00
+lastmod: 2024-08-19T16:45:40+08:00
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
