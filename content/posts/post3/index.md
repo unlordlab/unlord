@@ -7,10 +7,10 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Metavers"
-images: ["RSU.jpg"]
+images: ["dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"]
 resources:
 - name: "featured-image"
-  src: "RSU.jpg"
+  src: "dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"
 
 tags: ["trading","RSU",]
 categories: ["unlord"]
