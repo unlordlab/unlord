@@ -7,7 +7,7 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Imagen de las primeras páginas web en Geocities"
-images: []
+images: ["1.jpeg"]
 resources:
 - name: "featured-image"
   src: "1.jpeg"
