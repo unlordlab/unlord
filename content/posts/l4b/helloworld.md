@@ -10,7 +10,7 @@ description: "Imagen de las primeras páginas web en Geocities"
 images: ["content/posts/l4b/1.jpeg"]
 resources:
 - name: "featured-image"
-  src: "1.jpeg"
+  src: "content/posts/l4b/1.jpeg"
 
 tags: ["unlord", "lab", "webpages", "nostalgia"]
 categories: ["l4b"]
