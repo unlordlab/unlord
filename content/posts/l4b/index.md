@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "1.jpeg"
 
-tags: ["unlord", "lab", "webpages", "nostalgia"]
+tags: ["helloworld!", "internet", "cultura", "nostalgia"]
 categories: ["l4b"]
 
 lightgallery: true
