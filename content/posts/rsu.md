@@ -1,7 +1,7 @@
 ---
 weight: 4
-title: "¿Por qué la gente dejó de crear su propio sitio en Internet?"
-date: 2023-9-01T21:57:40+08:00
+title: "Redistribution Strategy Research Unit  (RSU)"
+date: 2024-8-2024:57:40+08:00
 lastmod: 2023-09-01T16:45:40+08:00
 draft: false
 author: "unlord"
@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "1.jpeg"
 
-tags: ["unlord", "lab", "webpages", "nostalgia"]
+tags: ["trading", "", "rsu", ""]
 categories: ["l4b"]
 
 lightgallery: true
