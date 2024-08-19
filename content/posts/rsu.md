@@ -7,10 +7,10 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: ""
-images: ["content/posts/unlord/RSU.jpg"]
+images: ["RSU.jpg"]
 resources:
 - name: "featured-image"
-  src: "content/posts/unlord/RSU.jpg"
+  src: "RSU.jpg"
 
 tags: ["trading","rsu",]
 categories: ["l4b"]
