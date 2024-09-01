@@ -60,10 +60,10 @@ baseURL = "https://unlordl4b.pages.dev/"
   fingerprint = ""
   # date format
   # 日期格式
-  dateFormat = "2024-19-08"
+  dateFormat = "2024-01-01"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
-  title = "unlord lab"
+  title = "unl4b"
   # website description for RSS, SEO, Open Graph and Twitter Cards
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "projects repository"
@@ -88,7 +88,7 @@ baseURL = "https://unlordl4b.pages.dev/"
       logo = ""
       # title name
       # 标题名称
-      name = "unlord l4b"
+      name = "unl4b"
       # you can add extra information before the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
@@ -228,7 +228,7 @@ copyright = ""
       enable = true
       # Gravatar Email for preferred avatar in home page
       # Gravatar 邮箱，用于优先在主页显示的头像
-      gravatarEmail = "marcescriba86@gmail.com"
+      gravatarEmail = "unl4b@proton.me"
       # URL of avatar shown in home page
       # 主页显示头像的 URL
       avatarURL = ""
@@ -237,7 +237,7 @@ copyright = ""
       title = ""
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "I am Marc Escribà. Bachelor's degree in Social Education from Open University of Catalonia (UOC). Activist for critical pedagogy and defender of hacker community education. Interested in virtual societies, degrowth, algorithmic biases and free technologies."
+      subtitle = "I am Marc Escribà. Bachelor's degree in Social Education from Open University of Catalonia (UOC). Activist for a critical pedagogy and defender of hacker community education. Fascinated by the interplay between technology and society. Interested in virtual societies, degrowth, cyberpunk, algorithmic biases, critical disability and free technologies."
       # whether to use typeit animation for subtitle
       # 是否为副标题显示打字机动画
       typeit = true
@@ -296,7 +296,7 @@ copyright = ""
     Hackernews = ""
     Kickstarter = ""
     Patreon = ""
-    Steam = "/76561198087577379/"
+    Steam = "unlord86"
     Twitch = ""
     Strava = ""
     Skype = ""
@@ -330,7 +330,7 @@ copyright = ""
     Plume = ""
     HackTheBox = ""
     RootMe= ""
-    Email = "marcescriba86@gmail.com"
+    Email = "unl4b@proton.me"
     Phone = ""
     RSS = ""
 
