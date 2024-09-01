@@ -88,7 +88,7 @@ baseURL = "https://unlordl4b.pages.dev/"
       logo = ""
       # title name
       # 标题名称
-      name = "unl4b"
+      name = "unlord lab"
       # you can add extra information before the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
@@ -228,7 +228,7 @@ copyright = ""
       enable = true
       # Gravatar Email for preferred avatar in home page
       # Gravatar 邮箱，用于优先在主页显示的头像
-      gravatarEmail = "unl4b@proton.me"
+      gravatarEmail = "unlord86@gmail.com"
       # URL of avatar shown in home page
       # 主页显示头像的 URL
       avatarURL = ""
