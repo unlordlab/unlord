@@ -63,7 +63,7 @@ baseURL = "https://unlordl4b.pages.dev/"
   dateFormat = "2024-19-08"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
-  title = "unl4b"
+  title = "unlord lab"
   # website description for RSS, SEO, Open Graph and Twitter Cards
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "projects repository"
@@ -169,7 +169,7 @@ copyright = ""
   [params.app]
     # optional site title override for the app when added to an iOS home screen or Android launcher
     # 当添加到 iOS 主屏幕或者 Android 启动器时的标题, 覆盖默认标题
-    title = "unlord l4b"
+    title = "unl4b"
     # whether to omit favicon resource links
     # 是否隐藏网站图标资源链接
     noFavicon = false
