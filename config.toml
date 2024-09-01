@@ -228,7 +228,7 @@ copyright = ""
       enable = true
       # Gravatar Email for preferred avatar in home page
       # Gravatar 邮箱，用于优先在主页显示的头像
-      gravatarEmail = "unlord86@gmail.com"
+      gravatarEmail = "marcescriba86@gmail.com"
       # URL of avatar shown in home page
       # 主页显示头像的 URL
       avatarURL = ""
