@@ -88,10 +88,10 @@ baseURL = "https://unlordl4b.pages.dev/"
       logo = ""
       # title name
       # 标题名称
-      name = "unlord lab"
+      name = "unlord l4b"
       # you can add extra information before the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
-      pre = ""
+      pre = "hola"
       # you can add extra information after the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
       post = ""
