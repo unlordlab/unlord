@@ -88,7 +88,7 @@ baseURL = "https://unlordl4b.pages.dev/"
       logo = ""
       # title name
       # 标题名称
-      name = "unlord l4b"
+      name = "ul4b"
       # you can add extra information before the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
@@ -237,7 +237,7 @@ copyright = ""
       title = ""
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "I am Marc Escribà. Bachelor's degree in Social Education from Open University of Catalonia (UOC). Activist for a critical pedagogy and defender of hacker community education. Fascinated by the interplay between technology and society. Interested in virtual societies, degrowth, cyberpunk, algorithmic biases, critical disability and free technologies."
+      subtitle = "I am Marc Escribà. Bachelor's degree in Social Education from Open University of Catalonia (UOC). Activist for a critical pedagogy and defender of hacker community education. Fascinated by the interplay between technology and society. Interested in virtual societies, degrowth, ciberpunk, algorithmic biases, critical disability and free technologies."
       # whether to use typeit animation for subtitle
       # 是否为副标题显示打字机动画
       typeit = true
