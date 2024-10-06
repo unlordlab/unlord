@@ -24,7 +24,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     # you can add extra information after the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
-    name = "Posts"
+    name = "/Posts"
     url = "/posts/"
     # title will be shown when you hover on this menu link
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
@@ -34,7 +34,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "tags"
     pre = ""
     post = ""
-    name = "Tags"
+    name = "/Tags"
     url = "/tags/"
     title = ""
   [[menu.main]]
@@ -42,7 +42,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "categories"
     pre = ""
     post = ""
-    name = "Categories"
+    name = "/Categories"
     url = "/categories/"
     title = ""
 
@@ -63,7 +63,7 @@ baseURL = "https://unlordl4b.pages.dev/"
   dateFormat = "2024-01-01"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
-  title = "unl4b"
+  title = "unlord l4b"
   # website description for RSS, SEO, Open Graph and Twitter Cards
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "projects repository"
@@ -88,7 +88,7 @@ baseURL = "https://unlordl4b.pages.dev/"
       logo = ""
       # title name
       # 标题名称
-      name = "ul4b"
+      name = "unlord l4b"
       # you can add extra information before the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
@@ -169,7 +169,7 @@ copyright = ""
   [params.app]
     # optional site title override for the app when added to an iOS home screen or Android launcher
     # 当添加到 iOS 主屏幕或者 Android 启动器时的标题, 覆盖默认标题
-    title = "unl4b"
+    title = "unlord l4b"
     # whether to omit favicon resource links
     # 是否隐藏网站图标资源链接
     noFavicon = false
@@ -237,7 +237,7 @@ copyright = ""
       title = ""
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "I am Marc Escribà. Bachelor's degree in Social Education from Open University of Catalonia (UOC). Activist for a critical pedagogy and defender of hacker community education. Fascinated by the interplay between technology and society. Interested in virtual societies, degrowth, ciberpunk, algorithmic biases, critical disability and free technologies."
+      subtitle = "I am Marc Escribà. Bachelor's degree in Social Education from Open University of Catalonia (UOC). Activist for a critical pedagogy and defender of hacker community education. Fascinated by the interplay between technology and society. Interested in virtual societies, degrowth, algorithmic biases and free technologies."
       # whether to use typeit animation for subtitle
       # 是否为副标题显示打字机动画
       typeit = true
