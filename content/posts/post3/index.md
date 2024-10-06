@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"
 
-tags: ["trading","RSU",]
+tags: ["TFG","Metaverse",]
 categories: ["unlord"]
 
 lightgallery: true
