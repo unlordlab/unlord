@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "1.jpeg"
 
-tags: ["internet", "cultura", "nostalgia"]
+tags: ["internet", "cultura",]
 categories: ["l4b"]
 
 lightgallery: true
