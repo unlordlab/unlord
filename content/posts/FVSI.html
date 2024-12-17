@@ -26,37 +26,71 @@
             background-color: #0056b3;
         }
     </style>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El metavers. Les noves coordenades de la desigualtat</title>
+    <style>
+        @font-face {
+            font-family: 'MetaversFont';
+            src: url('fonts/nom-de-la-font.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'MetaversFont', Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #5A6F68;
+            color: #ffffff;
+        }
+        h1 {
+            font-family: 'MetaversFont', Arial, sans-serif;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 20px auto;
+            max-width: 800px; /* Amplada màxima del paràgraf */
+            color: #e0e0e0;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'MetaversFont', Arial, sans-serif;
+        }
+        input {
+            background-color: #ffffff;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            color: #333;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            background-color: #FFD700;
+            color: #333;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+    </style>
 </head>
 <body>
     <h1>El metavers. Les noves coordenades de la desigualtat.</h1>
-    <input type="text" id="search" placeholder="Escriu una ciutat del món">
-    <div>
-        <button onclick="searchFlickr()">Buscar en Flickr</button>
-        <button onclick="searchInstagram()">Buscar en Instagram</button>
-    </div>
-
-    <script>
-        function searchFlickr() {
-            const query = document.getElementById('search').value.trim();
-            if (!query) {
-                alert('Por favor, escribe una palabra clave.');
-                return;
-            }
-            // Construir URL de búsqueda en Flickr
-            const flickrURL = `https://www.flickr.com/search/?text=${encodeURIComponent(query)}`;
-            window.open(flickrURL, '_blank');
-        }
-
-        function searchInstagram() {
-            const query = document.getElementById('search').value.trim();
-            if (!query) {
-                alert('Por favor, escribe una palabra clave.');
-                return;
-            }
-            // Para Instagram, no hay una búsqueda pública directa. Este es un truco:
-            const instagramURL = `https://www.instagram.com/explore/tags/${encodeURIComponent(query)}/`;
-            window.open(instagramURL, '_blank');
-        }
-    </script>
-</body>
-</html>
+    <p>
+        El <strong>self digital</strong> ha evolucionat significativament des de la creació de 
+        <strong>Flickr</strong> el 2004 fins a l'arribada d'<strong>Instagram</strong> el 2010. 
+        Mentre que Flickr promovia una fotografia més documental i espontània, Instagram ha transformat 
+        el self digital en una identitat curada i performativa, on la cerca de likes i reconeixement 
+        social ha provocat un canvi cap a la posada en escena constant de la pròpia imatge.
+    </p>
+    <p>Introdueix una paraula clau per explorar més contingut relacionat amb Flickr o Instagram:</p>
+    <input type="text" id="search"
