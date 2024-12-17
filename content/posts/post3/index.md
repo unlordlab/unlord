@@ -18,7 +18,7 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-<b>Flickr VS Instagram. </b>
+<b>Flickr vs Instagram. </b>
 
 
 <!--more-->
