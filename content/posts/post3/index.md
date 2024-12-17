@@ -18,6 +18,7 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-<b>TFG El Metavers. Les noves coordenades de la desigualtat. </b>
+<b>Flickr VS Instagram. </b>
 
 <!--more-->
+
