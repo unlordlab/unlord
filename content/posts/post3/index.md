@@ -20,8 +20,8 @@ lightgallery: true
 
 <b>Flickr VS Instagram. </b>
 
-<https://unlordl4b.pages.dev/posts/FVSI.html>
-
 
 <!--more-->
+
+<https://unlordl4b.pages.dev/posts/FVSI.html>
 
