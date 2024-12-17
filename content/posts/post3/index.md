@@ -20,7 +20,7 @@ lightgallery: true
 
 <b>Flickr VS Instagram. </b>
 
-<https://github.com/unlordlab/unlord/blob/58302dd1ebeed0c10cbc6e61b6e054ea26bf2aa3/content/posts/FVSI.html>
+<content/posts/FVSI.html>
 <contact@revolunet.com>
 [Assemble](https://assemble.io)
 
