@@ -23,5 +23,5 @@ lightgallery: true
 
 <!--more-->
 
-<https://unlordl4b.pages.dev/posts/FVSI.html>
+[Flickr vs Instagram](https://assemble.io](https://unlordl4b.pages.dev/posts/FVSI.html)
 
