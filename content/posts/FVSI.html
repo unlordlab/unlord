@@ -1,32 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Búsqueda en Flickr e Instagram</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-        button {
-            cursor: pointer;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-<!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
@@ -93,4 +65,32 @@
         social ha provocat un canvi cap a la posada en escena constant de la pròpia imatge.
     </p>
     <p>Introdueix una paraula clau per explorar més contingut relacionat amb Flickr o Instagram:</p>
-    <input type="text" id="search"
+    <input type="text" id="search" placeholder="Escriu una paraula clau">
+    <div>
+        <button onclick="searchFlickr()">Explora a Flickr</button>
+        <button onclick="searchInstagram()">Explora a Instagram</button>
+    </div>
+
+    <script>
+        function searchFlickr() {
+            const query = document.getElementById('search').value.trim();
+            if (!query) {
+                alert('Si us plau, introdueix una paraula clau.');
+                return;
+            }
+            const flickrURL = `https://www.flickr.com/search/?text=${encodeURIComponent(query)}`;
+            window.open(flickrURL, '_blank');
+        }
+
+        function searchInstagram() {
+            const query = document.getElementById('search').value.trim();
+            if (!query) {
+                alert('Si us plau, introdueix una paraula clau.');
+                return;
+            }
+            const instagramURL = `https://www.instagram.com/explore/tags/${encodeURIComponent(query)}/`;
+            window.open(instagramURL, '_blank');
+        }
+    </script>
+</body>
+</html>
