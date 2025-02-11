@@ -68,7 +68,7 @@ baseURL = "https://unlordl4b.pages.dev/"
   fingerprint = ""
   # date format
   # 日期格式
-  dateFormat = "2025-02-11"
+  dateFormat = "2006-01-02"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
   title = "unlord l4b"
@@ -442,7 +442,7 @@ copyright = ""
       Twitter = true
       Facebook = true
       Linkedin = false
-      Whatsapp = false
+      Whatsapp = true
       Pinterest = false
       Tumblr = false
       HackerNews = true
@@ -465,7 +465,7 @@ copyright = ""
     # Comment config
     # 评论系统设置
     [params.page.comment]
-      enable = false
+      enable = true
       # Disqus comment config (https://disqus.com/)
       # Disqus 评论系统设置 (https://disqus.com/)
       [params.page.comment.disqus]
@@ -476,7 +476,7 @@ copyright = ""
       # Gitalk comment config (https://github.com/gitalk/gitalk)
       # Gitalk 评论系统设置 (https://github.com/gitalk/gitalk)
       [params.page.comment.gitalk]
-        enable = false
+        enable = true
         owner = ""
         repo = ""
         clientId = ""
