@@ -15,6 +15,14 @@ baseURL = "https://unlordl4b.pages.dev/"
 # Menu config
 # 菜单配置
 [menu]
+ [[menu.main]]
+    weight = 3
+    identifier = "CV"
+    pre = ""
+    post = ""
+    name = "/CV/"
+    url = "https://github.com/unlordlab/unlord/blob/43b29421322a706c6cdb9cade1ebaa75712eed98/CV%20Marc%20Escriba.pdf"
+    title = ""
   [[menu.main]]
     weight = 1
     identifier = "posts"
@@ -24,7 +32,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     # you can add extra information after the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
-    name = "/Posts"
+    name = "/Posts/"
     url = "/posts/"
     # title will be shown when you hover on this menu link
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
@@ -34,7 +42,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "tags"
     pre = ""
     post = ""
-    name = "/Tags"
+    name = "/Tags/"
     url = "/tags/"
     title = ""
   [[menu.main]]
@@ -42,7 +50,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "categories"
     pre = ""
     post = ""
-    name = "/Categories"
+    name = "/Categories/"
     url = "/categories/"
     title = ""
 
