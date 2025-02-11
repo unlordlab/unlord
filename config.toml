@@ -16,15 +16,15 @@ baseURL = "https://unlordl4b.pages.dev/"
 # 菜单配置
 [menu]
  [[menu.main]]
-    weight = 3
+    weight = 1
     identifier = "CV"
     pre = ""
     post = ""
     name = "/CV/"
-    url = "https://github.com/unlordlab/unlord/blob/43b29421322a706c6cdb9cade1ebaa75712eed98/CV%20Marc%20Escriba.pdf"
+    url = "https://unlordl4b.pages.dev/CV%20Marc%20Escriba.pdf"
     title = ""
   [[menu.main]]
-    weight = 1
+    weight = 2
     identifier = "posts"
     # you can add extra information before the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
@@ -38,7 +38,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
     title = ""
   [[menu.main]]
-    weight = 2
+    weight = 3
     identifier = "tags"
     pre = ""
     post = ""
@@ -46,7 +46,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     url = "/tags/"
     title = ""
   [[menu.main]]
-    weight = 3
+    weight = 4
     identifier = "categories"
     pre = ""
     post = ""
