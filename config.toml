@@ -21,7 +21,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     pre = ""
     post = ""
     name = "/CV/"
-    url = "/CV%20Marc%20Escriba.pdf"
+    url = "https://unlordl4b.pages.dev/posts/CV_Marc_Escriba.pdf"
     title = ""
   [[menu.main]]
     weight = 2
