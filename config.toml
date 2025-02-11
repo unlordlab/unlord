@@ -93,7 +93,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     [params.header.title]
       # URL of the LOGO
       # LOGO 的 URL
-      logo = "https://unlordl4b.pages.dev/posts/icono.png"
+      logo = "https://unlordl4b.pages.dev/posts/icono.PNG"
       # title name
       # 标题名称
       name = "unlord l4b"
