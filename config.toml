@@ -16,7 +16,7 @@ baseURL = "https://unlordl4b.pages.dev/"
 # 菜单配置
 [menu]
  [[menu.main]]
-    weight = 1
+    weight = 4
     identifier = "CV"
     pre = ""
     post = ""
@@ -24,7 +24,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     url = "https://unlordl4b.pages.dev/posts/CV_Marc_Escriba.pdf"
     title = ""
   [[menu.main]]
-    weight = 2
+    weight = 1
     identifier = "posts"
     # you can add extra information before the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
@@ -38,7 +38,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
     title = ""
   [[menu.main]]
-    weight = 3
+    weight = 2
     identifier = "tags"
     pre = ""
     post = ""
@@ -46,7 +46,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     url = "/tags/"
     title = ""
   [[menu.main]]
-    weight = 4
+    weight = 3
     identifier = "categories"
     pre = ""
     post = ""
@@ -68,7 +68,7 @@ baseURL = "https://unlordl4b.pages.dev/"
   fingerprint = ""
   # date format
   # 日期格式
-  dateFormat = "2024-01-01"
+  dateFormat = "01-02"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
   title = "unlord l4b"
