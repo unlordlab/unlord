@@ -20,7 +20,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "CV"
     pre = ""
     post = ""
-    name = "/CV/"
+    name = "CV"
     url = "https://unlordl4b.pages.dev/posts/CV_Marc_Escriba.pdf"
     title = ""
   [[menu.main]]
@@ -32,7 +32,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     # you can add extra information after the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
-    name = "/Posts/"
+    name = "Posts"
     url = "/posts/"
     # title will be shown when you hover on this menu link
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
@@ -42,7 +42,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "tags"
     pre = ""
     post = ""
-    name = "/Tags/"
+    name = "Tags"
     url = "/tags/"
     title = ""
   [[menu.main]]
@@ -50,7 +50,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     identifier = "categories"
     pre = ""
     post = ""
-    name = "/Categories/"
+    name = "Categories"
     url = "/categories/"
     title = ""
 
@@ -68,7 +68,7 @@ baseURL = "https://unlordl4b.pages.dev/"
   fingerprint = ""
   # date format
   # 日期格式
-  dateFormat = "01-02"
+  dateFormat = ""
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
   title = "unlord l4b"
