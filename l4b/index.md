@@ -13,7 +13,7 @@ resources:
   src: "1.jpeg"
 
 tags: ["unlord", "lab", "webpages", "nostalgia"]
-categories: ["l4b"]
+categories: [""]
 
 lightgallery: true
 ---
