@@ -20,8 +20,8 @@ lightgallery: true
 
 <b>Hubo un tiempo en Internet, por allà a finales de los 90 y principios de los 2000, donde era muy fácil encontrarse con ingentes cantidades de espacios personales web creados por individuos. Una suerte de habitaciones personales dentro del ciberespacio. En estas pequeñas parcelas digitales cualquiera podía compartir sus pasiones, pensamientos e intereses.
 Estos sitios, alojados en plataformas como Geocities, Tripod o similares, ofrecían un sinfín de contenidos inesperados: desde información curiosa hasta fansites dedicados a bandas musicales, anime y otras formas de arte.
-Cada una de estas paginas era un collage caótico de GIFs extravagantes, enlaces rotos, música MIDI estridente y los omnipresentes obreros con casco que advertían que el sitio estaba en un estado permanente de "en construcción". Todo ello conformaba una experiencia visual lisérgica única en cada visita.
-Pero, ¿qué cambió? ¿Cuándo y por qué desaparecieron estos rincones personales de la web?
+Cada una de estas paginas era un collage caótico de GIFs extravagantes, enlaces rotos, música MIDI estridente y los omnipresentes obreros con casco que advertían que el sitio estaba en un estado permanente de "en construcción". Todo ello conformaba una experiencia visual lisérgica única en cada visita.<br>
+<strong>Pero, ¿qué cambió? ¿Cuándo y por qué desaparecieron estos rincones personales de la web?</strong>
 
 
 </b>
