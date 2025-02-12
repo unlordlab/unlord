@@ -18,8 +18,13 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-<b>Hubo un tiempo en Internet, por allá a finales de los 90 y principios de los 2000, donde era muy fácil encontrarse con ingentes cantidades de espacios personales web creados por individuos. Una suerte de habitaciones personales dentro del ciberespacio. En estos espacios, generalmente alojados en servicios como Geocities, Tripod o similares, uno podía sorprenderse hallando información interesante de todo tipo, aunque, es cierto, abundaban los fansites sobre alguna banda musical o algún arte en particular (anime, etc.). Adornados por incontables .gifs bizarros, enlaces rotos, música Midi estridente (1) y numerosos obreros con casco anunciando que la página se encontraba en un estado permanente de under construction, confabulando así, una experiencia lisérgica única en cada una de las visitas.
-¿Que fue lo que cambio esa tendencia? ¿En que momento y por qué se acabó? 
+<b>Hubo un tiempo en Internet, por allà a finales de los 90 y principios de los 2000, donde era muy fácil encontrarse con ingentes cantidades de espacios personales web creados por individuos. Una suerte de habitaciones personales dentro del ciberespacio. En estas pequeñas parcelas digitales cualquiera podía compartir sus pasiones, pensamientos e intereses.
+Estos sitios, alojados en plataformas como Geocities, Tripod o similares, ofrecían un sinfín de contenidos inesperados: desde información curiosa hasta fansites dedicados a bandas musicales, anime y otras formas de arte.
+Cada una de estas paginas era un collage caótico de GIFs extravagantes, enlaces rotos, música MIDI estridente y los omnipresentes obreros con casco que advertían que el sitio esta "en construcción". Todo ello conformaba una experiencia visual lisérgica única en cada visita.
+Pero, ¿qué cambió? ¿Cuándo y por qué desaparecieron estos rincones personales de la web?
+
+
+</b>
 
 
 
