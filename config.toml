@@ -9,7 +9,7 @@ baseURL = "https://unlordl4b.pages.dev/"
 # 作者配置
 [author]
   name = "unlord"
-  email = ""
+  email = "marcescriba86@gmail.com"
   link = ""
 
 # Menu config
@@ -71,7 +71,7 @@ baseURL = "https://unlordl4b.pages.dev/"
   dateFormat = "2006-01-02"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
-  title = "unlord l4b"
+  title = "  unlord l4b"
   # website description for RSS, SEO, Open Graph and Twitter Cards
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "projects repository"
@@ -96,7 +96,7 @@ baseURL = "https://unlordl4b.pages.dev/"
       logo = "https://unlordl4b.pages.dev/posts/icono.PNG"
       # title name
       # 标题名称
-      name = "unlord l4b"
+      name = "  unlord l4b"
       # you can add extra information before the name (HTML format is supported), such as icons
       # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
       pre = ""
@@ -180,7 +180,7 @@ copyright = ""
     title = "unlord l4b"
     # whether to omit favicon resource links
     # 是否隐藏网站图标资源链接
-    noFavicon = false
+    noFavicon = true
     # modern SVG favicon to use in place of older style .png and .ico files
     # 更现代的 SVG 网站图标, 可替代旧的 .png 和 .ico 文件
     svgFavicon = ""
