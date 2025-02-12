@@ -13,7 +13,7 @@ resources:
   src: "1.jpeg"
 
 tags: ["internet", "cultura",]
-categories: ["l4b"]
+categories: [""]
 
 lightgallery: true
 ---
