@@ -488,7 +488,7 @@ copyright = ""
         appId = "tsT5IDJI6QzjxRoqjoBsKkFT-MdYXbMMI"
         appKey = "5Qy1O1fzOvtLVxa3Z9iYQJOI"
         placeholder = ""
-        avatar = "mp"
+        avatar = ""
         meta= ""
         pageSize = 10
         # automatically adapt the current theme i18n configuration when empty
