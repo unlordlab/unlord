@@ -485,8 +485,8 @@ copyright = ""
       # Valine 评论系统设置 (https://github.com/xCss/Valine)
       [params.page.comment.valine]
         enable = true
-        appId = ""
-        appKey = ""
+        appId = "tsT5IDJI6QzjxRoqjoBsKkFT-MdYXbMMI"
+        appKey = "5Qy1O1fzOvtLVxa3Z9iYQJOI"
         placeholder = ""
         avatar = "mp"
         meta= ""
