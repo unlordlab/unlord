@@ -498,7 +498,7 @@ copyright = ""
         recordIP = true
         highlight = true
         enableQQ = false
-        serverURLs = ""
+        serverURLs = "https://tst5idji.api.lncldglobal.com"
         # emoji data file name, default is "google.yml"
         # ["apple.yml", "google.yml", "facebook.yml", "twitter.yml"]
         # located in "themes/LoveIt/assets/lib/valine/emoji/" directory
