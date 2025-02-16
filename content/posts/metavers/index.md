@@ -30,5 +30,4 @@ Així, es convida a reconsiderar el paper de l’educació social dins el contex
 
 [Podeu consultar aquí](https://unlordl4b.pages.dev/posts/metavers/metavers.pdf)
 
-Això marca el final del meu viatge acadèmic com a estudiant de grau a la Universitat d'Ibadan. Llicenciatura
 
