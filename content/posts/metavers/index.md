@@ -2,7 +2,7 @@
 weight: 1
 title: "Treball fi de grau: El metavers. Les noves coordenades de la desigualtat."
 date: 2025-2-16T00:00:00Z
-draft:  true
+draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "El metavers. Les noves coordenades de la desigualtat."
