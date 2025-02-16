@@ -1,12 +1,12 @@
 
 ---
 weight: 4
-title: "Treball fi de grau. El metavers. Les noves coordenades de la desigualtat."
+title: "Treball fi de grau: El metavers. Les noves coordenades de la desigualtat."
 date: 2025-2-16
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "El passat 16 de gener vaig defensar amb èxit el meu treball final de grau, **El metavers. Les noves coordenades de la desigualtat.** Això marca el punt final al meu camí acadèmic com a estudiant del grau d’Educació Social a la Universitat Oberta de Catalunya.. Ha estat un procés intens, ple d’aprenentatges i reflexions que m’han fet créixer molt. Comparteixo el treball aquí per si a algú li pot interessar o servir d’inspiració."
+description: "El metavers. Les noves coordenades de la desigualtat."
 images: ["dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"]
 resources:
 - name: "featured-image"
@@ -18,10 +18,10 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
+
+> El passat 16 de gener vaig defensar amb èxit el meu treball final de grau, **El metavers. Les noves coordenades de la desigualtat.** Això marca el punt final al meu camí acadèmic com a estudiant del grau d’Educació Social a la Universitat Oberta de Catalunya. Ha estat un procés intens, ple d’aprenentatges i reflexions que m’han fet créixer molt. Comparteixo el treball aquí per si a algú li pot interessar o servir d’inspiració.
+
 <!--more--> 
-> El passat 16 de gener vaig defensar amb èxit el meu treball final de grau, **El metavers. Les noves coordenades de la desigualtat.** Això marca el punt final al meu camí acadèmic com a estudiant del grau d’Educació Social a la Universitat Oberta de Catalunya.. Ha estat un procés intens, ple d’aprenentatges i reflexions que m’han fet créixer molt. Comparteixo el treball aquí per si a algú li pot interessar o servir d’inspiració.
-
-
 
 **Abstract.**
 
