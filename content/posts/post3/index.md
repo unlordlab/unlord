@@ -1,5 +1,5 @@
 ---
-weight: 3
+weight: 2
 title: "Flickr vs Instagram."
 date: 2024-8-19
 draft: false
