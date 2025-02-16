@@ -1,6 +1,6 @@
 ---
 weight: 4
-title: "El Metavers. Les noves coordenades de la desigualtat."
+title: "Flickr vs Instagram."
 date: 2024-8-19T21:40:32+08:00
 lastmod: 2024-08-19T21:40:32+08:00
 draft: false
