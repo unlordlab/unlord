@@ -29,4 +29,4 @@ Partint de teories com la hiperrealitat de Baudrillard, la dramatúrgia del self
 Així, es convida a reconsiderar el paper de l’educació social dins el context del metavers que, lluny de quedar-se marginada pels avenços tecnològics ha de ser una disciplina capaç de liderar processos transformadors en aquesta nova realitat interconnectada. Processos que poden beneficiar a les persones i a les comunitats.
 
 ## **Descarregar.**
-[Disponible en PDF.](https://unlordl4b.pages.dev/posts/metavers/metavers.pdf)
+[PDF disponible aquí.](https://unlordl4b.pages.dev/posts/metavers/metavers.pdf)
