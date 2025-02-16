@@ -1,10 +1,11 @@
----
 $date := "2015-01-21";
 
 {{ if ne $date nil }}
   {{ dateFormat "Monday, Jan 2, 2006" $date }}
 {{ end }}
 weight: 1
+---
+
 title: "Treball fi de grau: El metavers. Les noves coordenades de la desigualtat."
 date: 2025-2-16T00:00:00Z
 draft: false
