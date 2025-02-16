@@ -1,5 +1,5 @@
 ---
-weight: 1
+weight: 4
 title: "¿Por qué la gente dejó de crear su propio sitio en Internet?"
 date: 2023-9-01
 draft: false
