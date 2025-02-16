@@ -1,8 +1,7 @@
 ---
-weight: 4
+weight: 2
 title: "Redistribution Strategy Research Unit  (RSU)"
-date: 2024-8-19T21:40:32+08:00
-lastmod: 2024-08-19T21:40:32+08:00
+date: 2024-8-19
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
@@ -12,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "RSU.jpg"
 
-tags: ["trading","RSU",]
+tags: ["markets","RSU",]
 categories: ["unlord"]
 
 lightgallery: true
