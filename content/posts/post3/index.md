@@ -12,7 +12,7 @@ resources:
 - name: "featured-image"
   src: "fvsi.webp"
 
-tags: ["metaverse",]
+tags: ["metaverse", "social networks"]
 categories: ["unlord"]
 
 lightgallery: true
