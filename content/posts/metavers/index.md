@@ -16,11 +16,6 @@ categories: ["unlord"]
 
 lightgallery: true
 ---
-$date := "2015-01-21";
-
-{{ if ne $date nil }}
-  {{ dateFormat "Monday, Jan 2, 2006" $date }}
-{{ end }}
 
 El passat 16 de gener vaig defensar amb èxit el meu treball final de grau, **El metavers. Les noves coordenades de la desigualtat.** Això marca el punt final al meu camí acadèmic com a estudiant del grau d’Educació Social a la Universitat Oberta de Catalunya. Ha estat un procés intens, ple d’aprenentatges i reflexions que m’han fet créixer molt. Comparteixo el treball aquí per si a algú li pot interessar o servir d’inspiració.
 
