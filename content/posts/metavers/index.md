@@ -30,6 +30,6 @@ Aquest treball explora com això podria redefinir les coordenades de la desigual
 Partint de teories com la hiperrealitat de Baudrillard, la dramatúrgia del self de Goffman i el model sobre el capitalisme de plataformes, aquest treball analitza com el metavers pot reproduir les desigualtats socials existents. S’analitzen fenòmens com l’exclusió digital, la vigilància massiva o l’impacte en les identitats individuals i col·lectives. I es proposen categories d’intervenció per explorar com el metavers pot esdevenir un nou camp d’acció per l’educació social i convertir-se en una eina clau per a la justícia social i l’equitat en aquest nou espai virtual.
 Així, es convida a reconsiderar el paper de l’educació social dins el context del metavers que, lluny de quedar-se marginada pels avenços tecnològics ha de ser una disciplina capaç de liderar processos transformadors en aquesta nova realitat interconnectada. Processos que poden beneficiar a les persones i a les comunitats.
 
-## [Podeu consultar aquí.](https://unlordl4b.pages.dev/posts/metavers/metavers.pdf)
+# [Descarregar.](https://unlordl4b.pages.dev/posts/metavers/metavers.pdf)
 
 
