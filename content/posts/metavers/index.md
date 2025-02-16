@@ -2,12 +2,12 @@
 ---
 weight: 4
 title: "Treball fi de grau. El metavers. Les noves coordenades de la desigualtat."
-date: 2025-2-16T21:40:32+08:00
-lastmod: 2025-02-16T21:40:32+08:00
+date: 2025-2-16
+lastmod: 2025-02-16
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "metavers"
+description: "El passat 16 de gener vaig defensar amb èxit el meu Treball Final de Grau, El metavers. Les noves coordenades de la desigualtat. Això marca el punt final al meu camí acadèmic com a estudiant del grau d’Educació Social a la Universitat Oberta de Catalunya.. Ha estat un procés intens, ple d’aprenentatges i reflexions que m’han fet créixer molt. Comparteixo el treball aquí per si a algú li pot interessar o servir d’inspiració."
 images: ["dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"]
 resources:
 - name: "featured-image"
@@ -19,11 +19,6 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-
-
-
-
-
 <!--more--> 
 
 **Abstract.**
@@ -33,5 +28,7 @@ Aquest treball explora com això podria redefinir les coordenades de la desigual
 Partint de teories com la hiperrealitat de Baudrillard, la dramatúrgia del self de Goffman i el model sobre el capitalisme de plataformes, aquest treball analitza com el metavers pot reproduir les desigualtats socials existents. S’analitzen fenòmens com l’exclusió digital, la vigilància massiva o l’impacte en les identitats individuals i col·lectives. I es proposen categories d’intervenció per explorar com el metavers pot esdevenir un nou camp d’acció per l’educació social i convertir-se en una eina clau per a la justícia social i l’equitat en aquest nou espai virtual.
 Així, es convida a reconsiderar el paper de l’educació social dins el context del metavers que, lluny de quedar-se marginada pels avenços tecnològics ha de ser una disciplina capaç de liderar processos transformadors en aquesta nova realitat interconnectada. Processos que poden beneficiar a les persones i a les comunitats.
 
-[Podeu consultar aquí](https://unlordl4b.pages.dev/content/posts/metavers/metavers.pdf)
+[Podeu consultar aquí](https://unlordl4b.pages.dev/posts/metavers/metavers.pdf)
+
+Això marca el final del meu viatge acadèmic com a estudiant de grau a la Universitat d'Ibadan. Llicenciatura
 
