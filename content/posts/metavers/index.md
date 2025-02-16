@@ -23,7 +23,7 @@ El passat 16 de gener vaig defensar amb èxit el meu treball final de grau, **El
 
 <!--more--> 
 
-< **Abstract.**
+> **Abstract.**
 
 Les tecnologies digitals han canviat molt la forma com interactuem, treballem i experimentem el món. En aquest sentit, el metavers és una de les propostes més innovadores del segle XXI. Una realitat virtual immersiva on els límits entre el que és físic i el que és digital es difuminen. Aquesta nova dimensió tecnològica no és només una revolució tècnica, sinó també un espai ple de possibilitats i reptes per al camp de l’educació social.
 Aquest treball explora com això podria redefinir les coordenades de la desigualtat i obrir nous escenaris per a la intervenció educativa. Des d’una perspectiva crítica, el treball aborda els aspectes tècnics del metavers, els reptes i les oportunitats que planteja i la relació d’això amb els documents professionalitzadors de l’educació social i les normatives legislatives emergents.
