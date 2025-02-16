@@ -2,7 +2,6 @@
 weight: 3
 title: "Flickr vs Instagram."
 date: 2024-8-19
-lastmod: 2024-08-19
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
