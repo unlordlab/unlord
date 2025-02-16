@@ -1,18 +1,18 @@
 ---
-weight: 4
+weight: 3
 title: "Flickr vs Instagram."
-date: 2024-8-19T21:40:32+08:00
-lastmod: 2024-08-19T21:40:32+08:00
+date: 2024-8-19
+lastmod: 2024-08-19
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Metavers"
-images: ["dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"]
+description: "Flickr VS Instagram"
+images: ["fvsi.webp"]
 resources:
 - name: "featured-image"
-  src: "dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"
+  src: "fvsi.webp"
 
-tags: ["TFG","Metaverse",]
+tags: ["metaverse",]
 categories: ["unlord"]
 
 lightgallery: true
