@@ -33,7 +33,7 @@ Cada una de estas páginas era un festín visual caótico, lleno de GIFs extrava
 
 <!--more-->
 
-Un poco historia
+###*Un poco historia*
 
 El 6 de agosto de 1991 se presentó al mundo el primer sitio web (aún en línea): <https://info.cern.ch/hypertext/WWW/TheProject.html>. En él se podían aprender las primeras formas del lenguaje de marcas de hipertexto (también conocido como HTML) que es el componente más básico de la Web y sirve para dotar de significado y estructura su contenido. 
 
