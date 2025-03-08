@@ -63,7 +63,7 @@ Más allá del diseño, GeoCities fomentó la creación de comunidades digitales
 
 ### Un legado que perdura.
 
-Aunque GeoCities cerró en 2009, su impacto sigue notándose. No solo marcó una etapa en la evolución de la web, sino que ayudó a consolidar la idea de que Internet podía ser un espacio de expresión personal, descentralizado y comunitario. Hoy en día, iniciativas como el Web Revival Movement intentan recuperar ese espíritu reivindicando la idea de que la web es algo más que redes sociales y grandes plataformas.
+Aunque GeoCities cerró en 2009, su impacto sigue notándose. No solo marcó una etapa en la evolución de la web, sino que ayudó a consolidar la idea de que Internet podía ser un espacio de expresión personal, descentralizado y comunitario. Hoy en día, iniciativas como el [Web Revival Movement](https://thoughts.melonking.net/guides/introduction-to-the-web-revival-1-what-is-the-web-revival) intentan recuperar ese espíritu reivindicando la idea de que la web es algo más que redes sociales y grandes plataformas.
 
 ## Del sitio web personal a la web centralizada.
 
