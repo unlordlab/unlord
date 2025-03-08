@@ -60,6 +60,7 @@ La falta de plantillas prediseñadas convertía a cada página en un pequeño ex
 ### Comunidad en línea.
 
 Más allá del diseño, GeoCities fomentó la creación de comunidades digitales. No era solo un alojamiento web, sino una ciudad virtual donde los usuarios podían explorar páginas de otros, dejar mensajes en libros de visitas y compartir enlaces a sitios afines. Había una sensación real de pertenencia, una especie de vecindario digital en el que los intereses comunes unían a extraños de todo el mundo.
+![Delated cities](delated.png "Deleted Cities es un esfuerzo por rescatar las páginas web personales que existían en GeoCities antes de que Yahoo! cerrara la plataforma y eliminara todos sus datos.")
 
 ### Un legado que perdura.
 
