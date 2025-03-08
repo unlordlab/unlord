@@ -21,7 +21,7 @@ lightgallery: true
 
 Estos sitios, alojados en plataformas como Geocities, Tripod o similares, ofrecían un sinfín de contenidos inesperados: desde información curiosa hasta fansites dedicados a bandas musicales, anime y otras formas de arte.
 
-¿No me creen? ¡Vean! <https://oneterabyteofkilobyteage.tumblr.com/> 
+¿No me creen? ¡Vean! [One Terabyte of Kilobyte Age](https://oneterabyteofkilobyteage.tumblr.com) 
 
 Cada una de estas páginas era un festín visual caótico, lleno de GIFs extravagantes, enlaces rotos, música MIDI estridente y los omnipresentes obreros con casco que advertían que el sitio estaba en un estado permanente de "en construcción". Todo ello conformaba una experiencia visual lisérgica única en cada visita.
 <br>
