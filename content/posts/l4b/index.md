@@ -55,7 +55,7 @@ Antes de que existieran redes sociales, la identidad digital se forjaba en estos
 
 ### Creatividad y experimentación.
 
-La falta de plantillas prediseñadas convertía a cada página en un pequeño experimento visual único. No existían reglas estrictas ni algoritmos que dictaran qué funcionaba mejor o peor. Algunos diseños eran extravagantes y caóticos. Otros, con combinaciones de colores imposibles y elementos en constante movimiento. Eso formaba parte del espíritu de la web de los 90: una explosión de creatividad sin filtros ni restricciones.
+La falta de plantillas prediseñadas convertía a cada página en un pequeño experimento visual único. No existían reglas estrictas ni algoritmos que dictaran qué funcionaba mejor o peor. Algunos diseños eran extravagantes y caóticos. Otros, con combinaciones de colores imposibles y elementos en constante movimiento. Eso formaba parte del espíritu de la web de los 90: una explosión de creatividad sin filtros ni restricciones.<br>
 En [Gif Cities](https://gifcities.org/) puedes ver algunos de los GIF's que se empleaban para el diseño de las páginas web en Geocities.
 
 ### Comunidad en línea.
