@@ -36,10 +36,12 @@ Cada una de estas páginas era un festín visual caótico, lleno de GIFs extrava
 ### Un poco historia
 
 El 6 de agosto de 1991 se presentó al mundo el primer sitio web (aún en línea) <https://info.cern.ch/hypertext/WWW/TheProject.html>. En él se podían aprender las primeras formas del lenguaje de marcas de hipertexto (también conocido como HTML) que es el componente más básico de la Web y sirve para dotar de significado y estructura su contenido. 
+
 ![Primera web de la historia.](primerawww.png "La primera página web de internet aún esta disponible para su visita.")
 Sus orígenes se remontan a la necesidad creciente de la comunidad científica y académica de intercambiar información de manera automatizada. El informático Tim Berners-Lee publicó el primer código fuente del navegador Nexus. Aunque, no fue hasta la aparición del navegador Mosaic —que posteriormente daría origen a Netscape— cuando se popularizó el uso de este tipo de software, revolucionando el acceso a la información, el entretenimiento e incluso la manera en que nos relacionamos.
 
 Este protocolo, junto con el Internet Relay Chat (IRC), fue clave en la expansión de la comunicación en línea en los primeros días de Internet. Así nació la World Wide Web. Un espacio inicialmente descentralizado y abierto donde cualquiera podía construir su propio sitio sin intermediarios.
+
 ![Mosaic](mosaic.jpg "Uno de los primeros navegadores de Internet fue Mosaic.")
 ### La democratizacion de la creacion web. Como Geocities suburbanizo internet.
 
@@ -68,7 +70,8 @@ Aunque GeoCities cerró en 2009, su impacto sigue notándose. No solo marcó una
 El cambio comenzó de forma gradual. Con la inexorable masificación del acceso a Internet, la necesidad de herramientas más accesibles se hizo evidente. Surgieron servicios como MySpace y Blogger que simplificaban la creación de páginas personales, ofreciendo plantillas y estructuras predefinidas que eliminaban la necesidad de aprender HTML.
 
 Este cambio trajo consigo una sutil transformación. En lugar de sitios web completamente personalizados, los usuarios comenzaron a adaptarse a los formatos y limitaciones impuestas por estas plataformas. MySpace aún permitía cierta personalización, con fondos y música de perfil, pero ya no era una web realmente descentralizada.
-![La plataforma Myspace.](myspace.png)
+
+![La plataforma Myspace.](myspace.png "MySpace jugo un papel decisivo en el declive de plataformas como Geocities.")
 El golpe definitivo llegó con Facebook y Twitter. Estas redes sociales eliminaron por completo la necesidad de gestionar un sitio propio, estableciendo  un nuevo estándar. El feed infinito. Diseñado para el consumo rápido de contenido en lugar de la exploración pausada de espacios personales. La identidad digital dejó de estar en manos del usuario y pasó a estar controlada por algoritmos cuyo objetivo no era fomentar la creatividad, sino maximizar el tiempo de permanencia en la plataforma.
 
 Hoy, la mayoría de las personas ya no tienen un sitio propio. En su lugar, su presencia digital se limita a perfiles en redes sociales, donde la expresión personal se reduce a unas pocas opciones prediseñadas:  una foto de perfil, una biografía breve y publicaciones sometidas al escrutinio de un algoritmo opaco.
