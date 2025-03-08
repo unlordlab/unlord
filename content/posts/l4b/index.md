@@ -38,7 +38,7 @@ Cada una de estas páginas era un festín visual caótico, lleno de GIFs extrava
 El 6 de agosto de 1991 se presentó al mundo el primer sitio web (aún en línea) <https://info.cern.ch/hypertext/WWW/TheProject.html>. En él se podían aprender las primeras formas del lenguaje de marcas de hipertexto (también conocido como HTML) que es el componente más básico de la Web y sirve para dotar de significado y estructura su contenido. 
 
 ![Primera web de la historia.](primerawww.png "La primera página web de internet aún esta disponible para su visita.")
-Sus orígenes se remontan a la necesidad creciente de la comunidad científica y académica de intercambiar información de manera automatizada. El informático Tim Berners-Lee publicó el primer código fuente del navegador Nexus. Aunque, no fue hasta la aparición del navegador Mosaic —que posteriormente daría origen a Netscape— cuando se popularizó el uso de este tipo de software, revolucionando el acceso a la información, el entretenimiento e incluso la manera en que nos relacionamos.
+Sus orígenes se remontan a la necessidad creciente de la comunidad científica y académica de intercambiar información de manera automatizada. El informático Tim Berners-Lee publicó el primer código fuente del navegador Nexus. Aunque, no fue hasta la aparición del navegador Mosaic —que posteriormente daría origen a Netscape— cuando se popularizó el uso de este tipo de software, revolucionando el acceso a la información, el entretenimiento e incluso la manera en que nos relacionamos.
 
 Este protocolo, junto con el Internet Relay Chat (IRC), fue clave en la expansión de la comunicación en línea en los primeros días de Internet. Así nació la World Wide Web. Un espacio inicialmente descentralizado y abierto donde cualquiera podía construir su propio sitio sin intermediarios.
 
@@ -56,6 +56,7 @@ Antes de que existieran redes sociales, la identidad digital se forjaba en estos
 ### Creatividad y experimentación.
 
 La falta de plantillas prediseñadas convertía a cada página en un pequeño experimento visual único. No existían reglas estrictas ni algoritmos que dictaran qué funcionaba mejor o peor. Algunos diseños eran extravagantes y caóticos. Otros, con combinaciones de colores imposibles y elementos en constante movimiento. Eso formaba parte del espíritu de la web de los 90: una explosión de creatividad sin filtros ni restricciones.
+En [Gif Cities](https://gifcities.org/) puedes ver algunos de los GIF's que se empleaban para el diseño de las páginas web en Geocities.
 
 ### Comunidad en línea.
 
