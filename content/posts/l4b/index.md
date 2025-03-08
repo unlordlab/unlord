@@ -78,7 +78,7 @@ Hoy, la mayoría de las personas ya no tienen un sitio propio. En su lugar, su p
 
 ## Recuperemos la web personal.
 
-Pero no todo está perdido. Si algo aprendimos en la era de GeoCities es que Internet puede ser más que un puñado de plataformas centralizadas. Existen herramientas como Neocities, WordPress o incluso GitHub Pages que permiten a cualquiera recuperar el control sobre su presencia en la web.
+Pero no todo está perdido. Si algo aprendimos en la era de GeoCities es que Internet puede ser más que un puñado de plataformas centralizadas. Existen herramientas como [Neocities](https://neocities.org/), [WordPress](https://wordpress.com/) o incluso [GitHub Pages](https://github.com/) que permiten a cualquiera recuperar el control sobre su presencia en la web.
 
 Tener un sitio web propio es un acto de resistencia digital. Es recuperar el derecho a expresarnos sin restricciones. Sin depender de los caprichos de un algoritmo o los términos de servicio de una corporación. No es necesario ser un experto en código para hacerlo. Basta con la voluntad de crear un espacio propio. Una parcela digital que nos pertenezca de verdad.
 
