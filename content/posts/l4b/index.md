@@ -35,17 +35,12 @@ Cada una de estas páginas era un festín visual caótico, lleno de GIFs extrava
 
 ### Un poco historia
 
-El 6 de agosto de 1991 se presentó al mundo el primer sitio web (aún en línea): <https://info.cern.ch/hypertext/WWW/TheProject.html>. En él se podían aprender las primeras formas del lenguaje de marcas de hipertexto (también conocido como HTML) que es el componente más básico de la Web y sirve para dotar de significado y estructura su contenido. 
-
+El 6 de agosto de 1991 se presentó al mundo el primer sitio web (aún en línea)<https://info.cern.ch/hypertext/WWW/TheProject.html>. En él se podían aprender las primeras formas del lenguaje de marcas de hipertexto (también conocido como HTML) que es el componente más básico de la Web y sirve para dotar de significado y estructura su contenido. 
 ![Primera web de la historia.](primerawww.png)
-
-
 Sus orígenes se remontan a la necesidad creciente de la comunidad científica y académica de intercambiar información de manera automatizada. El informático Tim Berners-Lee publicó el primer código fuente del navegador Nexus. Aunque, no fue hasta la aparición del navegador Mosaic —que posteriormente daría origen a Netscape— cuando se popularizó el uso de este tipo de software, revolucionando el acceso a la información, el entretenimiento e incluso la manera en que nos relacionamos.
 
 Este protocolo, junto con el Internet Relay Chat (IRC), fue clave en la expansión de la comunicación en línea en los primeros días de Internet. Así nació la World Wide Web. Un espacio inicialmente descentralizado y abierto donde cualquiera podía construir su propio sitio sin intermediarios.
-
 ![El navegador Mosaic.](mosaic.jpg)
-
 ### La democratizacion de la creacion web. Como Geocities suburbanizo internet.
 
 ##### El boom de las páginas web personales.
@@ -56,11 +51,11 @@ El auge de GeoCities fue a los finales 90 y principios de los 2000 donde se conv
 
 Antes de que existieran redes sociales, la identidad digital se forjaba en estos espacios personales. Cada usuario diseñaba su página para reflejar sus intereses, personalidad y gustos. Desde la elección de colores y fondos hasta la inclusión de imágenes, música MIDI y diarios en línea, cada sitio era una expresión única de su creador. Era la era de los GIFs parpadeantes, los fondos estrellados y las páginas "en construcción" que, en lugar de ser un defecto, formaban parte del encanto de la época.
 
-##### Creatividad y experimentación.
+#####Creatividad y experimentación.
 
 La falta de plantillas prediseñadas convertía a cada página en un pequeño experimento visual único. No existían reglas estrictas ni algoritmos que dictaran qué funcionaba mejor o peor. Algunos diseños eran extravagantes y caóticos. Otros, con combinaciones de colores imposibles y elementos en constante movimiento. Eso formaba parte del espíritu de la web de los 90: una explosión de creatividad sin filtros ni restricciones.
 
-#####Comunidad en línea.
+##### Comunidad en línea.
 
 Más allá del diseño, GeoCities fomentó la creación de comunidades digitales. No era solo un alojamiento web, sino una ciudad virtual donde los usuarios podían explorar páginas de otros, dejar mensajes en libros de visitas y compartir enlaces a sitios afines. Había una sensación real de pertenencia, una especie de vecindario digital en el que los intereses comunes unían a extraños de todo el mundo.
 
@@ -88,7 +83,7 @@ Así que aquí está mi invitación. Si alguna vez tuviste un sitio web personal
 
 La web es un territorio vasto, y aún hay espacio para la creatividad, la experimentación y la verdadera expresión personal.
 
-*¡Aquí está el mío! Hello, World!*
+**¡Aquí está el mío! Hello, World!**
 
 
 
