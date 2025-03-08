@@ -37,14 +37,14 @@ Cada una de estas páginas era un festín visual caótico, lleno de GIFs extrava
 
 El 6 de agosto de 1991 se presentó al mundo el primer sitio web (aún en línea): <https://info.cern.ch/hypertext/WWW/TheProject.html>. En él se podían aprender las primeras formas del lenguaje de marcas de hipertexto (también conocido como HTML) que es el componente más básico de la Web y sirve para dotar de significado y estructura su contenido. 
 
-![Primera web de la historia.](primerwww.png)
+![Primera web de la historia.](primerawww.png)
 
 
 Sus orígenes se remontan a la necesidad creciente de la comunidad científica y académica de intercambiar información de manera automatizada. El informático Tim Berners-Lee publicó el primer código fuente del navegador Nexus. Aunque, no fue hasta la aparición del navegador Mosaic —que posteriormente daría origen a Netscape— cuando se popularizó el uso de este tipo de software, revolucionando el acceso a la información, el entretenimiento e incluso la manera en que nos relacionamos.
 
 Este protocolo, junto con el Internet Relay Chat (IRC), fue clave en la expansión de la comunicación en línea en los primeros días de Internet. Así nació la World Wide Web. Un espacio inicialmente descentralizado y abierto donde cualquiera podía construir su propio sitio sin intermediarios.
 
-![El navegador Mosaic.](primerwww.png)
+![El navegador Mosaic.](mosaic.jpg)
 
 ### La democratizacion de la creacion web. Como Geocities suburbanizo internet.
 
