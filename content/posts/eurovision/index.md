@@ -6,7 +6,7 @@ draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Eurovisión y la banalidad del mal: el castigo simbólico a los Estados genocidas."
-images: ["dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"]
+images: ["eurovision.png"]
 resources:
 - name: "featured-image"
   src: "eurovision.png"
