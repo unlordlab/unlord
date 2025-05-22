@@ -18,8 +18,6 @@ lightgallery: true
 ---
 
 
-<!--more--> 
-
 ## **Eurovisión y la banalidad del mal: el castigo simbólico a los Estados genocidas.**
 
 Eurovisión, ese espectáculo anual de luces, lentejuelas y diversidades escénicas se ha convertido en algo más que un simple certamen de canciones. En estos últimos años, Eurovisión ha dejado de ser un concurso televisivo donde participan representantes cuyas televisiones pertenecen a la Unión Europea de Radiodifusión (EBU) para convertirse en una suerte de tribunal simbólico o plataforma donde Europa parece pronunciar su “veredicto moral” sobre aquellos Estados que cometen crímenes de guerra o violaciones graves de los derechos humanos. Un ejemplo claro lo encontramos en la reciente exclusión de Rusia tras la invasión de Ucrania. Hoy, el foco está sobre si Israel debería ser el siguiente en la lista, debido a las graves violaciones cometidas en Gaza.
