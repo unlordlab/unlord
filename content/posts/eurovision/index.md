@@ -39,3 +39,7 @@ Eurovisión no es el problema en sí, sino el síntoma de una Europa que es inca
 ¿Qué podría exigir la ciudadanía más allá de un veto simbólico? Embargos efectivos, auditorías públicas de exportaciones de armas, comisiones independientes, sanciones diplomáticas, juicios por crímenes de guerra. Porque si Europa quiere ocupar el “lado correcto de la historia”, no basta con afinar la voz en Eurovisión. Hace falta algo mucho más difícil. Actuar con responsabilidad y coherencia donde de verdad duele.
 
 
+
+22/6/2025
+
+
