@@ -11,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "eurovision.png"
 
-tags: ["article","",]
+tags: ["Eurovision","Genocidio","Palestina","Europa","Gaza"]
 categories: ["unlord"]
 
 lightgallery: true
