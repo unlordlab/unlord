@@ -57,26 +57,28 @@
     </style>
 </head>
 <body>
-    <h1>El metavers. Les noves coordenades de la desigualtat.</h1>
+    <h1>Flickr vs. Instagram: La evolución del self digital.</h1>
     <p>
-        El <strong>self digital</strong> ha evolucionat significativament des de la creació de 
-        <strong>Flickr</strong> el 2004 fins a l'arribada d'<strong>Instagram</strong> el 2010. 
-        Mentre que Flickr promovia una fotografia més documental i espontània, Instagram ha transformat 
-        el self digital en una identitat curada i performativa, on la cerca de likes i reconeixement 
-        social ha provocat un canvi cap a la posada en escena constant de la pròpia imatge.
+He creado esta herramienta de observación en forma de divertimento que explora la transformación de la representación del 'self digital' a través del análisis comparativo de dos plataformas icónicas: <strong> Flickr e Instagram </strong>. La primera plataforma fue lanzada en el 2004 y la segunda en el 2010. <br>
+La premisa central es que la forma en que nos presentamos en línea ha evolucionado significativamente, pasando de un enfoque centrado en el entorno a otro donde el individuo se convierte en el protagonista absoluto.
+
+Para ilustrar esta tesis, el proyecto permite al usuario introducir el nombre de una ciudad. A continuación, se realizan búsquedas independientes en Flickr e Instagram para esta localidad. El objetivo es evidenciar cómo, en los resultados de Flickr, la ciudad o el paisaje solían ser el elemento central de la imagen (o las habilidades del fotografo/a), mientras que en Instagram, incluso en el contexto de una ciudad, la atención se desplaza hacia la persona, su rostro o su presencia. Esta comparación visual y directa revela de manera palpable el cambio en la narrativa visual: de documentar un lugar a proyectar una identidad personal curada y performativa en relación con ese lugar. En definitiva, el proyecto sirve como espejo de la evolución de nuestra 'selfie-cultura' y la redefinición del 'yo' en la era digital.
+
+
+        
     </p>
-    <p>Introdueix una ciutat del món per explorar com ha canviat la representació del self digital:</p>
+    <p>Introduce una ciudad del mundo para explorar como ha cambiado la representación del self digital:</p>
     <input type="text" id="search" placeholder="Escriu una ciutat del món">
     <div>
-        <button onclick="searchFlickr()">Explora a Flickr</button>
-        <button onclick="searchInstagram()">Explora a Instagram</button>
+        <button onclick="searchFlickr()">Explorar en Flickr</button>
+        <button onclick="searchInstagram()">Explorar en Instagram</button>
     </div>
 
     <script>
         function searchFlickr() {
             const query = document.getElementById('search').value.trim();
             if (!query) {
-                alert('Si us plau, introdueix una paraula clau.');
+                alert('Por favor, introduce una ciudad del mundo.');
                 return;
             }
             const flickrURL = `https://www.flickr.com/search/?text=${encodeURIComponent(query)}`;
@@ -86,7 +88,7 @@
         function searchInstagram() {
             const query = document.getElementById('search').value.trim();
             if (!query) {
-                alert('Si us plau, introdueix una paraula clau.');
+                alert(''Por favor, introduce una ciudad del mundo.');
                 return;
             }
             const instagramURL = `https://www.instagram.com/explore/tags/${encodeURIComponent(query)}/`;
@@ -95,44 +97,6 @@
     </script>
     <p>
 
-
-**La diferència que observes entre les imatges a Flickr i Instagram en buscar una ubicació com Roma reflecteix canvis significatius en com les plataformes digitals i els seus usuaris representen el món i el *self* digital al llarg del temps. Aquest fenomen està profundament connectat amb conceptes centrals del teu TFG, com la hiperrealitat, el *self* dramatúrgic i el metavers, així com amb l’evolució tecnològica i cultural des de la creació de Flickr (2004) fins a Instagram (2010).**<br><br>
-
-<strong>### **Flickr (2004): La mirada cap a l’espai físic** </strong> <br>
-Flickr, com una de les primeres plataformes per compartir fotografies, neix en un context on la fotografia digital tot just comença a democratitzar-se. En els seus inicis, Flickr incentivava una visió més documental i estètica, centrada a capturar l’essència dels llocs i paisatges, promovent la contemplació del món físic. Aquí, l’èmfasi es posava en allò objectiu, en una representació de l’espai geogràfic com a element principal, amb el fotògraf gairebé invisible darrere de la càmera. <br><br>
-
-<strong>**Connexió amb el *self* digital:** </strong><br>
-L’usuari de Flickr projectava un *self* indirecte, definit per la seva habilitat de capturar i compartir imatges del món real. Aquest *self* digital funcionava com un narrador o curador d’espais, no com el protagonista del contingut. <br><br>
-
-<strong>### **Instagram (2010): La centralitat del *self***</strong><br> 
-Instagram sorgeix en un context on l’auge dels telèfons intel·ligents i les xarxes socials transforma la fotografia en una eina d’autopresentació. Aquí, les imatges deixen de ser únicament documents de l’espai físic i es converteixen en escenaris per projectar un *self* dramatúrgic, en la línia de Goffman. La ciutat, com en el cas de Roma, ja no és el subjecte principal, sinó el fons sobre el qual es construeix la identitat digital de l’individu.<br><br>
-
-<strong>*Cultura del jo:** </strong>*<br>
-La cultura d’Instagram prioritza l’autoexpressió i la validació social a través dels *likes* i els comentaris, promovent un *self* hiperreal, construït i optimitzat per al consum digital.  <br><br>
-<strong>**Estètica del moment:**</strong> <br>
-Instagram fomenta una narrativa personal, on cada publicació es converteix en un acte performatiu, situant la persona com el centre del contingut, mentre l’entorn (com Roma) adquireix un rol secundari, gairebé decoratiu.<br><br>
-
-
-
-<strong>### **Transició cultural i tecnològica: De l’espai al *self*** </strong> <br>
-Aquesta evolució reflecteix un canvi més ampli en la societat i la tecnologia:<br><br>
-
-<strong>- **Tecnologia accessible:** </strong>La massificació dels telèfons intel·ligents amb càmeres d’alta qualitat va permetre que la creació de contingut visual fos immediata i personal.  <br>
-<strong>- **Canvi en la lògica de les plataformes:** </strong>Flickr incentivava la connexió a través del contingut (què estàs mostrant?), mentre que Instagram se centra en les persones i la seva experiència personal (com et veus aquí?).  <br>
-<strong>- **Hiperrealitat i economia de l’atenció:** </strong> Amb el temps, Instagram s’ha alineat amb el capitalisme de plataformes, on l’usuari no només consumeix contingut, sinó que també es converteix en el producte a través de la seva autopresentació. Això connecta amb la hiperrealitat de Baudrillard: allò que importa no és tant estar a Roma com mostrar com Roma apareix en la meva versió digitalitzada.<br><br>
-
-
-
-<strong>### **Connexió amb el metavers i el *self*** </strong> <br>
-Aquest fenomen anticipa com el metavers aprofundeix la fusió entre el món físic i digital:  <br>
-
-En el metavers, igual que a Instagram, l’espai es converteix en un llenç per projectar identitats, consolidant un *self* dramatúrgic que respon a normes d’hiperrealitat. La representació visual no busca autenticitat, sinó una versió idealitzada que maximitzi la validació social i l’atenció.<br>
-
-Aquesta transició també posa de manifest com la percepció de l’espai es transforma en funció de les lògiques de les plataformes. Mentre Flickr promovia un metavers proto-documental, Instagram abraça un metavers performatiu i centrat en la persona.<br><br>
-
-
-<strong>### **Conclusió** </strong> <br>
-El canvi de focus, de les ciutats com a protagonistes a Flickr a les persones com a centre a Instagram, simbolitza una transformació en la nostra relació amb el digital i amb nosaltres mateixos. Hem passat de documentar el món a reinterpretar-lo com un escenari per projectar un *self* hiperreal i dramatúrgic. Aquest fenomen no només redefineix com percebem l’espai, sinó també com entenem el *self* en el context del metavers i la seva promesa d’immersió total. És un reflex d’un món on la tecnologia no només media les nostres interaccions, sinó que també reconfigura les nostres identitats i narratives.
 
 </p>
 </body>
