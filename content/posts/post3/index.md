@@ -17,10 +17,16 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-<b>Flickr vs Instagram. </b>
+<b>Flickr vs. Instagram: La evolución del self digital.</b>
 
 
 <!--more-->
+
+¡Descubre cómo ha cambiado nuestra forma de presentarnos en el mundo digital! 
+
+He creado un proyecto interactivo que compara la representación del 'self digital' en Flickr e Instagram. ¿Sabías que antes las fotos se centraban en los lugares y ahora en nosotros?
+
+Introduce una ciudad y comprueba por ti mismo esta fascinante evolución.
 
 [Flickr vs Instagram](https://unlordl4b.pages.dev/posts/FVSI.html)
 
