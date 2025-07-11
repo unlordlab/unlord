@@ -23,5 +23,5 @@ He creado un proyecto interactivo que compara la representación del 'self digit
 
 Introduce una ciudad y comprueba por ti mismo esta fascinante evolución.
 <!--more-->
-[Flickr vs Instagram](https://unlordl4b.pages.dev/posts/FVSI.html)
+Clica en el siguiente enlace para acceder a: [Flickr vs Instagram](https://unlordl4b.pages.dev/posts/FVSI.html)
 
