@@ -65,17 +65,17 @@ Para ilustrar esta tesis, el proyecto permite al usuario introducir el nombre de
 
     </p>
     <p>Introduce una ciudad del mundo para explorarla en Flickr o Instagram:</p>
-    <input type="text" id="search" placeholder="Escriu una paraula clau">
+    <input type="text" id="search" placeholder="Escribe una ciudad.">
     <div>
-        <button onclick="searchFlickr()">Explora a Flickr</button>
-        <button onclick="searchInstagram()">Explora a Instagram</button>
+        <button onclick="searchFlickr()">Explorar en Flickr</button>
+        <button onclick="searchInstagram()">Explorar en Instagram</button>
     </div>
 
     <script>
         function searchFlickr() {
             const query = document.getElementById('search').value.trim();
             if (!query) {
-                alert('Si us plau, introdueix una paraula clau.');
+                alert('Por favor, introduce una ciudad.');
                 return;
             }
             const flickrURL = `https://www.flickr.com/search/?text=${encodeURIComponent(query)}`;
@@ -85,7 +85,7 @@ Para ilustrar esta tesis, el proyecto permite al usuario introducir el nombre de
         function searchInstagram() {
             const query = document.getElementById('search').value.trim();
             if (!query) {
-                alert('Si us plau, introdueix una paraula clau.');
+                alert('Por favor, introduce una ciudad.');
                 return;
             }
             const instagramURL = `https://www.instagram.com/explore/tags/${encodeURIComponent(query)}/`;
