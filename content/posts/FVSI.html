@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flickr vs. Instagram: La evolución del self digital.</title>
+    <title>El metavers. Les noves coordenades de la desigualtat</title>
     <style>
         @font-face {
             font-family: 'MetaversFont';
@@ -17,11 +17,11 @@
             text-align: center;
             margin: 50px;
             background-color: #5A6F68;
-            color: #a9a9b3;
+            color: #ffffff;
         }
         h1 {
             font-family: 'MetaversFont', Arial, sans-serif;
-            color: #252627;
+            color: #FFD700;
             margin-bottom: 10px;
         }
         p {
@@ -29,8 +29,7 @@
             line-height: 1.6;
             margin: 20px auto;
             max-width: 800px; /* Amplada màxima del paràgraf */
-            color: #a9a9b3;
-            text-align: justify;
+            color: #e0e0e0;
         }
         input, button {
             margin: 10px;
@@ -39,44 +38,44 @@
             font-family: 'MetaversFont', Arial, sans-serif;
         }
         input {
-            background-color: #a9a9b3;
-            border: 2px solid #80A858;
+            background-color: #ffffff;
+            border: 2px solid #FFD700;
             border-radius: 5px;
             color: #333;
         }
         button {
             cursor: pointer;
-            border: #80A858;
-            background-color: #a9a9b3;
+            border: none;
+            background-color: #FFD700;
             color: #333;
             border-radius: 5px;
         }
         button:hover {
-            background-color: #80A858;
+            background-color: #FFC107;
         }
     </style>
 </head>
 <body>
-    <h1>Flickr vs. Instagram: La evolución del self digital.</h1>
+    <h1>El metavers. Les noves coordenades de la desigualtat.</h1>
     <p>
-He creado esta herramienta de observación en forma de divertimento que explora la transformación de la representación del 'self digital' a través del análisis comparativo de dos plataformas icónicas: <strong> Flickr e Instagram </strong>. La primera plataforma fue lanzada en el 2004 y la segunda en el 2010. <br>
-La premisa central es que la forma en que nos presentamos en línea ha evolucionado significativamente, pasando de un enfoque centrado en el entorno a otro donde el individuo se convierte en el protagonista absoluto.
-
-Para ilustrar esta tesis, el proyecto permite al usuario introducir el nombre de una ciudad. A continuación, se realizan búsquedas independientes en Flickr e Instagram para esta localidad. El objetivo es evidenciar cómo, en los resultados de Flickr, la ciudad o el paisaje solían ser el elemento central de la imagen (incluso las habilidades del fotografo/a), mientras que en Instagram, incluso en el contexto de una ciudad, la atención se desplaza hacia la persona, su rostro o su presencia. Esta comparación visual y directa revela de manera palpable el cambio en la narrativa visual: de documentar un lugar a proyectar una identidad personal curada y performativa en relación con ese lugar. En definitiva, el proyecto sirve como espejo de la evolución de nuestra 'selfie-cultura' y la redefinición del 'yo' en la era digital.
-        
+        El <strong>self digital</strong> ha evolucionat significativament des de la creació de 
+        <strong>Flickr</strong> el 2004 fins a l'arribada d'<strong>Instagram</strong> el 2010. 
+        Mentre que Flickr promovia una fotografia més documental i espontània, Instagram ha transformat 
+        el self digital en una identitat curada i performativa, on la cerca de likes i reconeixement 
+        social ha provocat un canvi cap a la posada en escena constant de la pròpia imatge.
     </p>
-    <p>Introduce una ciudad del mundo para explorar como ha cambiado la representación del self digital:</p>
-    <input type="text" id="search" placeholder="Escribe una ciudad.">
+    <p>Introdueix una paraula clau per explorar més contingut relacionat amb Flickr o Instagram:</p>
+    <input type="text" id="search" placeholder="Escriu una paraula clau">
     <div>
-        <button onclick="searchFlickr()">Explorar en Flickr</button>
-        <button onclick="searchInstagram()">Explorar en Instagram</button>
+        <button onclick="searchFlickr()">Explora a Flickr</button>
+        <button onclick="searchInstagram()">Explora a Instagram</button>
     </div>
 
     <script>
         function searchFlickr() {
             const query = document.getElementById('search').value.trim();
             if (!query) {
-                alert('Por favor, introduce una ciudad del mundo.');
+                alert('Si us plau, introdueix una paraula clau.');
                 return;
             }
             const flickrURL = `https://www.flickr.com/search/?text=${encodeURIComponent(query)}`;
@@ -86,13 +85,12 @@ Para ilustrar esta tesis, el proyecto permite al usuario introducir el nombre de
         function searchInstagram() {
             const query = document.getElementById('search').value.trim();
             if (!query) {
-                alert(''Por favor, introduce una ciudad del mundo.');
+                alert('Si us plau, introdueix una paraula clau.');
                 return;
             }
             const instagramURL = `https://www.instagram.com/explore/tags/${encodeURIComponent(query)}/`;
             window.open(instagramURL, '_blank');
         }
     </script>
-   
 </body>
 </html>
