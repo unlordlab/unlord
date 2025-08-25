@@ -39,6 +39,10 @@ Lejos de disiparse, esta brecha generacional se agudiza, señalando que la músi
 
 ***
 
+{{< youtube Ym59_2x6zgU >}}
+
+***
+
 ## La cancelación del futuro y la experiencia de la precarización.
 
 El concepto de "cancelación del futuro", acuñado por Mark Fisher, es central para comprender el trasfondo sociocultural de "Million Dollar Baby". Fisher argumenta que el capitalismo tardío ha erosionado la capacidad de las sociedades para imaginar futuros alternativos y mejores, dejando a las nuevas generaciones atrapadas en una repetición perpetua de un presente mediocre (Fisher, 2009). 
