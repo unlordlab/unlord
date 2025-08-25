@@ -21,8 +21,7 @@ lightgallery: true
 ### **Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G.**
 
 > “La música popular siempre ha sido el lugar donde los jóvenes pueden decirle a sus mayores: ‘No somos como vosotros’.”
-
-                                                                                                            > - Simon Frith
+ - Simon Frith
 
 ***
 
@@ -53,7 +52,7 @@ Esta idea resuena profundamente con la experiencia de la precarización, una con
 ilustra la ausencia de progreso y la resignación ante un futuro incierto. Esta descripción no es una mera anécdota personal; es un reflejo de la realidad de una juventud que, ante la precariedad laboral y la dificultad de acceso a la vivienda, se enfrenta a la pregunta existencial: ¿para qué estudiar, esforzarse o soñar? Si lo que me espera es esto. Cabe señalar que el dinero ya no garantiza la dignidad en este contexto. 
 La experiencia de Cecilio G., quien 
 
->> "cobra del estudio, pero iba sucio / La calle me tenía mal / Nadie me podía sacar"
+>> "Cobraba del estudio, pero iba sucio / La calle me tenía mal / Nadie me podía sacar"
 
 desmantela la narrativa neoliberal de la meritocracia. A pesar del éxito aparente, el trauma estructural y social persiste, manifestándose en un dolor sin causa externa clara que Fisher identifica como el "malestar generacional" (2009). 
 
