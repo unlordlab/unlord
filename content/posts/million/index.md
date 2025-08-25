@@ -42,8 +42,7 @@ Lejos de disiparse, esta brecha generacional se agudiza, señalando que la músi
 
 {{< youtube Ym59_2x6zgU >}}
 
->> 
-El Tony dice que esas manos van al pan
+> El Tony dice que esas manos van al pan
 A los 15 años me colaba en Razzmatazz
 A los 16 me colé en el Sonar
 Ahora Sonar me paga por cantar
