@@ -1,5 +1,5 @@
 ---
-weight: 1
+weight: 2
 title: "Eurovisión y la banalidad del mal: el castigo simbólico a los Estados genocidas."
 date: 2025-5-22 
 Draft:  false
