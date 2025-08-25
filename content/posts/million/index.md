@@ -39,7 +39,10 @@ La experiencia de Cecilio G., quien "cobra del estudio, pero iba sucio / La call
 Esta privatización del estrés, donde los problemas sistémicos se internalizan como fallas individuales, es una característica distintiva del realismo capitalista. 
 La canción, por tanto, se convierte en un testimonio de la violencia estructural y la desigualdad. Las referencias a la pérdida familiar y la amenaza de embargo ("He llorado mucho desde que no está papá / He tenido que ver llorando a mi mamá / Nos querían embargar, no teníamos pa' pagar") no son victimismo, sino una memoria colectiva de millones de jóvenes sin herencia, sin redes de apoyo, sin un colchón social que amortigüe los golpes de un sistema implacable. Cecilio G. se posiciona como una voz que, lejos de la autosuperación individualista, reconoce su origen en la marginalidad y se solidariza con quienes aún permanecen atrapados en ella.
 
-![Video Cecilio G](cecivideo.mp4)
+<video controls width="640">
+  <source src="cecivideo.mp4" type="video/mp4">
+  Cecilio G.
+</video>
 
 ## La Música como resistencia y cuidado colectivo.
 
@@ -52,7 +55,6 @@ Esta dimensión política y comunitaria es fundamental. La música no se convier
 
 ![Cecilio G en el Sonar](caballo.jpg "En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.")
 
-> En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.
 
 ## El choque generacional: Cuando los boomers no entienden el trap.
 
