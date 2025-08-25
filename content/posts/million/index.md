@@ -20,7 +20,7 @@ lightgallery: true
 
 ### **Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G.**
 
-> “La música popular siempre ha sido el lugar donde los jóvenes pueden decirle a sus mayores: ‘No somos como vosotros’.” - Simon Frith 
+> “La música popular siempre ha sido el lugar donde los jóvenes pueden decirle a sus mayores: ‘No somos como vosotros’.” - - Simon Frith 
 
 ## Introducción.
 
@@ -31,7 +31,7 @@ Este enfrentamiento cultural no es un fenómeno novedoso; la historia de la mús
 
 
 
-## La Cancelación del Futuro y la Experiencia de la Precarización.
+## La cancelación del futuro y la experiencia de la precarización.
 
 El concepto de "cancelación del futuro", acuñado por Mark Fisher, es central para comprender el trasfondo sociocultural de "Million Dollar Baby". Fisher argumenta que el capitalismo tardío ha erosionado la capacidad de las sociedades para imaginar futuros alternativos y mejores, dejando a las nuevas generaciones atrapadas en una repetición perpetua de un presente mediocre (Fisher, 2009). Esta idea resuena profundamente con la experiencia de la precarización, una condición de existencia marcada por la falta de previsibilidad y seguridad, tanto material como psicológica, que se ha intensificado en España tras la crisis económica del 2008 (2021). La letra de "Million Dollar Baby" encapsula esta sensación de estancamiento y desesperanza. La repetición de la rutina laboral sin un horizonte claro, "Trabajo de lunes a jueves / Pa' ti guardo tos los viernes / Sábados si me entretienes / Los domingos con mamá", ilustra la ausencia de progreso y la resignación ante un futuro incierto. Esta descripción no es una mera anécdota personal; es un reflejo de la realidad de una juventud que, ante la precariedad laboral y la dificultad de acceso a la vivienda, se enfrenta a la pregunta existencial: ¿para qué estudiar, esforzarse o soñar? Si lo que me espera es esto. Cabe señalar que el dinero ya no garantiza la dignidad en este contexto. 
 La experiencia de Cecilio G., quien "cobra del estudio, pero iba sucio / La calle me tenía mal / Nadie me podía sacar", desmantela la narrativa neoliberal de la meritocracia. A pesar del éxito aparente, el trauma estructural y social persiste, manifestándose en un dolor sin causa externa clara que Fisher identifica como el "malestar generacional" (2009). 
@@ -42,18 +42,9 @@ La canción, por tanto, se convierte en un testimonio de la violencia estructura
 
 ## La Música como resistencia y cuidado colectivo.
 
-Frente a la "cancelación del futuro" y la precarización, "Million Dollar Baby" emerge como
-un acto de resistencia existencial y una forma de cuidado colectivo. La declaración "Por eso
-quiero que sepas, que yo vengo de la mierda / Y le quiero cantar, a los que aún siguen en
-ella / Que no sientan soledad / Que no dejen que el sistema les hunda jamás" es una
-poderosa consigna. No es un canto a la redención individual, sino una afirmación de
+Frente a la "cancelación del futuro" y la precarización, "Million Dollar Baby" emerge como un acto de resistencia existencial y una forma de cuidado colectivo. La declaración "Por eso quiero que sepas, que yo vengo de la mierda / Y le quiero cantar, a los que aún siguen en ella / Que no sientan soledad / Que no dejen que el sistema les hunda jamás" es una poderosa consigna. No es un canto a la redención individual, sino una afirmación de
 persistencia en la dificultad y un llamado a la solidaridad mutua.
-Esta dimensión política y comunitaria es fundamental. La música no se convierte en un
-mero escapismo, sino en un medio para sostener una experiencia compartida, para decir a
-otros: "no estás solo". El enemigo es estructural, no individual, y por ello, el apoyo
-también debe ser mutuo. En un mundo que niega el futuro, el arte se convierte en el único
-modo de dejar huella, de ser escuchado, de trascender la propia existencia. No es éxito en
-términos convencionales, sino testimonio y legado.
+Esta dimensión política y comunitaria es fundamental. La música no se convierte en un mero escapismo, sino en un medio para sostener una experiencia compartida, para decir a otros: "no estás solo". El enemigo es  structural, no individual, y por ello, el apoyo también debe ser mutuo. En un mundo que niega el futuro, el arte se convierte en el único modo de dejar huella, de ser escuchado, de trascender la propia existencia. No es éxito en términos convencionales, sino testimonio y legado.
 
 ## El choque generacional: Cuando los boomers no entienden el trap.
 
