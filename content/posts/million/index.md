@@ -21,7 +21,7 @@ lightgallery: true
 ### **Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G.**
 
 > “La música popular siempre ha sido el lugar donde los jóvenes pueden decirle a sus mayores: ‘No somos como vosotros’.”
-{{< style "text-align: right;" >}}-- Dick Hebdige{{< /style >}}
+{{< style "text-align: right;" >}}-- Simon Frith{{< /style >}}
 
 ***
 
@@ -147,8 +147,7 @@ no son victimismo, sino una memoria colectiva de millones de jóvenes sin herenc
 ## La Música como resistencia y cuidado colectivo.
 
 > “Las subculturas juveniles son formas de resistencia simbólica, aunque estén condenadas a ser apropiadas o malinterpretadas por la cultura dominante.”
-> - Dick Hebdige
-
+{{< style "text-align: right;" >}}-- Dick Hebdige{{< /style >}}
 
 Frente a la "cancelación del futuro" y la precarización, "Million Dollar Baby" emerge como un acto de resistencia existencial y una forma de cuidado colectivo. La declaración 
 
