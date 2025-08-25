@@ -50,9 +50,9 @@ Frente a la "cancelación del futuro" y la precarización, "Million Dollar Baby"
 persistencia en la dificultad y un llamado a la solidaridad mutua.
 Esta dimensión política y comunitaria es fundamental. La música no se convierte en un mero escapismo, sino en un medio para sostener una experiencia compartida, para decir a otros: "no estás solo". El enemigo es  structural, no individual, y por ello, el apoyo también debe ser mutuo. En un mundo que niega el futuro, el arte se convierte en el único modo de dejar huella, de ser escuchado, de trascender la propia existencia. No es éxito en términos convencionales, sino testimonio y legado.
 
-## El choque generacional: Cuando los boomers no entienden el trap.
-
 ![Cecilio G en el Sonar](caballo.jpg "En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.")
+
+## El choque generacional: Cuando los boomers no entienden el trap.
 
 > En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.
 
