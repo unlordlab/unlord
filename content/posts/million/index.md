@@ -38,8 +38,11 @@ Lejos de disiparse, esta brecha generacional se agudiza, señalando que la músi
 
 ***
 
+## Letra Million Dollar Baby por Cecilio G.
 
 {{< youtube Ym59_2x6zgU >}}
+
+
 
 ***
 
@@ -69,6 +72,7 @@ no son victimismo, sino una memoria colectiva de millones de jóvenes sin herenc
   <source src="cecivideo.mp4" type="video/mp4">
   Cecilio G.
 </video>
+{{< instagram DLzsc0go2Fb >}}
 
 ***
 
