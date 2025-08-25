@@ -39,10 +39,6 @@ La experiencia de Cecilio G., quien "cobra del estudio, pero iba sucio / La call
 Esta privatización del estrés, donde los problemas sistémicos se internalizan como fallas individuales, es una característica distintiva del realismo capitalista. 
 La canción, por tanto, se convierte en un testimonio de la violencia estructural y la desigualdad. Las referencias a la pérdida familiar y la amenaza de embargo ("He llorado mucho desde que no está papá / He tenido que ver llorando a mi mamá / Nos querían embargar, no teníamos pa' pagar") no son victimismo, sino una memoria colectiva de millones de jóvenes sin herencia, sin redes de apoyo, sin un colchón social que amortigüe los golpes de un sistema implacable. Cecilio G. se posiciona como una voz que, lejos de la autosuperación individualista, reconoce su origen en la marginalidad y se solidariza con quienes aún permanecen atrapados en ella.
 
-<video controls width="640">
-  <source src="cecivideo.mp4" type="video/mp4">
-  Cecilio G.
-</video>
 
 ## La Música como resistencia y cuidado colectivo.
 
@@ -52,8 +48,6 @@ La canción, por tanto, se convierte en un testimonio de la violencia estructura
 Frente a la "cancelación del futuro" y la precarización, "Million Dollar Baby" emerge como un acto de resistencia existencial y una forma de cuidado colectivo. La declaración "Por eso quiero que sepas, que yo vengo de la mierda / Y le quiero cantar, a los que aún siguen en ella / Que no sientan soledad / Que no dejen que el sistema les hunda jamás" es una poderosa consigna. No es un canto a la redención individual, sino una afirmación de
 persistencia en la dificultad y un llamado a la solidaridad mutua.
 Esta dimensión política y comunitaria es fundamental. La música no se convierte en un mero escapismo, sino en un medio para sostener una experiencia compartida, para decir a otros: "no estás solo". El enemigo es  structural, no individual, y por ello, el apoyo también debe ser mutuo. En un mundo que niega el futuro, el arte se convierte en el único modo de dejar huella, de ser escuchado, de trascender la propia existencia. No es éxito en términos convencionales, sino testimonio y legado.
-
-![Cecilio G en el Sonar](caballo.jpg "En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.")
 
 
 ## El choque generacional: Cuando los boomers no entienden el trap.
