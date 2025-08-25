@@ -60,7 +60,7 @@ Esta privatización del estrés, donde los problemas sistémicos se internalizan
 La canción, por tanto, se convierte en un testimonio de la violencia estructural y la desigualdad. 
 Las referencias a la pérdida familiar y la amenaza de embargo 
 
->>He llorado mucho desde que no está papá / He tenido que ver llorando a mi mamá / Nos querían embargar, no teníamos pa' pagar"
+>>"He llorado mucho desde que no está papá / He tenido que ver llorando a mi mamá / Nos querían embargar, no teníamos pa' pagar"
 
 no son victimismo, sino una memoria colectiva de millones de jóvenes sin herencia, sin redes de apoyo, sin un colchón social que amortigüe los golpes de un sistema implacable. Cecilio G. se posiciona como una voz que, lejos de la autosuperación individualista, reconoce su origen en la marginalidad y se solidariza con quienes aún permanecen atrapados en ella.
 
