@@ -169,11 +169,11 @@ El enemigo es  estructural, no individual, y por ello, el apoyo también debe se
 >> "A los 15 años me colaba en Razzmatazz / A los 16 me colé en el Sonar / Ahora Sonar me paga por cantar"
 
 ilustra cómo el acceso se obtiene a través de la transgresión, no por herencia o privilegio.
-La canción desmantela la narrativa meritocrática, mostrando cómo el éxito aparente no erradica el trauma estructural de la marginalidad, un concepto perturbador para quienes crecieron con la promesa de que el trabajo duro garantizaba bienestar. La reivindicación de autenticidad de Cecilio G. frente a la mercantilización de lo marginal, ejemplificada en:
+La canción desmantela la narrativa meritocrática, mostrando cómo el éxito aparente no erradica el trauma estructural de la marginalidad, un concepto perturbador para quienes crecieron con la promesa de que el trabajo duro garantizaba bienestar. La reivindicación de autenticidad de Cecilio G. frente a la mercantilización de lo marginal, ejemplificada en
 
 >>"Yo soy de la calle loco, yo no soy Bad Gyal"
 
-y su crítica a la apropiación cultural sin experiencia real, son invisibles para una generación que no comprende cómo el dolor se convierte en marketing.
+,y su crítica a la apropiación cultural sin experiencia real, son invisibles para una generación que no comprende cómo el dolor se convierte en marketing.
 La descripción de una rutina existencial sin progreso, una vida de repetición infinita de un presente mediocre, choca con la percepción boomer de falta de ambición. Esta realidad, marcada por el desempleo juvenil y la inaccesibilidad a la vivienda, es incomprensible para quienes vivieron una expansión económica. La memoria del trauma familiar, la desposesión y la vulnerabilidad, son una memoria colectiva de la crisis de 2008 que resulta ajena a la experiencia de estabilidad de generaciones previas.
 
 El trap, con su estética, autotune y aparente simplicidad lírica, se convierte en el lenguaje de una generación que los boomers no pueden o no quieren entender. Estos elementos son un código emocional preciso para expresar realidades que el lenguaje convencional no captura, siendo el autotune una metáfora de la necesidad de "procesar" artificialmente las emociones para hacerlas audibles. 
