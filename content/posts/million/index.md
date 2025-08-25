@@ -55,8 +55,8 @@ La canción, por tanto, se convierte en un testimonio de la violencia estructura
 
 Frente a la "cancelación del futuro" y la precarización, "Million Dollar Baby" emerge como un acto de resistencia existencial y una forma de cuidado colectivo. La declaración 
 // "Por eso quiero que sepas, que yo vengo de la mierda / Y le quiero cantar, a los que aún siguen en ella / Que no sientan soledad / Que no dejen que el sistema les hunda jamás"
-es una poderosa consigna. No es un canto a la redención individual, sino una afirmación de persistencia en la dificultad y un llamado a la solidaridad mutua.
 
+es una poderosa consigna. No es un canto a la redención individual, sino una afirmación de persistencia en la dificultad y un llamado a la solidaridad mutua.
 Esta dimensión política y comunitaria es fundamental. La música no se convierte en un mero escapismo, sino en un medio para sostener una experiencia compartida, para decir a otros: "no estás solo". El enemigo es  estructural, no individual, y por ello, el apoyo también debe ser mutuo. En un mundo que niega el futuro, el arte se convierte en el único modo de dejar huella, de ser escuchado, de trascender la propia existencia. No es éxito en términos convencionales, sino testimonio y legado.
 
 ***
