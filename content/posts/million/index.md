@@ -9,7 +9,7 @@ description: "Million Dollar Baby: Un análisis sociocultural del Trap y el conf
 images: ["mdb.png"]
 resources:
 - name: "featured-image"
-  src: "mdb.png"
+  src: "mdb.png" , "caballo.jpg"
 
 tags: ["Trap","Cecilio G","Boomer","Música",""]
 categories: ["unlord"]
