@@ -39,7 +39,7 @@ La experiencia de Cecilio G., quien "cobra del estudio, pero iba sucio / La call
 Esta privatización del estrés, donde los problemas sistémicos se internalizan como fallas individuales, es una característica distintiva del realismo capitalista. 
 La canción, por tanto, se convierte en un testimonio de la violencia estructural y la desigualdad. Las referencias a la pérdida familiar y la amenaza de embargo ("He llorado mucho desde que no está papá / He tenido que ver llorando a mi mamá / Nos querían embargar, no teníamos pa' pagar") no son victimismo, sino una memoria colectiva de millones de jóvenes sin herencia, sin redes de apoyo, sin un colchón social que amortigüe los golpes de un sistema implacable. Cecilio G. se posiciona como una voz que, lejos de la autosuperación individualista, reconoce su origen en la marginalidad y se solidariza con quienes aún permanecen atrapados en ella.
 
-![Video Cecilio G](https://unlordl4b.pages.dev/posts/million/content/posts/million/cecivideo.mp4)
+![Video Cecilio G](cecivideo.mp4)
 
 ## La Música como resistencia y cuidado colectivo.
 
@@ -49,7 +49,7 @@ Esta dimensión política y comunitaria es fundamental. La música no se convier
 
 ## El choque generacional: Cuando los boomers no entienden el trap.
 
-![Cecilio G en el Sonar](https://unlordl4b.pages.dev/posts/million/content/posts/million/caballo.jpeg)
+![Cecilio G en el Sonar](caballo.jpeg)
 
 "Million Dollar Baby" es un reflejo del profundo conflicto generacional en España, donde la incomprensión del trap por parte de la generación boomer trasciende lo estético para revelar fracturas socioculturales. La narrativa de Cecilio G. expone una realidad de acceso a la cultura a través de la transgresión y la autogestión, ajena a la experiencia de estabilidad de generaciones anteriores. Su trayectoria ("A los 15 años me colaba en Razzmatazz / A los 16 me colé en el Sonar / Ahora Sonar me paga por cantar") ilustra cómo el acceso se obtiene a través de la transgresión, no por herencia o privilegio.
 La canción desmantela la narrativa meritocrática, mostrando cómo el éxito aparente no erradica el trauma estructural de la marginalidad, un concepto perturbador para quienes crecieron con la promesa de que el trabajo duro garantizaba bienestar. La reivindicación de autenticidad de Cecilio G. frente a la mercantilización de lo marginal, ejemplificada en "Yo soy de la calle loco, yo no soy Bad Gyal", y su crítica a la apropiación cultural sin experiencia real, son invisibles para una generación que no comprende cómo el dolor se convierte en marketing.
