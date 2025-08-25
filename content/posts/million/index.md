@@ -114,4 +114,8 @@ La incomprensión alcanza su punto álgido cuando Cecilio G. declara su propósi
 
 Esta fractura generacional es cultural, política y económica. Los boomers crecieron en una España con un Estado del Bienestar funcional y oportunidades estables, mientras la juventud del trap ha crecido en una España neoliberalizada y precarizada. No es una falta de entendimiento de valores, sino que esos valores han dejado de ser operativos en su realidad material. "Million Dollar Baby" es un documento antropológico de este choque, un testimonio de cómo dos generaciones pueden habitar el mismo país pero vivir en mundos completamente diferentes. 
 
+Clica en el siguiente enlace para descargar el texto en PDF: [Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G.](million.pdf)
+
+25/8/2025
+
 
