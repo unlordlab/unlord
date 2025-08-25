@@ -39,8 +39,7 @@ Lejos de disiparse, esta brecha generacional se agudiza, señalando que la músi
 ***
 
 {{< youtube Ym59_2x6zgU >}}
-{{< youtube 0RKpf3rK57I >}}
-{{</* youtube Ym59_2x6zgU */>}}
+
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Ym59_2x6zgU?si=0rBBhsZCqGW5dv0Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
