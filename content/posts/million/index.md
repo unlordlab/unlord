@@ -9,8 +9,7 @@ description: "Million Dollar Baby: Un análisis sociocultural del Trap y el conf
 images: ["mdb.png"]
 resources:
 - name: "featured-image"
-  src: "mdb.png"
-  src: "cecivideo.mp4"
+  src: "mdb.png", "cecivideo.mp4", "caballo.jpeg"
 
 tags: ["Trap","Cecilio G","Boomer","Música",""]
 categories: ["unlord"]
@@ -57,6 +56,8 @@ modo de dejar huella, de ser escuchado, de trascender la propia existencia. No e
 términos convencionales, sino testimonio y legado.
 
 ## El choque generacional: Cuando los boomers no entienden el trap.
+
+![Cecilio G en el Sonar](/content/posts/million/caballo.jpeg)
 
 "Million Dollar Baby" es un reflejo del profundo conflicto generacional en España, donde la incomprensión del trap por parte de la generación boomer trasciende lo estético para revelar fracturas socioculturales. La narrativa de Cecilio G. expone una realidad de acceso a la cultura a través de la transgresión y la autogestión, ajena a la experiencia de estabilidad de generaciones anteriores. Su trayectoria ("A los 15 años me colaba en Razzmatazz / A los 16 me colé en el Sonar / Ahora Sonar me paga por cantar") ilustra cómo el acceso se obtiene a través de la transgresión, no por herencia o privilegio.
 La canción desmantela la narrativa meritocrática, mostrando cómo el éxito aparente no erradica el trauma estructural de la marginalidad, un concepto perturbador para quienes crecieron con la promesa de que el trabajo duro garantizaba bienestar. La reivindicación de autenticidad de Cecilio G. frente a la mercantilización de lo marginal, ejemplificada en "Yo soy de la calle loco, yo no soy Bad Gyal", y su crítica a la apropiación cultural sin experiencia real, son invisibles para una generación que no comprende cómo el dolor se convierte en marketing.
