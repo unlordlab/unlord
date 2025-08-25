@@ -1,5 +1,5 @@
 ---
-weight: 1
+weight: 3
 title: "Treball fi de grau: El metavers. Les noves coordenades de la desigualtat."
 date: 2025-2-16T00:00:00Z
 draft:  false
