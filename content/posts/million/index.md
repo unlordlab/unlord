@@ -52,7 +52,7 @@ Esta dimensión política y comunitaria es fundamental. La música no se convier
 
 ## El choque generacional: Cuando los boomers no entienden el trap.
 
-![Cecilio G en el Sonar](/content/posts/milion/caballo.jpeg "En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.")
+![Cecilio G en el Sonar](content/posts/milion/caballo.jpeg "En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.")
 
 > En la imagen, Cecilio G en su entrada a caballo en el Sónar 2019.
 
