@@ -11,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "fvsi.webp"
 
-tags: ["Metaverso", "SelfDigital", "Flickr", "Instalgram", "Redes Sociales", "EvolucionDigital"]
+tags: ["Metaverso", "SelfDigital", "Flickr", "Instagram", "Redes Sociales", "EvolucionDigital"]
 categories: ["unlord"]
 
 lightgallery: true
