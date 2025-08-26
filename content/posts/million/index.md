@@ -113,6 +113,6 @@ Esta fractura generacional es cultural, política y económica. Los boomers crec
 
 Clica en el siguiente enlace para descargar el texto en PDF: [Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G.](million.pdf)
 
-25/8/2025.
+25/8/2025
 
 
