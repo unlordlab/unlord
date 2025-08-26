@@ -188,4 +188,15 @@ Clica en el siguiente enlace para descargar el texto en PDF: [Million Dollar Bab
 
 25/8/2025
 
+## Referencias.
+
+Fisher, M. (2009). Capitalist Realism: Is There No Alternative? Zero Books.
+
+Gayoso, R., & Diz, C. (2021). Música trap en España: estéticas juveniles en tiempos de
+crisis. Revista de Antropología Iberoamericana.
+
+Gómez Trinidad, L. (2023). EL TRAP EN ESPAÑA: UNA EXPRESIÓN SUBCULTURAL DE
+DESCONTENTO JUVENIL EN EL SIGLO XXI. Universidad de Oviedo.
+
+
 
