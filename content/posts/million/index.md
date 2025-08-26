@@ -121,7 +121,7 @@ Yo soy de la calle loco, yo no soy Bad Gyal{{< /style >}}
 
 {{< youtube hyBhuXU_kIU >}}
 
-El concepto de "cancelación del futuro", acuñado por Mark Fisher, es central para comprender el trasfondo sociocultural de "Million Dollar Baby". Fisher argumenta que el capitalismo tardío ha erosionado la capacidad de las sociedades para imaginar futuros alternativos y mejores, dejando a las nuevas generaciones atrapadas en una repetición perpetua de un presente mediocre (Fisher, 2009). 
+El concepto de "cancelación del futuro", acuñado por Mark Fisher, es central para comprender el trasfondo sociocultural de "Million Dollar Baby". Fisher argumenta que el capitalismo tardío ha erosionado la capacidad de las sociedades para imaginar futuros alternativos y mejores, dejando a las nuevas generaciones atrapadas en una repetición perpetua de un presente mediocre (Fisher, 2009[^1]). 
 Esta idea resuena profundamente con la experiencia de la precarización, una condición de existencia marcada por la falta de previsibilidad y seguridad, tanto material como psicológica, que se ha intensificado en España tras la crisis económica del 2008 (2021). La letra de "Million Dollar Baby" encapsula esta sensación de estancamiento y desesperanza. La repetición de la rutina laboral sin un horizonte claro, 
 
 >> "Trabajo de lunes a jueves / Pa' ti guardo tos los viernes / Sábados si me entretienes / Los domingos con mamá"
@@ -190,7 +190,7 @@ Clica en el siguiente enlace para descargar el texto en PDF: [Million Dollar Bab
 
 ## Referencias.
 
-Fisher, M. (2009). Capitalist Realism: Is There No Alternative? Zero Books.
+[^1]:Fisher, M. (2009). Capitalist Realism: Is There No Alternative? Zero Books.
 
 Gayoso, R., & Diz, C. (2021). Música trap en España: estéticas juveniles en tiempos de
 crisis. Revista de Antropología Iberoamericana.
