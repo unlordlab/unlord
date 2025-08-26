@@ -50,7 +50,7 @@ A los 17 no me paraba drogar
 Pintaba en metros y robaba Brugal
 Yo soy de la calle loco, yo no soy Bad Gyal
 
->Trabajo de lunes a jueves
+Trabajo de lunes a jueves
 Pa' ti guardo tos los viernes
 Sábados si me entretienes
 Los domingos con mamá
@@ -59,7 +59,7 @@ A los 19 me encerraron en el penal
 A los 20 me dejé de drogar
 A los 21 me volví a drogar
 
->He llorado mucho desde que no está papá
+He llorado mucho desde que no está papá
 He tenido que ver llorando a mi mamá
 Nos querían embargar, no teníamos pa' pagar
 Como ves siempre ha ido mal
@@ -68,7 +68,7 @@ Y le quiero cantar, a los que aún siguen en ella
 Que no sientan soledad
 Que no dejen que el sistema les hunda jamás
 
->El Tony dice que esas manos van al pan
+El Tony dice que esas manos van al pan
 A los 15 años me colaba en Razzmatazz
 A los 16 me cole en el Sonar
 Ahora Sonar me paga por cantar
@@ -76,14 +76,14 @@ A los 17 no me paraba drogar
 Pintaba en metros y robaba Brugal
 Yo soy de la calle loco, yo no soy Bad Gyal
 
->A los 22 cobraba del estudio, pero iba sucio
+A los 22 cobraba del estudio, pero iba sucio
 La calle me tenía mal
 Nadie me podía sacar
 Y ahora que estoy bien
 Con más de 23
 No sé por qué aún tengo estas ganas de llorar
 
->El Tony dice que esas manos van al pan
+El Tony dice que esas manos van al pan
 A los 15 años me colaba en Razzmatazz
 A los 16 me colé en el Sonar
 Ahora Sonar me paga por cantar
@@ -91,7 +91,7 @@ A los 17 no me paraba drogar
 Pintaba en metros y robaba Brugal
 Yo soy de la calle loco, yo no soy Bad Gyal
 
->Trabajo de lunes a jueves
+Trabajo de lunes a jueves
 Pa' ti guardo tos los viernes
 Sábados si me entretienes
 Y vuelvo a empezar
@@ -100,13 +100,13 @@ Pa' ti guardo tos los viernes
 Sábados si me entretienes
 Y vuelvo a empezar
 
->Pero mi amor
+Pero mi amor
 No sé si lo entiendes
 Que lo hago por ellos necesito cantarles
 Mi corazón siente que el día de mi muerte
 Dejaré este legado pa' que puedan cantar
 
->El Tony dice que esas manos van al pan
+El Tony dice que esas manos van al pan
 A los 15 años me colaba en Razzmatazz
 A los 16 me colé en el Sonar
 Ahora Sonar me paga por cantar
