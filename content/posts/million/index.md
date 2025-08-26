@@ -11,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "mdb.png"
 
-tags: ["Trap","Cecilio G","Boomer","Música",""]
+tags: ["Trap","Cecilio G","Boomer","Música","Choque generacional"]
 categories: ["unlord"]
 
 lightgallery: true
