@@ -42,22 +42,22 @@ Lejos de disiparse, esta brecha generacional se agudiza, señalando que la músi
 
 {{< youtube Ym59_2x6zgU >}}
 
->{{< style "text-align: center;" >}} El Tony dice que esas manos van al pan
-A los 15 años me colaba en Razzmatazz
-A los 16 me colé en el Sonar
-Ahora Sonar me paga por cantar
-A los 17 no me paraba drogar
-Pintaba en metros y robaba Brugal
-Yo soy de la calle loco, yo no soy Bad Gyal
+>{{< style "text-align: center;" >}} El Tony dice que esas manos van al pan;
+A los 15 años me colaba en Razzmatazz;
+A los 16 me colé en el Sonar;
+Ahora Sonar me paga por cantar;
+A los 17 no me paraba drogar;
+Pintaba en metros y robaba Brugal;
+Yo soy de la calle loco, yo no soy Bad Gyal;
 
-Trabajo de lunes a jueves
-Pa' ti guardo tos los viernes
-Sábados si me entretienes
-Los domingos con mamá
-A los 18 no sé bien qué paso
-A los 19 me encerraron en el penal
-A los 20 me dejé de drogar
-A los 21 me volví a drogar
+Trabajo de lunes a jueves;
+Pa' ti guardo tos los viernes;
+Sábados si me entretienes;
+Los domingos con mamá;
+A los 18 no sé bien qué paso;
+A los 19 me encerraron en el penal;
+A los 20 me dejé de drogar;
+A los 21 me volví a drogar;
 
 He llorado mucho desde que no está papá
 He tenido que ver llorando a mi mamá
