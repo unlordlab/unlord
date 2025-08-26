@@ -112,7 +112,7 @@ A los 16 me colé en el Sonar
 Ahora Sonar me paga por cantar
 A los 17 no me paraba drogar
 Pintaba en metros y robaba Brugal
-Yo soy de la calle loco, yo no soy Bad Gyal
+Yo soy de la calle loco, yo no soy Bad Gyal{{< /style >}}
 
 ***
 
