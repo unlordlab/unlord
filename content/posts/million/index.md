@@ -68,7 +68,6 @@ Las referencias a la pérdida familiar y la amenaza de embargo
 no son victimismo, sino una memoria colectiva de millones de jóvenes sin herencia, sin redes de apoyo, sin un colchón social que amortigüe los golpes de un sistema implacable. Cecilio G. se posiciona como una voz que, lejos de la autosuperación individualista, reconoce su origen en la marginalidad y se solidariza con quienes aún permanecen atrapados en ella.
 
 
-{{< instagram DLzsc0go2Fb >}}
 
 ***
 
