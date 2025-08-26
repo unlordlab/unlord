@@ -174,7 +174,7 @@ La canción desmantela la narrativa meritocrática, mostrando cómo el éxito ap
 
 >>"Yo soy de la calle loco, yo no soy Bad Gyal"
 
-,y su crítica a la apropiación cultural sin experiencia real, son invisibles para una generación que no comprende cómo el dolor se convierte en marketing.
+(conocida por formar parte de una familia acomodada de la ciudad condal),y su crítica a la apropiación cultural sin experiencia real, son invisibles para una generación que no comprende cómo el dolor se convierte en marketing.
 La descripción de una rutina existencial sin progreso, una vida de repetición infinita de un presente mediocre, choca con la percepción boomer de falta de ambición. Esta realidad, marcada por el desempleo juvenil y la inaccesibilidad a la vivienda, es incomprensible para quienes vivieron una expansión económica. La memoria del trauma familiar, la desposesión y la vulnerabilidad, son una memoria colectiva de la crisis de 2008 que resulta ajena a la experiencia de estabilidad de generaciones previas.
 
 El trap, con su estética, autotune y aparente simplicidad lírica, se convierte en el lenguaje de una generación que los boomers no pueden o no quieren entender. Estos elementos son un código emocional preciso para expresar realidades que el lenguaje convencional no captura, siendo el autotune una metáfora de la necesidad de "procesar" artificialmente las emociones para hacerlas audibles. 
