@@ -1,7 +1,7 @@
 ---
 weight: 2
 title: "Flickr vs. Instagram: La evolución del self digital"
-date: 2024-8-19
+date: 2024-08-19
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
