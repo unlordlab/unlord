@@ -1,7 +1,7 @@
 ---
 weight: 4
 title: "¿Por qué la gente dejó de crear su propio sitio en Internet?"
-date: 2023-9-01
+date: 2023-09-01
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
