@@ -1,7 +1,7 @@
 ---
 weight: 2
 title: "Eurovisión y la banalidad del mal: el castigo simbólico a los Estados genocidas."
-date: 2025-5-22 
+date: 2025-05-22 
 Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
@@ -46,6 +46,6 @@ Eurovisión no es el problema en sí, sino el síntoma de una Europa que es inca
 
 
 
-22/6/2025
+
 
 
