@@ -46,13 +46,13 @@ En el poble, no existia cap grup o taller relacionat amb el teixit de ganxet i l
 
 L’educador social, especialitzar en educació crítica en cultura digital i prevenció de riscos en l’entorn en línia, va reconèixer el potencial terapèutic de les comunitats digitals com a eina per reconnectar a la Sra. Ferrer amb el seu passatemps preferit i, per extensió, vincular-se amb altres persones. Després d’una avaluació de riscos (incloent-hi la capacitat digital de la usuària i les possibles vulnerabilitats com la privadesa en línia), es va dissenyar un pla d’intervenció individualitzat:
 
-**Formació bàsica en competències digitals:** Durant l’acompanyament, l’educador social va ensenyar a la Sra. Ferrer a utilitzar un dispositiu mòbil o tauleta per navegar per internet de manera segura. Es van cobrir temes com la creació d’un compte en plataformes, la gestió de privadesa (configuració de perfils) i la identificació de continguts potencialment nocius (com estafes).
+1. **Formació bàsica en competències digitals:** Durant l’acompanyament, l’educador social va ensenyar a la Sra. Ferrer a utilitzar un dispositiu mòbil o tauleta per navegar per internet de manera segura. Es van cobrir temes com la creació d’un compte en plataformes, la gestió de privadesa (configuració de perfils) i la identificació de continguts potencialment nocius (com estafes).
 
-**Introducció a la plataforma:** Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit r/crochet. Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
+2. **Introducció a la plataforma:** Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit r/crochet. Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
 
 ![r/crochet a Reddit](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
 
-**Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
+3. **Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
 
 
 ***
@@ -89,16 +89,16 @@ La intervenció va tenir un impacte significatiu en el benestar de la Sra. Ferre
 
 Aquest cas il·lustra el potencial terapèutic de les comunitats en línia però, cal tenir en compte, diverses consideracions per a una pràctica ètica, efectiva i segura: 
 
-**Riscos digitals:** Els educadors socials han de prioritzar la prevenció de riscos com l'escletxa digital, la privadesa, l’exposició a continguts tòxics o l’addicció a les xarxes. En el cas que ens ocupa, es va realitzar una formació prèvia per mitigar aquests riscos.
++ **Riscos digitals:** Els educadors socials han de prioritzar la prevenció de riscos com l'escletxa digital, la privadesa, l’exposició a continguts tòxics o l’addicció a les xarxes. En el cas que ens ocupa, es va realitzar una formació prèvia per mitigar aquests riscos.
 
-**Enfocament crític:** Promoure una educació digital crítica implica reflexionar sobre les dinàmiques de poder en les plataformes (algoritmes que poden amplificar continguts negatius) i fomentar l’equilibri entre el digital i el presencial per evitar dependències.
++ **Enfocament crític:** Promoure una educació digital crítica implica reflexionar sobre les dinàmiques de poder en les plataformes (algoritmes que poden amplificar continguts negatius) i fomentar l’equilibri entre el digital i el presencial per evitar dependències.
 
-**Col·laboració interdisciplinària:** La intervenció va requerir coordinació amb professionals sanitaris (metge i psiquiatre) per monitorar la reducció de medicació i avaluar els progressos. Els educadors socials no substitueixen tractaments mèdics sinó que els complementen.
++ **Col·laboració interdisciplinària:** La intervenció va requerir coordinació amb professionals sanitaris (metge i psiquiatre) per monitorar la reducció de medicació i avaluar els progressos. Els educadors socials no substitueixen tractaments mèdics sinó que els complementen.
 
-**Accessibilitat i inclusió:** En contextos rurals, cal saber abordar les barreres com l’accés a internet o dispositius. En aquest cas, es va proporcionar suport tècnica inicial.
++ **Accessibilitat i inclusió:** En contextos rurals, cal saber abordar les barreres com l’accés a internet o dispositius. En aquest cas, es va proporcionar suport tècnica inicial.
 Ètica i consentiment: Totes les intervencions van incloure consentiment informat, respectant l’autonomia, la intimitat i la llibertat de la persona. Es va emfatitzar que les relacions digitals no són un substitut sinó un recurs complementari.
 
-**Generalització:** Tot i l’èxit, aquest cas no és universal. Factors com l’edat, el nivell cultural o la gravetat de la depressió poden influir. 
++ **Generalització:** Tot i l’èxit, aquest cas no és universal. Factors com l’edat, el nivell cultural o la gravetat de la depressió poden influir. 
 
 
 26/10/2025 - Per Marc Escribà Roig
