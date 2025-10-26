@@ -56,7 +56,7 @@ Després d’una avaluació de riscos (incloent-hi la capacitat digital de la us
 
 1. **Formació bàsica en competències digitals:** Durant l’acompanyament, l’educador social va ensenyar a la Sra. Ferrer a utilitzar un dispositiu mòbil o tauleta per navegar per internet de manera segura. Es van cobrir temes com la creació d’un compte en plataformes, la gestió de privadesa (configuració de perfils) i la identificació de continguts potencialment nocius (com estafes).
 
-2. **Introducció a la plataforma:** Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit r/crochet. Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
+2. **Introducció a la plataforma:** Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit [r/crochet](https://www.reddit.com/r/crochet/). Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
 
 3. **Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
 
@@ -67,7 +67,7 @@ Després d’una avaluació de riscos (incloent-hi la capacitat digital de la us
 
 ## Desenvolupament de les relacions.
 
-A partir de la participació activa en r/crochet, la Sra. Ferrer va començar a interactuar amb altres membres. Inicialment, les interaccions eren digitals. Compartia patrons de ganxet, rebia comentaris positius sobre les seves peces i intercanviava consells sobre materials. 
+A partir de la participació activa a [r/crochet](https://www.reddit.com/r/crochet/), la Sra. Ferrer va començar a interactuar amb altres membres. Inicialment, les interaccions eren digitals. Compartia patrons de ganxet, rebia comentaris positius sobre les seves peces i intercanviava consells sobre materials. 
 
 Ràpidament, va connectar amb dues dones d’edats similars (una de cinquanta-vuit anys de Tarragona i un altre de seixanta-cinc de Barcelona). Totes dues amb interessos comuns i experiències personals d’aïllament (una era jubilada soltera i l’altre cuidava un familiar malalt).
 
