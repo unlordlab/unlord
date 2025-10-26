@@ -38,7 +38,7 @@ La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resid
 
 ## Antecedents del cas.
 
-La Sra. Maria Ferrer és una vídua des de fa cinc anys d’ençà que el seu marit traspasses després d’una llarga malaltia. Sense fills ni familiars propers, el seu teixit social i comunitària és mínim. Viu en un poble de menys de 500 habitants on les activitats socials i culturals són escasses i centrades en tradicions locals que no li interessen gaire. Des de la mort del seu marit Josep, ha desenvolupat una depressió major diagnosticada clínicament i tractada amb medicació antidepressiva (principalment sertralina) prescrita per un metge de capçalera i un psiquiatre de l’hospital comarcal.
+La Sra. Maria Ferrer és una vídua des de fa cinc anys d’ençà que el seu marit traspasses després d’una llarga malaltia. Sense fills ni familiars propers, el seu teixit social i comunitari és mínim. Viu en un poble de menys de 500 habitants on les activitats socials i culturals són escasses i centrades en tradicions locals que no li interessen gaire. Des de la mort del seu marit Josep, ha desenvolupat una depressió major diagnosticada clínicament i tractada amb medicació antidepressiva (principalment sertralina) prescrita per un metge de capçalera i un psiquiatre de l’hospital comarcal.
 
 Les intervencions prèvies, incloent-hi la teràpia cognitivoconductual en sessions individuals i grupals, no han tingut l’èxit desitjat. La Sra. Ferrer ha manifestat una manca de motivació persistent, insomni, baixa autoestima i un sentiment d’aïllament profund que s'ha agreujat per la manca d’oportunitats locals per connectar amb altres persones.
 
