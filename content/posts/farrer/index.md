@@ -9,7 +9,7 @@ description: "Estudi de cas: L'impacte terapèutic de les comunitats en línia e
 images: ["farrer.png"]
 resources:
 - name: "featured-image"
-  src: "farrer.jpg"
+  src: "farrer.png"
 
 tags: ["Trap","Cecilio G","Boomer","Música","Choque generacional"]
 categories: ["unlord"]
