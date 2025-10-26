@@ -110,9 +110,7 @@ Aquest cas il·lustra el potencial terapèutic de les comunitats en línia però
 
 + **Generalització:** Tot i l’èxit, aquest cas no és universal. Factors com l’edat, el nivell cultural o la gravetat de la depressió poden influir. 
 
-***
-26/10/2025 - Per Marc Escribà Roig
-***
+
 
 
 
