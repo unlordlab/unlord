@@ -25,8 +25,12 @@ lightgallery: true
 
 ## Introducció.
 
-Aquest estudi de cas explora els efectes terapèutics de les comunitats en línia com a recurs per a la intervenció socioeducativa. Els educadors socials poden utilitzar plataformes digitals per fomentar vincles positius, especialment apropiats en contextos de vulnerabilitat emocional i aïllament social de les persones i, així, reduir els riscos associats a l’aïllament promovent l’empoderament personal.<br> El cas es basa en una intervenció (fictícia) realitzada en un entorn rural, on les oportunitats presencials i ofertes culturals són limitades. 
-<br>Aquest exemple il·lustra com un acompanyament segur entre el món digital i el real pot transformar la trajectòria d’una persona diagnosticada amb depressió.<br>
+Aquest estudi de cas explora els efectes terapèutics de les comunitats en línia com a recurs per a la intervenció socioeducativa. Els educadors socials poden utilitzar plataformes digitals per fomentar vincles positius, especialment apropiats en contextos de vulnerabilitat emocional i aïllament social de les persones i, així, reduir els riscos associats a l’aïllament promovent l’empoderament personal.
+
+El cas es basa en una intervenció (fictícia) realitzada en un entorn rural, on les oportunitats presencials i ofertes culturals són limitades. 
+
+Aquest exemple il·lustra com un acompanyament segur entre el món digital i el real pot transformar la trajectòria d’una persona diagnosticada amb depressió.
+
 La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resident a un petit poble de la comarca del Priorat (Catalunya). El seu passatemps favorit és el teixit amb ganxet (crochet). Una activitat creativa que permet l’intercanvi de patrons, materials i creacions amb plataformes molt actives com Reddit (subreddit r/crochet).
 
 
@@ -34,9 +38,11 @@ La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resid
 
 ## Antecedents del cas.
 
-La Sra. Maria Ferrer és una vídua des de fa cinc anys d’ençà que el seu marit traspasses després d’una llarga malaltia. Sense fills ni familiars propers, el seu teixit social i comunitària és mínim. Viu en un poble de menys de 500 habitants on les activitats socials i culturals són escasses i centrades en tradicions locals que no li interessen gaire. Des de la mort del seu marit Josep, ha desenvolupat una depressió major diagnosticada clínicament i tractada amb medicació antidepressiva (principalment sertralina) prescrita per un metge de capçalera i un psiquiatre de l’hospital comarcal. <br>Les intervencions prèvies, incloent-hi la teràpia cognitivoconductual en sessions individuals i grupals, no han tingut l’èxit desitjat. La Sra. Ferrer ha manifestat una manca de motivació persistent, insomni, baixa autoestima i un sentiment d’aïllament profund que s'ha agreujat per la manca d’oportunitats locals per connectar amb altres persones.
+La Sra. Maria Ferrer és una vídua des de fa cinc anys d’ençà que el seu marit traspasses després d’una llarga malaltia. Sense fills ni familiars propers, el seu teixit social i comunitària és mínim. Viu en un poble de menys de 500 habitants on les activitats socials i culturals són escasses i centrades en tradicions locals que no li interessen gaire. Des de la mort del seu marit Josep, ha desenvolupat una depressió major diagnosticada clínicament i tractada amb medicació antidepressiva (principalment sertralina) prescrita per un metge de capçalera i un psiquiatre de l’hospital comarcal.
 
-Durant una avaluació inicial realitzada per l’educador social assignat (un professional del servei d’atenció primària del municipi), es va identificar que l’únic element motivador en la vida de la Sra. Ferrer era el seu amor pel teixit de ganxet.<br> Aquesta tècnica l’havia après de la seva àvia durant la seva infància i l’havia practicat durant dècades fent mantes, bufandes i decoracions per casa. Com a conseqüència de la tristesa que sentia, aquesta activitat l’havia abandonat progressivament, argumentant una manca d’energia i de propòsit.<br>
+Les intervencions prèvies, incloent-hi la teràpia cognitivoconductual en sessions individuals i grupals, no han tingut l’èxit desitjat. La Sra. Ferrer ha manifestat una manca de motivació persistent, insomni, baixa autoestima i un sentiment d’aïllament profund que s'ha agreujat per la manca d’oportunitats locals per connectar amb altres persones.
+
+Durant una avaluació inicial realitzada per l’educador social assignat (un professional del servei d’atenció primària del municipi), es va identificar que l’únic element motivador en la vida de la Sra. Ferrer era el seu amor pel teixit de ganxet.<br> Aquesta tècnica l’havia après de la seva àvia durant la seva infància i l’havia practicat durant dècades fent mantes, bufandes i decoracions per casa. Com a conseqüència de la tristesa que sentia, aquesta activitat l’havia abandonat progressivament, argumentant una manca d’energia i de propòsit.
 
 En el poble, no existia cap grup o taller relacionat amb el teixit de ganxet i la Sra. Ferrer mai havia considerat opcions alternatives perquè no estava gens familiaritzada amb les tecnologies digitals més enllà de l’ús bàsic del telèfon mòbil.
 
@@ -45,7 +51,9 @@ En el poble, no existia cap grup o taller relacionat amb el teixit de ganxet i l
 
 ## Intervenció de l'educador social.
 
-L’educador social, especialitzar en educació crítica en cultura digital i prevenció de riscos en l’entorn en línia, va reconèixer el potencial terapèutic de les comunitats digitals com a eina per reconnectar a la Sra. Ferrer amb el seu passatemps preferit i, per extensió, vincular-se amb altres persones. Després d’una avaluació de riscos (incloent-hi la capacitat digital de la usuària i les possibles vulnerabilitats com la privadesa en línia), es va dissenyar un pla d’intervenció individualitzat:
+L’educador social, especialitzar en educació crítica en cultura digital i prevenció de riscos en l’entorn en línia, va reconèixer el potencial terapèutic de les comunitats digitals com a eina per reconnectar a la Sra. Ferrer amb el seu passatemps preferit i, per extensió, vincular-se amb altres persones. 
+
+Després d’una avaluació de riscos (incloent-hi la capacitat digital de la usuària i les possibles vulnerabilitats com la privadesa en línia), es va dissenyar un pla d’intervenció individualitzat:
 
 1. **Formació bàsica en competències digitals:** Durant l’acompanyament, l’educador social va ensenyar a la Sra. Ferrer a utilitzar un dispositiu mòbil o tauleta per navegar per internet de manera segura. Es van cobrir temes com la creació d’un compte en plataformes, la gestió de privadesa (configuració de perfils) i la identificació de continguts potencialment nocius (com estafes).
 
@@ -60,9 +68,9 @@ L’educador social, especialitzar en educació crítica en cultura digital i pr
 
 ## Desenvolupament de les relacions.
 
-A partir de la participació activa en r/crochet, la Sra. Ferrer va començar a interactuar amb altres membres. Inicialment, les interaccions eren digitals. Compartia patrons de ganxet, rebia comentaris positius sobre les seves peces i intercanviava consells sobre materials. <br>
+A partir de la participació activa en r/crochet, la Sra. Ferrer va començar a interactuar amb altres membres. Inicialment, les interaccions eren digitals. Compartia patrons de ganxet, rebia comentaris positius sobre les seves peces i intercanviava consells sobre materials. 
 
-Ràpidament, va connectar amb dues dones d’edats similars (una de cinquanta-vuit anys de Tarragona i un altre de seixanta-cinc de Barcelona). Totes dues amb interessos comuns i experiències personals d’aïllament (una era jubilada soltera i l’altre cuidava un familiar malalt).<br>
+Ràpidament, va connectar amb dues dones d’edats similars (una de cinquanta-vuit anys de Tarragona i un altre de seixanta-cinc de Barcelona). Totes dues amb interessos comuns i experiències personals d’aïllament (una era jubilada soltera i l’altre cuidava un familiar malalt).
 
 Les interaccions van evolucionar de manera orgànica:
 
