@@ -60,7 +60,8 @@ Després d’una avaluació de riscos (incloent-hi la capacitat digital de la us
 
 3. **Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
 
-![ r/crochet a Reddit ](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
+![r/crochet a Reddit](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
+
 
 ***
 
