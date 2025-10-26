@@ -14,7 +14,7 @@ resources:
 tags: ["Comunitats en línia","Educació social","Salut mental","Estudi de cas"]
 categories: ["unlord"]
 
-lightgallery: true
+lightgallery: false
 ---
 
 ### **Estudi de cas: L'impacte terapèutic de les comunitats en línia en la millora del benestar emocional. El cas de la Sra. Maria Ferrer.**
