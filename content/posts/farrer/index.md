@@ -11,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "ferrer.png"
 
-tags: ["comunitats en línia","Educació social","Salut mental","Estudi de cas"]
+tags: ["Comunitats en línia","Educació social","Salut mental","Estudi de cas"]
 categories: ["unlord"]
 
 lightgallery: true
