@@ -77,7 +77,7 @@ Les interaccions van evolucionar de manera orgànica:
 
 + **Transició cap al món real:** Després d’unes setmanes, van decidir organitzar unes trobades presencials. La primera va ser un cafè en una ciutat intermèdia per conèixer-se en persona. Seguida d’una visita a una exposició de tèxtils artesanals a Barcelona. Posteriorment, van planificar dinars, tallers conjunts de ganxet i excursions a botigues especialitzades.
 
-+ **Consolidació de l’amistat:** Aquestes trobades es van convertir en regulars, formant un grup d’amistat estable que perdura fins avui. Les dones es donen suport mutu més enllà del hobby parlant de temes personals com la solitud i la salut mental.
++ **Consolidació de l’amistat:** Aquestes trobades es van convertir en regulars, formant un grup d’amistat estable que perdura fins avui. Les dones es donen suport mutu més enllà de l'afició pel ganxet, parlant de temes personals com la solitud i la salut mental.
 
 ***
 
