@@ -93,7 +93,7 @@ La intervenció va tenir un impacte significatiu en el benestar de la Sra. Ferre
 
 ***
 
-## Consideracions i recomanacions.
+## Consideracions i recomanacions finals.
 
 Aquest cas il·lustra el potencial terapèutic de les comunitats en línia però, cal tenir en compte, diverses consideracions per a una pràctica ètica, efectiva i segura: 
 
