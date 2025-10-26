@@ -104,7 +104,7 @@ Aquest cas il·lustra el potencial terapèutic de les comunitats en línia però
 
 + **Col·laboració interdisciplinària:** La intervenció va requerir coordinació amb professionals sanitaris (metge i psiquiatre) per monitorar la reducció de medicació i avaluar els progressos. Els educadors socials no substitueixen tractaments mèdics sinó que els complementen.
 
-+ **Accessibilitat i inclusió:** En contextos rurals, cal saber abordar les barreres com l’accés a internet o dispositius. En aquest cas, es va proporcionar suport tècnica inicial.
++ **Accessibilitat i inclusió:** En contextos rurals, cal saber abordar les barreres com l’accés a internet o dispositius. En aquest cas, es va proporcionar suport tècnic inicial.
 Ètica i consentiment: Totes les intervencions van incloure consentiment informat, respectant l’autonomia, la intimitat i la llibertat de la persona. Es va emfatitzar que les relacions digitals no són un substitut sinó un recurs complementari.
 
 + **Generalització:** Tot i l’èxit, aquest cas no és universal. Factors com l’edat, el nivell cultural o la gravetat de la depressió poden influir. 
