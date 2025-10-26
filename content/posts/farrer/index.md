@@ -20,8 +20,6 @@ lightgallery: true
 
 ### **Estudi de cas: L'impacte terapèutic de les comunitats en línia en la millora del benestar emocional de la Sra. Maria Ferrer.**
 
-> “La música popular siempre ha sido el lugar donde los jóvenes pueden decirle a sus mayores: ‘No somos como vosotros’.”
-{{< style "text-align: right;" >}}-- Simon Frith{{< /style >}}
 
 ***
 
@@ -48,13 +46,13 @@ En el poble, no existia cap grup o taller relacionat amb el teixit de ganxet i l
 
 L’educador social, especialitzar en educació crítica en cultura digital i prevenció de riscos en l’entorn en línia, va reconèixer el potencial terapèutic de les comunitats digitals com a eina per reconnectar a la Sra. Ferrer amb el seu passatemps preferit i, per extensió, vincular-se amb altres persones. Després d’una avaluació de riscos (incloent-hi la capacitat digital de la usuària i les possibles vulnerabilitats com la privadesa en línia), es va dissenyar un pla d’intervenció individualitzat:
 
-Formació bàsica en competències digitals: Durant l’acompanyament, l’educador social va ensenyar a la Sra. Ferrer a utilitzar un dispositiu mòbil o tauleta per navegar per internet de manera segura. Es van cobrir temes com la creació d’un compte en plataformes, la gestió de privadesa (configuració de perfils) i la identificació de continguts potencialment nocius (com estafes).
+**Formació bàsica en competències digitals:** Durant l’acompanyament, l’educador social va ensenyar a la Sra. Ferrer a utilitzar un dispositiu mòbil o tauleta per navegar per internet de manera segura. Es van cobrir temes com la creació d’un compte en plataformes, la gestió de privadesa (configuració de perfils) i la identificació de continguts potencialment nocius (com estafes).
 
-Introducció a la plataforma: Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit r/crochet. Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
+**Introducció a la plataforma:** Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit r/crochet. Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
 
 ![r/crochet a Reddit](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
 
-Acompanyament inicial: Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
+**Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
 
 
 ***
@@ -67,11 +65,11 @@ Ràpidament, va connectar amb dues dones d’edats similars (una de cinquanta-vu
 
 Les interaccions van evolucionar de manera orgànica:
 
-Intercanvis digitals: S’intercanviaven fotos de creacions, receptes de patrons i històries personals relacionades amb el ganxet, creant un sentiment de pertinença.
++ **Intercanvis digitals:** S’intercanviaven fotos de creacions, receptes de patrons i històries personals relacionades amb el ganxet, creant un sentiment de pertinença.
 
-Transició cap al món real: Després d’unes setmanes, van decidir organitzar unes trobades presencials. La primera va ser un cafè en una ciutat intermèdia per conèixer-se en persona. Seguida d’una visita a una exposició de tèxtils artesanals a Barcelona. Posteriorment, van planificar dinars, tallers conjunts de ganxet i excursions a botigues especialitzades.
++ **Transició cap al món real:** Després d’unes setmanes, van decidir organitzar unes trobades presencials. La primera va ser un cafè en una ciutat intermèdia per conèixer-se en persona. Seguida d’una visita a una exposició de tèxtils artesanals a Barcelona. Posteriorment, van planificar dinars, tallers conjunts de ganxet i excursions a botigues especialitzades.
 
-Consolidació de l’amistat: Aquestes trobades es van convertir en regulars, formant un grup d’amistat estable que perdura fins avui. Les dones es donen suport mutu més enllà del hobby parlant de temes personals com la solitud i la salut mental.
++ **Consolidació de l’amistat:** Aquestes trobades es van convertir en regulars, formant un grup d’amistat estable que perdura fins avui. Les dones es donen suport mutu més enllà del hobby parlant de temes personals com la solitud i la salut mental.
 
 ***
 
@@ -79,23 +77,28 @@ Consolidació de l’amistat: Aquestes trobades es van convertir en regulars, fo
 
 La intervenció va tenir un impacte significatiu en el benestar de la Sra. Ferrer:
 
-Millora emocional: Es va observar una reducció notable en els símptomes depressius amb un augment de la motivació i l’energia. La Sra. Ferrer deia sentir-se “més animada i connectada amb els altres”. També presentava millores en el son i l’autoestima.
+1. **Millora emocional:** Es va observar una reducció notable en els símptomes depressius amb un augment de la motivació i l’energia. La Sra. Ferrer deia sentir-se “més animada i connectada amb els altres”. També presentava millores en el son i l’autoestima.
 
-Reducció de la medicació: Sota supervisió mèdica, va poder discontinuar gradualment la medicació antidepressiva sense patir recaigudes significatives en els darrers sis mesos.
+2. **Reducció de la medicació:** Sota supervisió mèdica, va poder discontinuar gradualment la medicació antidepressiva sense patir recaigudes significatives en els darrers sis mesos.
 
-Empoderament personal: Va recuperar el seu passatemps preferit. Un passatemps que representa una font de plaer i identitat. També va començar a participar en activitats locals relacionades, com ara, un taller municipal de manualitats.
+3. **Empoderament personal:** Va recuperar el seu passatemps preferit. Un passatemps que representa una font de plaer i identitat. També va començar a participar en activitats locals relacionades, com ara, un taller municipal de manualitats.
 
 ***
 
 ## Consideracions i recomanacions.
 
 Aquest cas il·lustra el potencial terapèutic de les comunitats en línia però, cal tenir en compte, diverses consideracions per a una pràctica ètica, efectiva i segura: 
-Riscos digitals: Els educadors socials han de prioritzar la prevenció de riscos com l'escletxa digital, la privadesa, l’exposició a continguts tòxics o l’addicció a les xarxes. En el cas que ens ocupa, es va realitzar una formació prèvia per mitigar aquests riscos.
-Enfocament crític: Promoure una educació digital crítica implica reflexionar sobre les dinàmiques de poder en les plataformes (algoritmes que poden amplificar continguts negatius) i fomentar l’equilibri entre el digital i el presencial per evitar dependències.
-Col·laboració interdisciplinària: La intervenció va requerir coordinació amb professionals sanitaris (metge i psiquiatre) per monitorar la reducció de medicació i avaluar els progressos. Els educadors socials no substitueixen tractaments mèdics sinó que els complementen.
-Accessibilitat i inclusió: En contextos rurals, cal saber abordar les barreres com l’accés a internet o dispositius. En aquest cas, es va proporcionar suport tècnica inicial.
+
+**Riscos digitals:** Els educadors socials han de prioritzar la prevenció de riscos com l'escletxa digital, la privadesa, l’exposició a continguts tòxics o l’addicció a les xarxes. En el cas que ens ocupa, es va realitzar una formació prèvia per mitigar aquests riscos.
+
+**Enfocament crític:** Promoure una educació digital crítica implica reflexionar sobre les dinàmiques de poder en les plataformes (algoritmes que poden amplificar continguts negatius) i fomentar l’equilibri entre el digital i el presencial per evitar dependències.
+
+**Col·laboració interdisciplinària:** La intervenció va requerir coordinació amb professionals sanitaris (metge i psiquiatre) per monitorar la reducció de medicació i avaluar els progressos. Els educadors socials no substitueixen tractaments mèdics sinó que els complementen.
+
+**Accessibilitat i inclusió:** En contextos rurals, cal saber abordar les barreres com l’accés a internet o dispositius. En aquest cas, es va proporcionar suport tècnica inicial.
 Ètica i consentiment: Totes les intervencions van incloure consentiment informat, respectant l’autonomia, la intimitat i la llibertat de la persona. Es va emfatitzar que les relacions digitals no són un substitut sinó un recurs complementari.
-Generalització: Tot i l’èxit, aquest cas no és universal. Factors com l’edat, el nivell cultural o la gravetat de la depressió poden influir. 
+
+**Generalització:** Tot i l’èxit, aquest cas no és universal. Factors com l’edat, el nivell cultural o la gravetat de la depressió poden influir. 
 
 
 26/10/2025 - Per Marc Escribà Roig
