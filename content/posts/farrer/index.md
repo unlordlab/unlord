@@ -51,7 +51,7 @@ En el poble, no existia cap grup o taller relacionat amb el teixit de ganxet i l
 
 ## Intervenció de l'educador social.
 
-L’educador social, especialitzar en educació crítica en cultura digital i prevenció de riscos en l’entorn en línia, va reconèixer el potencial terapèutic de les comunitats digitals com a eina per reconnectar a la Sra. Ferrer amb el seu passatemps preferit i, per extensió, vincular-se amb altres persones. 
+L’educador social, especialitzat en educació crítica de la cultura digital i prevenció de riscos en l’entorn en línia, va reconèixer el potencial terapèutic de les comunitats digitals com a eina per reconnectar a la Sra. Ferrer amb el seu passatemps preferit i, per extensió, vincular-se amb altres persones. 
 
 Després d’una avaluació de riscos (incloent-hi la capacitat digital de la usuària i les possibles vulnerabilitats com la privadesa en línia), es va dissenyar un pla d’intervenció individualitzat:
 
@@ -59,11 +59,11 @@ Després d’una avaluació de riscos (incloent-hi la capacitat digital de la us
 
 2. **Introducció a la plataforma:** Es va recomanar Reddit com a plataforma accessible i temàtica. Especialment, el subreddit r/crochet. Una comunitat global dedicada al teixit amb ganxet amb milers de membres actius. L’educador va acompanyar a la Sra. Ferrer en el registre d’un compte i en la subscripció a la comunitat, fomentant una aproximació crítica. És a dir, discutir sobre els potencials beneficis (intercanvi d’idees, suport mutu, etc.) i els potencials riscos (exposició a opinions negatives o dependència excessiva de l’entorn digital).
 
-![r/crochet a Reddit](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
+
 
 3. **Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
 
-
+![r/crochet a Reddit](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
 ***
 
 ## Desenvolupament de les relacions.
