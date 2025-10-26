@@ -30,7 +30,7 @@ El cas es basa en una intervenció (fictícia) realitzada en un entorn rural, on
 
 Aquest exemple il·lustra com un acompanyament segur entre el món digital i el real pot transformar la trajectòria d’una persona diagnosticada amb depressió.
 
-La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resident a un petit poble de la comarca del Priorat (Catalunya). El seu passatemps favorit és el teixit amb ganxet (crochet). Una activitat creativa que permet l’intercanvi de patrons, materials i creacions amb plataformes molt actives com Reddit (subreddit ([r/crochet](https://www.reddit.com/r/crochet/)).
+La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resident a un petit poble de la comarca del Priorat (Catalunya). El seu passatemps favorit és el teixit amb ganxet (crochet). Una activitat creativa que permet l’intercanvi de patrons, materials i creacions amb plataformes molt actives com Reddit (subreddit).
 
 
 ***
