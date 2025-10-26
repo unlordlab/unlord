@@ -245,7 +245,7 @@ copyright = ""
       title = ""
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "Soy Marc Escribà. Tengo un grado en Educación Social por la Universidad Abierta de Cataluña (UOC) y soy técnico forestal. Activista por la pedagogía crítica y defensor de la educación en la comunidad hacker. Fascinado por la interacción entre tecnología y sociedad. Interesado en las sociedades virtuales, el decrecimiento, los sesgos algorítmicos y las tecnologías libres."
+      subtitle = "Soy Marc Escribà. Tengo un grado en Educación Social por la Universidad Oberta de Catalunya (UOC) y soy técnico forestal. Activista por la educación crítica y defensor de la pedagogia hacker. Fascinado por la interacción entre tecnología y sociedad. Interesado en las sociedades virtuales, el decrecimiento, los sesgos algorítmicos y las tecnologías libres."
       # whether to use typeit animation for subtitle
       # 是否为副标题显示打字机动画
       typeit = false
@@ -683,6 +683,7 @@ copyright = ""
     # whether to use object-fit-images to be compatible with older browsers
     # 是否使用 object-fit-images 来兼容旧式浏览器
     objectFit = false
+
 
 
 
