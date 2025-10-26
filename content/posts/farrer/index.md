@@ -30,7 +30,7 @@ El cas es basa en una intervenció (fictícia) realitzada en un entorn rural, on
 
 Aquest exemple il·lustra com un acompanyament segur entre el món digital i el real pot transformar la trajectòria d’una persona diagnosticada amb depressió.
 
-La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resident a un petit poble de la comarca del Priorat (Catalunya). El seu passatemps favorit és el teixit amb ganxet (crochet). Una activitat creativa que permet l’intercanvi de patrons, materials i creacions amb plataformes molt actives com Reddit (subreddit).
+La persona del cas és la Sra. Maria Ferrer, una dona de seixanta-dos anys resident a un petit poble de la comarca del Priorat (Catalunya). El seu passatemps favorit és el teixit amb ganxet (crochet). Una activitat creativa que permet l’intercanvi de patrons, materials i creacions amb plataformes molt actives com Reddit (subreddit ([r/crochet](https://www.reddit.com/r/crochet/)).
 
 
 ***
@@ -60,7 +60,7 @@ Després d’una avaluació de riscos (incloent-hi la capacitat digital de la us
 
 3. **Acompanyament inicial:** Durant les primeres setmanes, l’educador va monitorar l’ús de la plataforma mitjançant sessions de seguiment, tot animant-la a publicar fotos de les seves creacions antigues i a interactuar amb posts d’altres usuaris. Aquesta fase va incloure reflexions sobre com les interaccions digitals poden traduir-se en relacions reals promovent una educació crítica per evitar idealitzacions o decepcions.
 
-[ r/crochet a Reddit ](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
+[r/crochet a Reddit](reddit.png "A l'imatge, la comunitat r/crochet a Reddit.")
 
 ***
 
