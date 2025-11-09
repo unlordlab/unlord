@@ -6,7 +6,7 @@ Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "RLHF (Reinforcement Learning from Human Feedback). El algoritmo de la angustia."
-images: ["RLHF.png"]
+images: ["rlhfai.png"]
 resources:
 - name: "featured-image"
   src: "rlhfai.png"
