@@ -9,7 +9,7 @@ description: "RLHF (Reinforcement Learning from Human Feedback). El algoritmo de
 images: ["RLHF.png"]
 resources:
 - name: "featured-image"
-  src: "RLHF.png"
+  src: "rlhfai.png"
 
 tags: ["Algoritmos","IA","Salut mental","RLHF"]
 categories: ["unlord"]
@@ -31,6 +31,8 @@ Ante la manifestación masiva de la miseria psíquica, la solución no es la tra
 El paradigma RLHF busca hacer a los modelos «útiles, inofensivos y honestos». Teóricamente, esto es bastante razonable: se supone que la IA debe ser útil y no perjudicial. Pero en la práctica, resultan ser tres objetivos que están en enfrentamiento permanente. ¿Qué pasa si el feedback que se incorpora al sistema es la desesperación, la soledad o un impulso autodestructivo? ¿Hay garantías de que la máquina pueda tratar la desesperación humana?
 
 El realismo capitalista, como señaló Fisher, opera mediante la privatización de la angustia. La depresión, la ansiedad o la psicosis no son vistas como respuestas lógicas a un sistema social alienante, precario y sin futuro. Son fallos individuales, desequilibrios químicos, problemas que deben ser tratados con acompañamiento. El sistema se declara inocente y el individuo, culpable y enfermo. La fragilidad humana no se reduce a un input-output que pueda ser corregido con RLHF. La ideación suicida es un territorio donde la ética, la biografía, la economía, la cultura y el abandono social convergen.
+
+![Claude AI](RLHF.png "Conversación con Claude AI")
 
 ***
 
