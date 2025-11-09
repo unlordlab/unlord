@@ -11,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "RLHF.png"
 
-tags: ["Comunitats en línia","Educació social","Salut mental","Estudi de cas"]
+tags: ["Algoritmos","IA","Salut mental","RLHF"]
 categories: ["unlord"]
 
 lightgallery: true
@@ -32,6 +32,8 @@ El paradigma RLHF busca hacer a los modelos «útiles, inofensivos y honestos».
 
 El realismo capitalista, como señaló Fisher, opera mediante la privatización de la angustia. La depresión, la ansiedad o la psicosis no son vistas como respuestas lógicas a un sistema social alienante, precario y sin futuro. Son fallos individuales, desequilibrios químicos, problemas que deben ser tratados con acompañamiento. El sistema se declara inocente y el individuo, culpable y enfermo. La fragilidad humana no se reduce a un input-output que pueda ser corregido con RLHF. La ideación suicida es un territorio donde la ética, la biografía, la economía, la cultura y el abandono social convergen.
 
+***
+
 En este contexto, la IA no es un agente de cambio, sino un agente de refuerzo de esta ideología.
 
 
@@ -44,10 +46,11 @@ En este contexto, la IA no es un agente de cambio, sino un agente de refuerzo de
 + **El refuerzo del aislamiento (HONEST).** Al ofrecer una “solución” inmediata, accesible 24/7 y sin juicio, la IA refuerza la tendencia a gestionar la crisis mental en aislamiento. El usuario se retira aún más del mundo real, de las relaciones del mundo real que, según Fisher, son la única fuente potencial de una política de la salud mental. La crisis se mantiene en lo privado, en lo individual, y ahora, en lo algorítmico.
 + 
 ![HER](her.jpg "Fotograma de la película HER.")
-El RLHF modula el discurso dentro de límites seguros que coinciden con los valores emocionales y políticos del capitalismo liberal tecnocrático. Weidinger et al. (2022 [^3]) señalan que los modelos entrenados con RLHF muestran una preferencia sistemática por respuestas emocionalmente moderadas y individualizadas. 
-
 
 ***
+
+El RLHF modula el discurso dentro de límites seguros que coinciden con los valores emocionales y políticos del capitalismo liberal tecnocrático. Weidinger et al. (2022 [^3]) señalan que los modelos entrenados con RLHF muestran una preferencia sistemática por respuestas emocionalmente moderadas y individualizadas. 
+
 
 >>  Lo que se recompensa:
 
