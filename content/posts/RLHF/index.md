@@ -57,35 +57,35 @@ El RLHF modula el discurso dentro de límites seguros que coinciden con los valo
 > ** Lo que se recompensa:**
 
 
-+Individualización.
++ Individualización.
 
 
-+Emocionalidad baja.
++ Emocionalidad baja.
 
 
-+Clínica estandarizada.
++ Clínica estandarizada.
 
 
-+Neutralidad política.
++ Neutralidad política.
 
 
-+Tono conciliador.
++ Tono conciliador.
 
 
 
 > **Lo que se penaliza:**
 
 
- +Crítica sistémica.
+ + Crítica sistémica.
 
 
-+Lecturas estructurales del sufrimiento.
++ Lecturas estructurales del sufrimiento.
 
 
-+Emociones intensas.
++ Emociones intensas.
 
 
-+Radicalidad política o afectiva.
++ Radicalidad política o afectiva.
 
 
 El esfuerzo de OpenAI por “alinear” GPT-5 para manejar mejor las crisis es una maniobra de desviación de responsabilidad, a pesar de haber contratadoa 170 clínicos para mejorar la respuesta del modelo. Al igual que el realismo capitalista nos dice que la depresión es un problema de serotonina, OpenAI nos sugiere que la ideación suicida es un problema de prompt engineering. La solución es técnica, no política.
