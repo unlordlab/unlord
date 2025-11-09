@@ -71,7 +71,7 @@ El RLHF modula el discurso dentro de límites seguros que coinciden con los valo
 
 +Tono conciliador.
 
-***
+
 
 > **Lo que se penaliza:**
 
