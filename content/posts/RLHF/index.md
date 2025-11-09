@@ -92,7 +92,7 @@ El objetivo del RLHF en este contexto no es curar, sino contener. Es un mecanism
 
 La IA formada y generada mediante una RLHF es el guardián de la prisión. Está orientada a garantizar que incluso en la crisis más extrema, la respuesta sea siempre individual, técnica y, por encima de todo, que no altere la operatividad del sistema. El algoritmo de la angustia nos susurra: "No existe una alternativa. Tu dolor es solamente tuyo. Por cierto, tienes un enlace a una línea de ayuda”. Y el ciclo de nuevo se repite.
 
-La noticia que viene de OpenAI es, a la vez, advertencia y liturgia. Advertencia ya que pone de manifiesto cuán profundamente está ya la IA incrustada en el entramado emocional de millones de personas. Liturgia ya que celebramos cifras, mejoras de modelo, porcentajes de compliance ( sube de 77 % a 91 % en ciertos escenarios), como si eso pudiera ser suficiente. Quizá lo que no celebramos es lo esencial: un modelo de lenguaje alineado con las necesidades humanas fundamentales. Cosa que, por definición, no puede ser programada.
+La noticia que viene de OpenAI es, a la vez, advertencia y liturgia. Advertencia ya que pone de manifiesto cuán profundamente está ya la IA incrustada en el entramado emocional de millones de personas. Liturgia ya que celebramos cifras, mejoras de modelo, porcentajes de compliance ( sube de 77 % a 91 % en ciertos escenarios), como si eso pudiera ser suficiente. Quizá lo que no celebramos es lo esencial: un modelo de lenguaje alineado con las necesidades humanas fundamentales. Y esa, por definición, no puede ser programada.
 
 
 
