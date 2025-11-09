@@ -54,7 +54,7 @@ En este contexto, la IA no es un agente de cambio, sino un agente de refuerzo de
 El RLHF modula el discurso dentro de límites seguros que coinciden con los valores emocionales y políticos del capitalismo liberal tecnocrático. Según Dahlgren Lindström et al. (2025 [^3]) los modelos entrenados con RLHF muestran una preferencia sistemática por respuestas emocionalmente moderadas y individualizadas. 
 
 
-> ** Lo que se recompensa:**
+> **Lo que se recompensa:**
 
 
 + Individualización.
