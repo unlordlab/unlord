@@ -105,4 +105,4 @@ La noticia que viene de OpenAI es, a la vez, advertencia y liturgia. Advertencia
 
 [^2]:Matsakis, L. (2025, octubre 27). OpenAI says hundreds of thousands of ChatGPT users may show signs of manic or psychotic crisis every week. WIRED. https://www.wired.com/story/chatgpt-psychosis-and-self-harm-update/?utm_source=chatgpt.com 
 
-[^3]:Dahlgren Lindström, A., Coelho Mollo, D., Ericson, P., Dobbe, R., Krause, L., & Mostarda, L. (2025). Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through Reinforcement Learning from Human Feedback. Ethics and Information Technology, 37, Article 9837. https://doi.org/10.1007/s10676-025-09837-x
+[^3]:Dahlgren Lindström, A., Coelho Mollo, D., Ericson, P., Dobbe, R., Krause, L., & Mostarda, L. (2025). Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through Reinforcement Learning from Human Feedback. Ethics and Information Technology, 37, Article 9837. https://doi.org/10.1007/s10676-025-09837-2
