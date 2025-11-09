@@ -87,6 +87,7 @@ El RLHF modula el discurso dentro de límites seguros que coinciden con los valo
 
 + Radicalidad política o afectiva.
 
+***
 
 El esfuerzo de OpenAI por “alinear” GPT-5 para manejar mejor las crisis es una maniobra de desviación de responsabilidad, a pesar de haber contratadoa 170 clínicos para mejorar la respuesta del modelo. Al igual que el realismo capitalista nos dice que la depresión es un problema de serotonina, OpenAI nos sugiere que la ideación suicida es un problema de prompt engineering. La solución es técnica, no política.
 
