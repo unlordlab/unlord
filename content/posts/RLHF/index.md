@@ -94,7 +94,7 @@ La IA formada y generada mediante una RLHF es el guardián de la prisión. Está
 
 La noticia que viene de OpenAI es, a la vez, advertencia y liturgia. Advertencia ya que pone de manifiesto cuán profundamente está ya la IA incrustada en el entramado emocional de millones de personas. Liturgia ya que celebramos cifras, mejoras de modelo, porcentajes de compliance ( sube de 77 % a 91 % en ciertos escenarios), como si eso pudiera ser suficiente. Quizá lo que no celebramos es lo esencial: un modelo de lenguaje alineado con las necesidades humanas fundamentales. Cosa que, por definición, no puede ser programada.
 
-***
+
 
 ## Referencias.
 
