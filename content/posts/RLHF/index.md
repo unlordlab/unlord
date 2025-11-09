@@ -44,8 +44,8 @@ En este contexto, la IA no es un agente de cambio, sino un agente de refuerzo de
 
 
 + **El refuerzo del aislamiento (HONEST).** Al ofrecer una “solución” inmediata, accesible 24/7 y sin juicio, la IA refuerza la tendencia a gestionar la crisis mental en aislamiento. El usuario se retira aún más del mundo real, de las relaciones del mundo real que, según Fisher, son la única fuente potencial de una política de la salud mental. La crisis se mantiene en lo privado, en lo individual, y ahora, en lo algorítmico.
-+ 
-![HER](her.jpg "Fotograma de la película HER.")
+  
+![HER](her.jpg "Fotograma de la película HER donde el protagonista Theodore tiene una relación íntima con el sistema operativo Samantha.")
 
 ***
 
