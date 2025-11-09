@@ -51,7 +51,7 @@ En este contexto, la IA no es un agente de cambio, sino un agente de refuerzo de
 
 ***
 
-El RLHF modula el discurso dentro de límites seguros que coinciden con los valores emocionales y políticos del capitalismo liberal tecnocrático. Weidinger et al. (2022 [^3]) señalan que los modelos entrenados con RLHF muestran una preferencia sistemática por respuestas emocionalmente moderadas y individualizadas. 
+El RLHF modula el discurso dentro de límites seguros que coinciden con los valores emocionales y políticos del capitalismo liberal tecnocrático. Según Dahlgren Lindström et al. (2025 [^3]) los modelos entrenados con RLHF muestran una preferencia sistemática por respuestas emocionalmente moderadas y individualizadas. 
 
 
 > ** Lo que se recompensa:**
@@ -105,4 +105,4 @@ La noticia que viene de OpenAI es, a la vez, advertencia y liturgia. Advertencia
 
 [^2]:Matsakis, L. (2025, octubre 27). OpenAI says hundreds of thousands of ChatGPT users may show signs of manic or psychotic crisis every week. WIRED. https://www.wired.com/story/chatgpt-psychosis-and-self-harm-update/?utm_source=chatgpt.com 
 
-[^3]:Weidinger, L., Mellor, J., Gabriel, I., Isaac, W., Kenton, Z., Brown, S., ... & Irving, G. (2022). Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through RLHF. arXiv:2212.08073. https://doi.org/10.48550/arXiv.2212.08073 
+[^3]:Dahlgren Lindström, A., Coelho Mollo, D., Ericson, P., Dobbe, R., Krause, L., & Mostarda, L. (2025). Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through Reinforcement Learning from Human Feedback. Ethics and Information Technology, 37, Article 9837. https://doi.org/10.1007/s10676-025-09837-x
