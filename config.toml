@@ -21,7 +21,7 @@ baseURL = "https://unlordl4b.pages.dev/"
     pre = ""
     post = ""
     name = "CV"
-    url = "https://unlordl4b.pages.dev/posts/CV_Marc_Escriba.pdf"
+    url = "https://unlordl4b.pages.dev/posts/cvmescribar.pdf"
     title = ""
   [[menu.main]]
     weight = 1
@@ -683,6 +683,7 @@ copyright = ""
     # whether to use object-fit-images to be compatible with older browsers
     # 是否使用 object-fit-images 来兼容旧式浏览器
     objectFit = false
+
 
 
 
