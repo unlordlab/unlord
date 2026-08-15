@@ -2,7 +2,7 @@
 ---
 weight: 1
 title: "Redistribution Research Unit (RSU). La terminal."
-date: 2026-15-08 
+date: 2026-08-15 
 Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
