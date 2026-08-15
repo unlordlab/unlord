@@ -86,7 +86,7 @@ RSU no existe para hacer ricos a unos pocos. Existe para devolver capacidad de d
 
 Nuestra revolución no comienza tomando el Palacio de Invierno. Comienza leyendo correctamente una vela, entendiendo el flujo del capital y negándonos a seguir siendo únicamente la liquidez de otros.
 
-**BIENVENIDOS A RSU.**
-**El exploit ha comenzado.**
+**BIENVENIDOS A RSU.
+El exploit ha comenzado.**
 
 
