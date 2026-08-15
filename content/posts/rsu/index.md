@@ -17,12 +17,10 @@ categories: ["unlord"]
 lightgallery: false
 ---
 
-### **Redistribution Research Unit (RSU). La terminal.**
-
-
 Después de mucho tiempo trabajando en las sombras, finalmente está aquí. **RSU Terminal** es mi proyecto más ambicioso hasta la fecha, una herramienta diseñada no solo para analizar el mercado, sino para comprender las estructuras de poder que lo sostienen. Aún no esta 100% acabada pero, definitivamente, esta ya muy avanzada.
 No es una simple plataforma de trading; es un punto de encuentro para quienes estamos cansados de la opacidad institucional. A continuación, comparto el manifesto de lo que nos mueve. Para acceder: [RSU Terminal](http://178.104.148.117/). 
 
+---
 
 # REDISTRIBUTION RESEARCH UNIT (RSU)
 ## MANIFIESTO
