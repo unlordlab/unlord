@@ -20,8 +20,6 @@ lightgallery: false
 ### **Redistribution Research Unit (RSU). La terminal.**
 
 
-***
-
 Después de mucho tiempo trabajando en las sombras, finalmente está aquí. **RSU Terminal** es mi proyecto más ambicioso hasta la fecha, una herramienta diseñada no solo para analizar el mercado, sino para comprender las estructuras de poder que lo sostienen. Aún no esta 100% acabada pero, definitivamente, esta ya muy avanzada.
 
 No es una simple plataforma de trading; es un punto de encuentro para quienes estamos cansados de la opacidad institucional. A continuación, comparto el manifesto de lo que nos mueve. Para acceder: [RSU Terminal](http://178.104.148.117/). 
@@ -91,8 +89,8 @@ RSU no existe para hacer ricos a unos pocos. Existe para devolver capacidad de d
 
 Nuestra revolución no comienza tomando el Palacio de Invierno. Comienza leyendo correctamente una vela, entendiendo el flujo del capital y negándonos a seguir siendo únicamente la liquidez de otros.
 
-**BIENVENIDOS A RSU**
-*El exploit ha comenzado*
+**BIENVENIDOS A RSU*.*
+*El exploit ha comenzado.*
 
 
 [^3]:Dahlgren Lindström, A., Coelho Mollo, D., Ericson, P., Dobbe, R., Krause, L., & Mostarda, L. (2025). Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through Reinforcement Learning from Human Feedback. Ethics and Information Technology, 37, Article 9837. https://doi.org/10.1007/s10676-025-09837-2
