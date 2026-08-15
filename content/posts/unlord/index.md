@@ -14,7 +14,7 @@ resources:
 tags: ["markets","RSU",]
 categories: ["unlord"]
 
-lightgallery: true
+lightgallery: false
 ---
 
 <b>Este documento se sumerge en las dinámicas del neoliberalismo, enfocándose en cómo este sistema ha concentrado el conocimiento financiero y bursátil
