@@ -1,4 +1,3 @@
-
 ---
 weight: 1
 title: "Redistribution Research Unit (RSU). La terminal."
