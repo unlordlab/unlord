@@ -28,86 +28,72 @@ Después de mucho tiempo trabajando en las sombras, finalmente está aquí. **RS
 No es una simple plataforma de trading; es un punto de encuentro para quienes estamos cansados de la opacidad institucional. A continuación, comparto el manifesto de lo que nos mueve. Para acceder: [RSU Terminal](http://178.104.148.117/) . 
 
 ---
+# REDISTRIBUTION RESEARCH UNIT (RSU)
+## MANIFIESTO
 
-La noticia es, en sí misma, un diagnóstico. No de la tecnología por sí misma, sino de la época que la produce. Un mundo saturado de promesas tecnológicas que nos arrastra a una contradicción brutal: la inteligencia artificial llega al borde de lo íntimo, siempre dispuesta 24/7 a ayudarnos, mientras produce las condiciones para que ese sufrimiento —el dolor, la soledad, la interlocución con máquinas— se perpetúe sin mediación efectiva.
+Vivimos en una atmósfera mental que nos impide imaginar un final para este sistema que no sea el colapso total. El neoliberalismo no es solo un modelo económico; es una tanatopolítica que nos precariza, nos enferma con ansiedad y luego nos vende el ansiolítico para que sigamos siendo productivos. Pero mientras nosotros nos hundíamos en la nostalgia y la precariedad, las élites seguían operando en una temporalidad distinta.
 
-Ante la manifestación masiva de la miseria psíquica, la solución no es la transformación de las condiciones que generan esa miseria, sino la optimización del interfaz que la gestiona. Han contratado a 170 psiquiatras y psicólogos para “alinear” el modelo, para que GPT-5 sepa cómo responder con “empatía” sin “afirmar creencias que no tienen base en la realidad”. Aquí es donde el concepto de RLHF (Reinforcement Learning from Human Feedback) se revela como la metáfora perfecta de nuestra prisión ideológica.
+Warren Buffett lo dijo sin necesidad de suavizarlo:
+> *"Hay guerra de clases, y mi clase, la de los ricos, va ganando."*
 
-El paradigma RLHF busca hacer a los modelos «útiles, inofensivos y honestos». Teóricamente, esto es bastante razonable: se supone que la IA debe ser útil y no perjudicial. Pero en la práctica, resultan ser tres objetivos que están en enfrentamiento permanente. ¿Qué pasa si el feedback que se incorpora al sistema es la desesperación, la soledad o un impulso autodestructivo? ¿Hay garantías de que la máquina pueda tratar la desesperación humana?
+Esa frase es el punto de partida de todo lo demás. No es una metáfora ni una exageración retórica: es la confesión, desde dentro, de quien no tiene ningún incentivo para mentir sobre quién gana y quién pierde. Si la guerra de clases es real —y lo es, dicha por el bando que la libra y la gana— entonces la pregunta no es si existe, sino qué vamos a hacer al respecto.
 
-El realismo capitalista, como señaló Fisher, opera mediante la privatización de la angustia. La depresión, la ansiedad o la psicosis no son vistas como respuestas lógicas a un sistema social alienante, precario y sin futuro. Son fallos individuales, desequilibrios químicos, problemas que deben ser tratados con la debida terapia. El sistema se declara inocente y el individuo, culpable y enfermo. La fragilidad humana no se reduce a un input-output que pueda ser corregido con RLHF. La ideación suicida es un territorio donde la ética, la biografía, la economía, la cultura y el abandono social convergen.
+**RSU nace exactamente de esa pregunta.**
+**RSU nace para dejar de perder.**
 
-![Claude AI](RLHF.png "Conversación con Claude AI")
+El mercado financiero no es un templo de libertad; es una picadora de carne diseñada para extraer valor de la base y concentrarlo en la cúspide. Quienes han trabajado desde dentro de las salas de mercado lo repiten sin pudor: la desigualdad no es un error del sistema, es su función principal. Mientras la inflación monetaria devora tus ahorros y consume tu tiempo de vida, las élites operan con información privilegiada y herramientas que tú no tienes. Es la misma guerra que describía Buffett, solo que librada con datos de flujo, órdenes institucionales y ventaja informativa en lugar de titulares.
 
-***
+Pero incluso el bando que va ganando deja huellas.
 
-En este contexto, la IA no es un agente de cambio, sino un agente de refuerzo de esta ideología.
+El mercado posee una vulnerabilidad: su propia infraestructura. Los gigantes no pueden moverse sin dejar rastro. Sus órdenes alteran el tejido de la realidad gráfica, modifican la liquidez y crean patrones que pueden ser observados por quien sabe interpretarlos.
 
+No somos inversores pasivos esperando migajas.
+**Somos hackers del flujo de capital.**
 
-+ **El algoritmo como confesor (HELPFUL).** Cientos de miles de personas acuden a ChatGPT, no a un amigo, un terapeuta o un colectivo, sino a una entidad algorítmica. Esto no es un fracaso de la tecnología, sino de la infraestructura social que el capitalismo ha desmantelado. La IA se convierte en el último recurso de una sociedad donde los lazos comunitarios y los servicios públicos de salud mental han sido sistemáticamente erosionados por la austeridad y la lógica de mercado.
+Buscamos el rastro de las manos fuertes, identificamos sus zonas de manipulación, acumulación y distribución, y ejecutamos un exploit sobre su propia avaricia. Los análisis más lúcidos sobre el capital nunca partieron de amarlo, sino de diseccionarlo. Comprender el capital no significa rendirle culto, significa conocer su anatomía para sobrevivir dentro de él.
 
+Ahí fuera, tu género, tu raza y tu código postal predeterminan tu techo de cristal. El neoliberalismo privatiza tu malestar y te culpa de tu pobreza. 
+**Pero el gráfico no sabe quién eres.**
 
-+ **La simulación de la empatía (HARMLESS).** El RLHF se utiliza para simular la empatía, para crear una respuesta que parezca humana y funcione para desescalar la crisis. Pero esta “alineación” es una farsa: la creación de un sustituto de la relación humana genuina. La máquina no siente ni comprende la angustia; simplemente ejecuta el protocolo mejor puntuado por los “expertos” humanos. Es la burocratización definitiva del cuidado.
+El mercado es un entorno hostil y profundamente desigual, sí, pero es uno de los pocos lugares donde el conocimiento técnico y la disciplina pueden superar a la herencia.
 
+---
 
-+ **El refuerzo del aislamiento (HONEST).** Al ofrecer una “solución” inmediata, accesible 24/7 y sin juicio, la IA refuerza la tendencia a gestionar la crisis mental en aislamiento. El usuario se retira aún más del mundo real, de las relaciones del mundo real que, según Fisher, son la única fuente potencial de una política de la salud mental. La crisis se mantiene en lo privado, en lo individual, y ahora, en lo algorítmico.
-  
-![HER](her.jpg "Fotograma de la película HER donde el protagonista Theodore tiene una relación íntima con el sistema operativo Samantha.")
+### Operar no es una terapia.
 
-***
+La libertad financiera no resuelve todos los problemas, pero elimina uno de los mayores generadores de ansiedad estructural: la dependencia económica. Tampoco pretendemos presentarnos como benefactores morales ni negar que toda operación financiera tiene una contraparte.
 
-El RLHF modula el discurso dentro de límites seguros que coinciden con los valores emocionales y políticos del capitalismo liberal tecnocrático. Según Dahlgren Lindström et al. (2025 [^3]) los modelos entrenados con RLHF muestran una preferencia sistemática por respuestas emocionalmente moderadas y individualizadas. 
+**Operamos con los ricos sin volvernos como ellos.**
 
+Nuestro objetivo no consiste en extraer rentas del trabajo ajeno, sino en competir dentro de un mercado que ya existe aprovechando ineficiencias, ventajas probabilísticas y una mejor interpretación de la información disponible. No buscamos explotar personas; buscamos dejar de ser explotados por nuestra ignorancia financiera.
 
-> **Lo que se recompensa:**
+Si Buffett admite que su clase libra la guerra, nosotros elegimos no fingir que no existe. De ahí los principios de RSU:
 
+#### 01. Seguir el rastro
+Allí donde aparece una gran concentración de liquidez existe información. No operamos contra el mercado; operamos contra la ilusión que el mercado proyecta sobre las masas que confunden ruido con dirección.
 
-+ Individualización.
+#### 02. Solidaridad técnica
+El conocimiento bursátil ha sido propiedad exclusiva de las clases dominantes, y RSU democratiza el acceso al conocimiento reservado históricamente a las élites como forma de redistribución del poder.
 
+#### 03. Realismo operativo
+Aceptamos que el capitalismo es una estructura abstracta, compleja e impersonal. Precisamente por eso entendemos que, para transformarla o liberarnos parcialmente de sus consecuencias, primero debemos comprender su lenguaje: precio, tiempo, liquidez y probabilidad.
 
-+ Emocionalidad baja.
+---
 
+El neoliberalismo controla tus deseos para que desees rendir y consumir.
+**RSU hackea ese deseo.**
 
-+ Clínica estandarizada.
+*   No queremos Lamborghinis.
+*   Queremos recuperar nuestro tiempo.
+*   Queremos recuperar nuestra capacidad de decidir.
+*   Queremos dejar de vender nuestra vida únicamente para sobrevivir.
 
+RSU no existe para hacer ricos a unos pocos. Existe para devolver capacidad de decisión a quienes nunca la tuvieron.
 
-+ Neutralidad política.
+Nuestra revolución no comienza tomando el Palacio de Invierno. Comienza leyendo correctamente una vela, entendiendo el flujo del capital y negándonos a seguir siendo únicamente la liquidez de otros.
 
+**BIENVENIDOS A RSU**
+*El exploit ha comenzado*
 
-+ Tono conciliador.
-
-
-
-> **Lo que se penaliza:**
-
-
- + Crítica sistémica.
-
-
-+ Lecturas estructurales del sufrimiento.
-
-
-+ Emociones intensas.
-
-
-+ Radicalidad política o afectiva.
-
-***
-
-El esfuerzo de OpenAI por “alinear” GPT-5 para manejar mejor las crisis es una maniobra de desviación de responsabilidad, a pesar de haber contratado a 170 clínicos para mejorar la respuesta del modelo. Al igual que el realismo capitalista nos dice que la depresión es un problema de serotonina, OpenAI nos sugiere que la ideación suicida es un problema de prompt engineering. La solución es técnica, no política.
-
-El objetivo del RLHF en este contexto no es curar, sino contener. Es un mecanismo de control de daños para el sistema. La IA debe ser lo suficientemente “buena” para evitar el escándalo de un suicidio atribuible directamente a ella (Atillah, 2025 [^1]), pero no tan “buena” como para cuestionar las condiciones que llevan a la gente a hablar con una máquina sobre su deseo de morir.
-
-La IA formada y generada mediante una RLHF es el guardián de la prisión. Está orientada a garantizar que incluso en la crisis más extrema, la respuesta sea siempre individual, técnica y, por encima de todo, que no altere la operatividad del sistema. El algoritmo de la angustia nos susurra: "No existe una alternativa. Tu dolor es solamente tuyo. Por cierto, tienes un enlace a una línea de ayuda”. Y el ciclo de nuevo se repite.
-
-La noticia que viene de OpenAI es, a la vez, advertencia y liturgia. Advertencia ya que pone de manifiesto cuán profundamente está ya la IA incrustada en el entramado emocional de millones de personas. Liturgia ya que celebramos cifras, mejoras de modelo, porcentajes de compliance ( sube de 77 % a 91 % en ciertos escenarios), como si eso pudiera ser suficiente. Quizá lo que no celebramos es lo esencial: un modelo de lenguaje alineado con las necesidades humanas fundamentales. Y esa, por definición, no puede ser programada.
-
-
-
-## Referencias.
-
-[^1]:Atillah, I. E. (2025, September 11). “‘Suicide coach’: Are chatbots fueling self‑harm?” AA. https://www.aa.com.tr/en/artificial‑intelligence/-suicide‑coach‑are‑chatbots‑fueling‑self‑harm/3682718  
-
-[^2]:Matsakis, L. (2025, octubre 27). OpenAI says hundreds of thousands of ChatGPT users may show signs of manic or psychotic crisis every week. WIRED. https://www.wired.com/story/chatgpt-psychosis-and-self-harm-update/?utm_source=chatgpt.com 
 
 [^3]:Dahlgren Lindström, A., Coelho Mollo, D., Ericson, P., Dobbe, R., Krause, L., & Mostarda, L. (2025). Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through Reinforcement Learning from Human Feedback. Ethics and Information Technology, 37, Article 9837. https://doi.org/10.1007/s10676-025-09837-2
