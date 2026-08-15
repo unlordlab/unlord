@@ -7,10 +7,10 @@ Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Redistribution Research Unit (RSU). La terminal."
-images: ["rlhfai.png"]
+images: ["rsu.png"]
 resources:
 - name: "featured-image"
-  src: "rlhfai.png"
+  src: "rsu.png"
 
 tags: ["Mercados financieros","RSU","Redistribution Research Unit","Terminal"]
 categories: ["unlord"]
