@@ -6,10 +6,10 @@ Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G."
-images: ["mdb.png"]
+images: ["ceci.mpg"]
 resources:
 - name: "featured-image"
-  src: "mdb.png"
+  src: "ceci.jpg"
 
 tags: ["Trap","Cecilio G","Boomer","Música","Choque generacional"]
 categories: ["unlord"]
