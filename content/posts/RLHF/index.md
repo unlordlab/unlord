@@ -1,11 +1,10 @@
 ---
-weight: 1
 title: "RLHF (Reinforcement Learning from Human Feedback). El algoritmo de la angustia."
 date: 2025-11-09 
-Draft:  false
+draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "RLHF (Reinforcement Learning from Human Feedback). El algoritmo de la angustia."
+description: "Un millón de personas hablan cada semana con ChatGPT sobre el suicidio. Qué revela eso sobre el RLHF, la IA entrenada para complacer y la época que la produce."
 images: ["rlhfai.jpg"]
 resources:
 - name: "featured-image"

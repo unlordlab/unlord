@@ -1,11 +1,10 @@
 ---
-weight: 1
 title: "Redistribution Research Unit (RSU). La terminal."
 date: 2026-08-15 
-Draft:  false
+draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Redistribution Research Unit (RSU). La terminal."
+description: "RSU Terminal: una herramienta para analizar los mercados y las estructuras de poder que los sostienen. El manifiesto del proyecto y cómo acceder."
 images: ["terminal.jpg"]
 resources:
 - name: "featured-image"
