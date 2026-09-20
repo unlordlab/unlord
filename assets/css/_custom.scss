@@ -336,13 +336,14 @@ body[theme=dark] hr {
 // marca: bandas, subrayados, bloques de titulo.
 // ==================================================================
 
-// En modo claro la estructura va en la magenta del tema Bubblegum, que
-// sobre el rosa da 7.25:1. El rojo teja chocaba con el fondo.
-$riso-red: #8a1f5c;
-// En modo oscuro la estructura va en la crema del tema Dark de
-// cyberspace.online. Ese tema es monocromo: crema sobre negro, sin
-// color de acento. El coral #ff6f61 chocaba con la paleta.
-$riso-red-dark: #efe5c0;
+// Estructura en rojo, sobre los fondos de Bubblegum y de Cyberspace Dark.
+// #c62828 da 4.72:1 sobre el rosa y 2.00:1 contra el texto. Se prefiere al
+// #b3241a anterior (5.53 sobre el fondo pero solo 1.70 contra el texto):
+// esa poca separacion era parte de por que los enlaces pasaban inadvertidos.
+$riso-red: #c62828;
+// En oscuro vuelve el coral: 7.70:1 sobre negro y 2.16:1 contra la crema,
+// el mejor equilibrio de los tonos probados.
+$riso-red-dark: #ff6f61;
 
 // --- Raya bajo la cabecera ---------------------------------------
 .header-wrapper {
@@ -381,7 +382,7 @@ body[theme=dark] .single-title::before {
 .home[data-home=posts] .summary .post-footer .post-tags a,
 .single .post-footer .post-tags a {
   color: $riso-red;
-  border-bottom: 1px solid rgba(138, 31, 92, .45);
+  border-bottom: 1px solid rgba(198, 40, 40, .5);
   white-space: nowrap;
 
   &:hover { border-bottom-color: $riso-red; }
@@ -389,7 +390,7 @@ body[theme=dark] .single-title::before {
 body[theme=dark] .home[data-home=posts] .summary .post-footer .post-tags a,
 body[theme=dark] .single .post-footer .post-tags a {
   color: $riso-red-dark;
-  border-bottom-color: rgba(239, 229, 192, .45);
+  border-bottom-color: rgba(255, 111, 97, .5);
 
   &:hover { border-bottom-color: $riso-red-dark; }
 }
@@ -443,8 +444,53 @@ body[theme=dark] hr {
 
 // --- Seleccion de texto ------------------------------------------
 ::selection {
-  background: rgba(138, 31, 92, .22);
+  background: rgba(198, 40, 40, .18);
 }
 body[theme=dark] ::selection {
-  background: rgba(239, 229, 192, .24);
+  background: rgba(255, 111, 97, .24);
+}
+
+
+// ==================================================================
+// Enlaces del contenido: que se vean
+//
+// El tema los deja indistinguibles. Compilado, su regla es:
+//
+//   .single .content a, .single .content a::before,
+//   .single .content a::after { text-decoration: none; color: ... }
+//
+// O sea, quita el subrayado. Y como el color del enlace y el del texto
+// estaban muy cerca (en oscuro eran IDENTICOS, #efe5c0 los dos), dentro
+// de un parrafo no habia forma de distinguirlos. WCAG pide que un enlace
+// no dependa solo del color; aqui no habia ni color.
+//
+// Se devuelve el subrayado. Mismo selector que el del tema, (0,2,1), y
+// como _custom.scss se importa despues, gana sin !important.
+// Se excluyen los enlaces de lightgallery, que envuelven imagenes.
+// ==================================================================
+
+.single .content a:not(.lightgallery),
+.page .content a:not(.lightgallery) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .18em;
+  text-decoration-color: rgba(198, 40, 40, .55);
+
+  &:hover {
+    text-decoration-thickness: 2px;
+    text-decoration-color: currentColor;
+  }
+}
+
+body[theme=dark] .single .content a:not(.lightgallery),
+body[theme=dark] .page .content a:not(.lightgallery) {
+  text-decoration-color: rgba(255, 111, 97, .55);
+}
+
+// Las notas al pie son numeros volados: subrayarlos queda sucio y ademas
+// ya se distinguen por su posicion y tamano.
+.single .content a.footnote-ref,
+.single .content sup a,
+.footnotes a {
+  text-decoration: none;
 }
