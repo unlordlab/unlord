@@ -519,10 +519,14 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
         clientSecret = ""
       # Valine comment config (https://github.com/xCss/Valine)
       # Valine 评论系统设置 (https://github.com/xCss/Valine)
+      # DESACTIVADO. Registraba la IP de cada visitante (recordIP) sin aviso
+      # de privacidad, con appId y appKey en un repositorio publico.
+      # Las claves siguen en el historial de git para siempre: hay que BORRAR
+      # la aplicacion en LeanCloud, no basta con vaciarlas aqui.
       [params.page.comment.valine]
-        enable = true
-        appId = "tsT5IDJI6QzjxRoqjoBsKkFT-MdYXbMMI"
-        appKey = "5Qy1O1fzOvtLVxa3Z9iYQJOI"
+        enable = false
+        appId = ""
+        appKey = ""
         placeholder = ""
         avatar = ""
         meta= ""
@@ -530,11 +534,11 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
         # automatically adapt the current theme i18n configuration when empty
         # 为空时自动适配当前主题 i18n 配置
         lang = ""
-        visitor = true
-        recordIP = true
+        visitor = false
+        recordIP = false
         highlight = true
         enableQQ = false
-        serverURLs = "https://tst5idji.api.lncldglobal.com"
+        serverURLs = ""
         # emoji data file name, default is "google.yml"
         # ["apple.yml", "google.yml", "facebook.yml", "twitter.yml"]
         # located in "themes/LoveIt/assets/lib/valine/emoji/" directory
@@ -586,19 +590,24 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
       [params.page.comment.giscus]
         # You can refer to the official documentation of giscus to use the following configuration.
         # 你可以参考官方文档来使用下列配置
-        enable = false
-        repo = ""
-        repoId = ""
+        enable = true
+        repo = "unlordlab/unlord"
+        repoId = "R_kgDOKX7Hng"
+        # Announcements a proposito: en esa categoria solo el propietario puede
+        # ABRIR discusiones, asi que giscus las crea bajo demanda y los
+        # visitantes solo pueden comentar. Es la defensa contra el spam.
         category = "Announcements"
-        categoryId = ""
+        categoryId = "DIC_kwDOKX7Hns4DGCav"
         # automatically adapt the current theme i18n configuration when empty
         # 为空时自动适配当前主题 i18n 配置
-        lang = ""
+        # El tema cae a la clave i18n "valineLang" si esto esta vacio, y en
+        # es.toml esa clave dice "en". Se fija a mano.
+        lang = "es"
         mapping = "pathname"
         reactionsEnabled = "1"
         emitMetadata = "0"
         inputPosition = "bottom"
-        lazyLoading = false
+        lazyLoading = true
         lightTheme = "light"
         darkTheme = "dark"
     # Third-party library config
