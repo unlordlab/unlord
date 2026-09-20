@@ -9,40 +9,43 @@ images: ["unlord.jpg"]
 lightgallery: true
 ---
 
-![Marc Escribà en un paisaje de montaña, en blanco y negro tramado, con la palabra «unlord» sobre una banda roja](unlord.jpg)
+![Foto perfil](unlord.jpg)
 
-Soy **Marc Escribà**.
 
-Me gradué en Educación Social por la Universitat Oberta de Catalunya y, antes de eso, me formé como técnico forestal. Sí: paso de hablar de bosques a hablar de algoritmos sin ninguna escala intermedia. En mi defensa diré que los dos son sistemas complejos que casi todo el mundo cree entender porque los ha visto de lejos, y que en ambos casos el problema aparece cuando alguien decide gestionarlos con una hoja de cálculo.
+Me gradué en Educación Social por la Universitat Oberta de Catalunya (UOC) y, antes de eso, me formé como técnico forestal. Sí, un perfil entre la gestión del medio natural y la intervención social. En el fondo, ambas disciplinas comparten más de lo que parece: se trata de observar bien el entorno, gestionar momentos de crisis y recordar que casi siempre vale más prevenir que tener que apagar el incendio después.
 
-## Pedagogía hacker, que no es lo que parece
+Me defino como activista por la educación crítica y defensor acérrimo de la **pedagogía hacker**. Cada vez que digo que defiendo la pedagogía hacker hay alguien que se imagina a un adolescente con capucha tumbando el Pentágono desde el sótano de su madre. No va de eso. Va de defender un aprendizaje que va más allá de consumir respuestas hechas. Se trata de pasar de ser meros usuarios pasivos a agentes capaces de cuestionar cómo están construidas las cosas, fomentando la autonomía para entender, auditar y transformar la tecnología y el conocimiento al servicio de las personas. De entender que detrás de cada interfaz amable hay decisiones que alguien tomó, con unos intereses concretos, y que esas decisiones se pueden discutir.
 
-Cada vez que digo que defiendo la **pedagogía hacker** hay alguien que se imagina a un adolescente con capucha tumbando el Pentágono desde el sótano de su madre. No va de eso.
+Me fascina la interacción entre la tecnología y la sociedad. Paso buena parte de mi tiempo reflexionando e investigando sobre:
 
-Va de abrir las cosas para ver cómo funcionan por dentro. De no aceptar que un dispositivo sea una caja negra solo porque es cómodo. De entender que detrás de cada interfaz amable hay decisiones que alguien tomó, con unos intereses concretos, y que esas decisiones se pueden discutir.
+## Sociedades virtuales:
 
-Aplicado a la educación: enseñar a desmontar antes que enseñar a obedecer. Que es, por cierto, bastante más incómodo que prohibir el móvil.
+Porque la sociedad contemporánea ya no distingue entre «vida digital» y «vida real». Los entornos online no son una simulación ni una evasión del mundo físico, sino un espacio donde se articulan nuevas comunidades, formas de cultura, poder y contradicciones perfectamente reales. La gente construye comunidad en los sitios más improbables, y suele funcionar mejor de lo que los sociólogos predijeron—
 
-## Qué me quita el sueño
+## Decrecimiento: 
 
-La **interacción entre tecnología y sociedad**, que es una manera elegante de decir que me paso el día pensando en por qué hemos aceptado todo esto tan rápido.
+Porque la idea de crecer infinitamente en un planeta finito suena genial en una plantilla de Excel, pero bastante reguleras en la realidad.
 
-Me interesan las **sociedades virtuales** —la gente construye comunidad en los sitios más improbables, y suele funcionar mejor de lo que los sociólogos predijeron—, el **decrecimiento**, los **sesgos algorítmicos** y las **tecnologías libres**.
+## Sesgos algorítmicos:
 
-Sobre los sesgos algorítmicos, una aclaración que ahorra discusiones: el problema no es que la máquina sea malvada. El problema es que es obediente. Hace exactamente lo que se le pidió, con los datos que se le dieron, para el objetivo que alguien fijó. Si el resultado es injusto, la máquina no ha fallado: ha funcionado.
+Descifrando por qué las máquinas, siendo supuestamente objetivas, acaban reproduciendo las mismas mañas y prejuicios de quienes las programan. El problema no es que la máquina sea malvada. El problema es que es obediente. Hace exactamente lo que se le pidió, con los datos que se le dieron, para el objetivo que alguien fijó. Si el resultado es injusto, la máquina no ha fallado: ha funcionado.
 
-Y sobre el decrecimiento, sí, soy consciente de la ironía de escribir sobre consumir menos en un medio que funciona a base de centros de datos. Por eso esto es una web estática, sin vídeo, sin infinite scroll y sin nada que se mueva solo. Pesa lo que pesa un correo con fotos.
+## Tecnologías libres:
 
-## Por qué esto es un blog y no un hilo
-
-Porque un hilo se lo queda otro.
+La infraestructura digital no debería ser una caja negra inauditable. Defiendo el código abierto y los estándares libres como una garantía básica de soberanía tecnológica, privacidad y cooperación comunitaria.
 
 Aquí no hay algoritmo que decida si esto te llega. No hay métricas que me digan qué debería escribir para gustar más. No hay nadie optimizando tu atención, entre otras cosas porque no hay nada que optimizar: son textos largos sobre temas que no interesan a casi nadie, y esa es precisamente la gracia.
-
 Si has llegado hasta aquí, ya somos dos personas raras.
 
-## Hablemos
+Si quieres discutir algo de lo que has leído, corregirme —pasa, y agradezco que pase— o simplemente comentar, los enlaces están en la portada.
 
-Escribo en castellano y en catalán, según el día y el tema.
 
-Estoy en el fediverso y respondo al correo. Si quieres discutir algo de lo que has leído, corregirme —pasa, y agradezco que pase— o simplemente comentar, los enlaces están en la portada.
+
+
+
+
+
+
+
+
+
