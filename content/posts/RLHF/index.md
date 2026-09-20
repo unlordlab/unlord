@@ -11,7 +11,7 @@ resources:
 - name: "featured-image"
   src: "rlhfai.png"
 
-tags: ["Algoritmos","IA","Salut mental","RLHF"]
+tags: ["algoritmos","IA","salud mental","RLHF"]
 categories: ["unlord"]
 
 lightgallery: true
