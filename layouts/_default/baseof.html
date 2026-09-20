@@ -5,7 +5,19 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="noodp" />
+        {{- /* "noodp" era legado inutil: el Open Directory Project cerro en 2017. */ -}}
+        {{- /* Se aprovecha el hueco para lo que si importa: quitar del indice las  */ -}}
+        {{- /* paginas de etiqueta que solo agrupan un articulo. Sacarlas del       */ -}}
+        {{- /* sitemap no basta, porque van enlazadas desde el pie de CADA post y   */ -}}
+        {{- /* Google las encuentra igual. "follow" para que siga los enlaces a los */ -}}
+        {{- /* articulos, que esos si interesan.                                    */ -}}
+        {{- $robots := "index, follow" -}}
+        {{- if and (eq .Kind "term") (eq .Data.Singular "tag") -}}
+            {{- if lt (len .Pages) 2 -}}
+                {{- $robots = "noindex, follow" -}}
+            {{- end -}}
+        {{- end -}}
+        <meta name="robots" content="{{ $robots }}" />
         <title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
 
         {{- partial "head/meta.html" . -}}

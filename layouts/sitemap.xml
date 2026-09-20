@@ -3,6 +3,20 @@
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
     >
     {{- range (where .Data.Pages "Section" "!=" "gallery") -}}
+        {{- /* Fuera las paginas de etiqueta que solo agrupan un post.        */ -}}
+        {{- /* Eran 32 de 35, o sea 32 de las 50 URLs del sitemap: paginas    */ -}}
+        {{- /* que solo repiten el titulo y el resumen de UN articulo. Eso es */ -}}
+        {{- /* contenido pobre: gasta presupuesto de rastreo y da la          */ -}}
+        {{- /* impresion de un sitio lleno de paginas vacias.                 */ -}}
+        {{- /* El umbral es automatico: en cuanto una etiqueta llegue a dos   */ -}}
+        {{- /* articulos vuelve a entrar sola.                                */ -}}
+        {{- $incluir := true -}}
+        {{- if and (eq .Kind "term") (eq .Data.Singular "tag") -}}
+            {{- if lt (len .Pages) 2 -}}
+                {{- $incluir = false -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if $incluir -}}
         <url>
             <loc>
                 {{- .Permalink -}}
@@ -43,5 +57,6 @@
                     />
             {{- end -}}
         </url>
+        {{- end -}}
     {{- end -}}
 </urlset>
