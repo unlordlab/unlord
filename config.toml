@@ -657,7 +657,9 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
   # Site verification code for Google/Bing/Yandex/Pinterest/Baidu
   # 网站验证代码，用于 Google/Bing/Yandex/Pinterest/Baidu
   [params.verification]
-    google = ""
+    # Verificacion de propiedad en Google Search Console.
+    # El tema la emite en head/seo.html como <meta name="google-site-verification">.
+    google = "-wAE9kgx9zWKuqJUI_hw3R40D6rVe5JfzfL8cf-En-M"
     bing = ""
     yandex = ""
     pinterest = ""
