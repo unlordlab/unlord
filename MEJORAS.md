@@ -449,6 +449,29 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   → Lo mismo para el estudio de caso de la Sra. Maria Ferrer: tiene público académico real
   en educación social.
 
+  **Por qué importa:** hoy el TFG es un adjunto. Quien investigue sobre metaverso y
+  desigualdad **no lo va a encontrar nunca**, porque Google Scholar no rastrea PDFs
+  sueltos en blogs personales. Y aunque lo encuentre, no puede citarlo bien: no tiene
+  identificador estable, y si cambias de dominio el enlace muere.
+
+  **Zenodo** (el repositorio del CERN, gratuito y permanente) da:
+  - Un **DOI**, identificador permanente y citable en bibliografías.
+  - **Indexación en Google Scholar**, que es donde busca quien podría citarte.
+  - Preservación a largo plazo, independiente del blog.
+  - Métricas de descargas y citas.
+
+  Son unos diez minutos: subir el PDF, rellenar título, resumen, autor y licencia.
+
+  **6.2b · Desarrollar el post del TFG** ⬅️ *añadido*
+  El post son **348 palabras**, básicamente un enlace de descarga. Si se toca, merece
+  la pena convertirlo en una entrada de verdad: por qué lo escribiste, qué encontraste,
+  qué te sorprendió. Eso **sí lo indexa Google**, al contrario que el PDF, y es lo que
+  llevaría gente al documento. Lo mismo aplica al post de la Sra. Ferrer.
+
+  **Cuando tengas el DOI y el ORCID**, dímelos: actualizo el post con la cita formal y
+  relleno los campos `ORCID`, `Googlescholar` y `Researchgate` del `config.toml`, que
+  siguen vacíos desde el principio.
+
 - [ ] 🙋 **6.3 · Dónde difundir, por tipo de post**
   - *Pantallas, RLHF, Metaverso* → Mastodon (`#EducacióDigital`, `#Tecnopolítica`),
     Menéame, comunidades de educación social en Telegram/Mastodon.
