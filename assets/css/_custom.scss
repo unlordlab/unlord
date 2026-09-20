@@ -264,3 +264,121 @@ body[theme=dark] hr {
     font-family: inherit;
   }
 }
+
+// ==================================================================
+// VARIANTE B — el rojo como estructura
+//
+// Misma base de papel y tinta que la variante A, mismos contrastes.
+// Lo que cambia es el papel del rojo: en la A solo aparece en enlaces
+// y hover; aqui sostiene la maquetacion. Imita el lenguaje de las
+// propias ilustraciones del blog, donde el rojo no decora sino que
+// marca: bandas, subrayados, bloques de titulo.
+// ==================================================================
+
+$riso-red: #b3241a;
+$riso-red-dark: #ff6f61;
+
+// --- Raya bajo la cabecera ---------------------------------------
+.header-wrapper {
+  border-bottom: 2px solid $riso-red;
+}
+body[theme=dark] .header-wrapper {
+  border-bottom-color: $riso-red-dark;
+}
+
+// --- Marca roja a la izquierda de cada titulo --------------------
+.single-title {
+  position: relative;
+  padding-left: .9rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .18em;
+    bottom: .18em;
+    width: 4px;
+    background: $riso-red;
+  }
+}
+body[theme=dark] .single-title::before {
+  background: $riso-red-dark;
+}
+
+// --- Etiquetas subrayadas en rojo --------------------------------
+// Nada de fichas con borde: la plantilla intercala comas literales
+// (",&nbsp;" en _default/summary.html:68) que no se pueden ocultar por
+// CSS, asi que caja + coma queda redundante. Y una etiqueta de varias
+// palabras partia el recuadro por la mitad.
+// El tema fuerza .single .post-footer .post-tags * { display: inline }
+// con especificidad (0,3,1): hay que igualarla para ganar.
+.home[data-home=posts] .summary .post-footer .post-tags a,
+.single .post-footer .post-tags a {
+  color: $riso-red;
+  border-bottom: 1px solid rgba(179, 36, 26, .45);
+  white-space: nowrap;
+
+  &:hover { border-bottom-color: $riso-red; }
+}
+body[theme=dark] .home[data-home=posts] .summary .post-footer .post-tags a,
+body[theme=dark] .single .post-footer .post-tags a {
+  color: $riso-red-dark;
+  border-bottom-color: rgba(255, 111, 97, .45);
+
+  &:hover { border-bottom-color: $riso-red-dark; }
+}
+
+// --- "Leer mas" como llamada, no como enlace suelto --------------
+// El enlace "Leer mas" no lleva clase: en _default/summary.html:63 es
+// simplemente el primer <a> de .post-footer.
+.post-footer > a:first-of-type {
+  display: inline-block;
+  padding: .15rem 0;
+  border-bottom: 2px solid $riso-red;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+body[theme=dark] .post-footer > a:first-of-type {
+  border-bottom-color: $riso-red-dark;
+}
+
+// --- Citas con banda gruesa --------------------------------------
+blockquote {
+  border-left: 4px solid $riso-red;
+  padding-left: 1rem;
+}
+body[theme=dark] blockquote {
+  border-left-color: $riso-red-dark;
+}
+
+// --- La barra CONTENIDO, perfilada en rojo -----------------------
+#toc-static .details-summary,
+.toc .toc-title {
+  border-color: $riso-red;
+  color: $riso-red;
+}
+body[theme=dark] #toc-static .details-summary,
+body[theme=dark] .toc .toc-title {
+  border-color: $riso-red-dark;
+  color: $riso-red-dark;
+}
+
+// --- Separadores de la portada -----------------------------------
+.home .summary:not(:last-child)::after,
+hr {
+  border-top: 2px solid $riso-red;
+  opacity: .25;
+}
+body[theme=dark] .home .summary:not(:last-child)::after,
+body[theme=dark] hr {
+  border-top-color: $riso-red-dark;
+}
+
+// --- Seleccion de texto ------------------------------------------
+::selection {
+  background: rgba(179, 36, 26, .22);
+}
+body[theme=dark] ::selection {
+  background: rgba(255, 111, 97, .28);
+}
