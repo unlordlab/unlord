@@ -39,6 +39,14 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 [menu]
  [[menu.main]]
     weight = 4
+    identifier = "about"
+    pre = ""
+    post = ""
+    name = "Acerca de mí"
+    url = "/about/"
+    title = ""
+  [[menu.main]]
+    weight = 5
     identifier = "CV"
     pre = ""
     post = ""

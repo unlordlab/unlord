@@ -494,3 +494,19 @@ body[theme=dark] .page .content a:not(.lightgallery) {
 .footnotes a {
   text-decoration: none;
 }
+
+// --- Titulo de las paginas sueltas --------------------------------
+// _page/_special.scss alinea a la derecha el titulo de las paginas
+// marcadas como "special" (las que no son posts, como /about/):
+//
+//     .special { .single-title, .single-subtitle { text-align: right; } }
+//
+// Con la marca roja de la variante riso, que va pegada a la izquierda,
+// el titulo quedaba en una punta y la marca en la otra. Se alinea a la
+// izquierda, igual que en los posts.
+.special {
+  .single-title,
+  .single-subtitle {
+    text-align: left;
+  }
+}
