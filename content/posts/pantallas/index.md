@@ -29,7 +29,7 @@ No es lo mismo una red social como Instagram que [Letterboxd](https://letterboxd
 
 Determinadas plataformas actuales no buscan únicamente ser usadas. Buscan convertirse en el ambiente mismo donde ocurre la experiencia social. El capitalismo de plataformas ya no vende productos: organiza percepción, deseo y temporalidad. El *scroll* infinito no es una simple característica inofensiva de diseño. Es una tecnología temporal que elimina el final y destruye la pausa. Convierte la experiencia en un flujo continuo donde desaparece la posibilidad de distancia crítica.
 
-La ironía es que muchos padres responden a este problema exactamente con la lógica que determinadas plataformas necesitan: sin señalar a los culpables y prohibiendo (aunque sea temporalmente) a sus hijos en lugar de alfabetizar. Y esa simplificación puede tener costes enormes.
+La ironía es que muchos padres responden a este problema exactamente con la lógica que determinadas plataformas necesitan: sin señalar a los culpables y prohibiendo (aunque sea temporalmente) a sus hijos en lugar de educar. Y esa simplificación puede tener costes enormes.
 
 Porque mientras se construye un pánico moral alrededor de las pantallas, se pierde de vista algo fundamental: detrás de ellas también existen posibilidades inmensas de aprendizaje, creación, cooperación y autonomía. Reducir el mundo digital únicamente a una amenaza implica condenar a los jóvenes a una relación infantilizada con el entorno en el que inevitablemente vivirán. La sociedad contemporánea ya no distingue entre «vida digital» y «vida real». Ambas se han fusionado irreversiblemente.
 
