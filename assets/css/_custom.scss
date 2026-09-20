@@ -312,8 +312,13 @@ body[theme=dark] hr {
   padding: 0;
   position: static;
 
-  // Al ancho de la columna de texto, sin recuadro ni recorte.
-  margin: .6rem 0;
+  // Mas estrechas que la columna de texto, para que quepan mas posts por
+  // pantalla. NO se ven peor por reducirlas: al encoger la caja el
+  // navegador escoge del srcset una variante menor para menos pixeles de
+  // pantalla, asi que la densidad efectiva sube.
+  // En la pagina del post se siguen viendo a todo el ancho.
+  max-width: 24rem;
+  margin: .6rem auto;
 
   img,
   img.lazyloaded {
