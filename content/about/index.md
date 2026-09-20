@@ -20,7 +20,7 @@ Me fascina la interacción entre la tecnología y la sociedad. Paso buena parte 
 
 ## Sociedades virtuales:
 
-Porque la sociedad contemporánea ya no distingue entre «vida digital» y «vida real». Los entornos online no son una simulación ni una evasión del mundo físico, sino un espacio donde se articulan nuevas comunidades, formas de cultura, poder y contradicciones perfectamente reales. La gente construye comunidad en los sitios más improbables, y suele funcionar mejor de lo que los sociólogos predijeron—
+Porque la sociedad contemporánea ya no distingue entre «vida digital» y «vida real». Los entornos **online** no son una simulación ni una evasión del mundo físico, sino un espacio donde se articulan nuevas comunidades, formas de cultura, poder y contradicciones perfectamente reales. La gente construye comunidad en los sitios más improbables, y suele funcionar mejor de lo que los sociólogos predijeron.
 
 ## Decrecimiento: 
 
@@ -28,16 +28,18 @@ Porque la idea de crecer infinitamente en un planeta finito suena genial en una 
 
 ## Sesgos algorítmicos:
 
-Descifrando por qué las máquinas, siendo supuestamente objetivas, acaban reproduciendo las mismas mañas y prejuicios de quienes las programan. El problema no es que la máquina sea malvada. El problema es que es obediente. Hace exactamente lo que se le pidió, con los datos que se le dieron, para el objetivo que alguien fijó. Si el resultado es injusto, la máquina no ha fallado: ha funcionado.
+Descifrando por qué las máquinas, siendo supuestamente objetivas, acaban reproduciendo las mismas mañas y prejuicios de quienes las programan. El problema no es que la máquina sea malvada. El problema es que es **obediente**. Hace exactamente lo que se le pidió, con los datos que se le dieron, para el objetivo que alguien fijó. Si el resultado es injusto, la máquina no ha fallado: **ha funcionado**.
 
 ## Tecnologías libres:
 
-La infraestructura digital no debería ser una caja negra inauditable. Defiendo el código abierto y los estándares libres como una garantía básica de soberanía tecnológica, privacidad y cooperación comunitaria.
+La **infraestructura digital** no debería ser una caja negra inauditable. Defiendo el **código abierto** y los estándares libres como una garantía básica de soberanía tecnológica, privacidad y cooperación comunitaria.
 
-Aquí no hay algoritmo que decida si esto te llega. No hay métricas que me digan qué debería escribir para gustar más. No hay nadie optimizando tu atención, entre otras cosas porque no hay nada que optimizar: son textos largos sobre temas que no interesan a casi nadie, y esa es precisamente la gracia.
+## En resumen:
+
+Aquí no hay **algoritmo** que decida si esto te llega. No hay métricas que me digan qué debería escribir para gustar más. No hay nadie optimizando tu atención, entre otras cosas porque no hay nada que optimizar: son textos largos sobre temas que no interesan a casi nadie, y esa es precisamente la gracia.
 Si has llegado hasta aquí, ya somos dos personas raras.
 
-Si quieres discutir algo de lo que has leído, corregirme —pasa, y agradezco que pase— o simplemente comentar, los enlaces están en la portada.
+Si quieres discutir algo de lo que has leído, corregirme —pasa, y agradezco que pase— o simplemente comentar, mi correo está en la portada.
 
 
 
