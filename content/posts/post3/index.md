@@ -6,10 +6,10 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Flickr vs. Instagram: La evolución del self digital"
-images: ["fvsi.webp"]
+images: ["fvsi.jpg"]
 resources:
 - name: "featured-image"
-  src: "fvsi.webp"
+  src: "fvsi.jpg"
 
 tags: ["Metaverso", "SelfDigital", "Flickr", "Instagram", "Redes Sociales", "EvolucionDigital"]
 categories: ["unlord"]
