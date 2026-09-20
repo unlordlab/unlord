@@ -1,5 +1,6 @@
 baseURL = "https://unlordl4b.pages.dev/"
 
+
 # Titulo del sitio. OJO: Hugo lee .Site.Title del NIVEL RAIZ, no de [params].
 title = "unlord l4b"
 # Idioma del contenido: pone <html lang="es"> y traduce la UI del tema via i18n/es.toml
@@ -13,6 +14,11 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 # Forma moderna: paginate quedo deprecado en Hugo 0.128 y es ERROR desde 0.140
 [pagination]
   pagerSize = 12
+
+# El buscador lunr se alimenta de /index.json, que solo se genera si la
+# home declara la salida JSON. Sin esto el buscador no encuentra nada.
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
 [module]
   [module.hugoVersion]
@@ -87,7 +93,8 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 [params]
   # site default theme ["auto", "light", "dark"]
   # 网站默认主题 ["auto", "light", "dark"]
-  defaultTheme = "dark"
+  # "auto" respeta la preferencia del sistema operativo del lector
+  defaultTheme = "auto"
   # public git repo url only then enableGitInfo is true
   # 公共 git 仓库路径，仅在 enableGitInfo 设为 true 时有效
   gitRepo = ""
@@ -108,6 +115,9 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
   # website description for RSS, SEO, Open Graph and Twitter Cards
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "Blog de Marc Escriba sobre educacion critica, cultura digital y tecnopolitica: algoritmos, decrecimiento y tecnologias libres."
+  # Cuenta del fediverso, para la etiqueta fediverse:creator.
+  # Mastodon 4.3+ la lee y acredita al autor en la tarjeta de enlace.
+  fediverseCreator = "@marcescriba@mastodon.social"
   # website images for Open Graph and Twitter Cards
   # 网站图片, 用于 Open Graph 和 Twitter Cards
   images = ["/og-default.png"]
@@ -222,10 +232,11 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
   # Search config
   # 搜索配置
   [params.search]
-    enable = false
+    enable = true
     # type of search engine ["lunr", "algolia"]
     # 搜索引擎的类型 ["lunr", "algolia"]
-    type = "algolia"
+    # lunr: indice local, sin servicio externo ni claves
+    type = "lunr"
     # max index length of the chunked content
     # 文章内容最长索引长度
     contentLength = 4000
@@ -270,7 +281,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
       title = ""
       # subtitle shown in home page (HTML format is supported)
       # 主页显示的网站副标题 (允许 HTML 格式)
-      subtitle = "Soy Marc Escribà. Graduado en Educación Social por la Universidad Oberta de Catalunya (UOC) y técnico forestal. Activista por la educación crítica y defensor de la pedagogia hacker. Fascinado por la interacción entre tecnología y sociedad. Interesado en las sociedades virtuales, el decrecimiento, los sesgos algorítmicos y las tecnologías libres."
+      subtitle = "Graduado en Educación Social por la Universidad Oberta de Catalunya (UOC) y técnico forestal. Activista por la educación crítica y defensor de la pedagogia hacker. Fascinado por la interacción entre tecnología y sociedad. Interesado en las sociedades virtuales, el decrecimiento, los sesgos algorítmicos y las tecnologías libres."
       # whether to use typeit animation for subtitle
       # 是否为副标题显示打字机动画
       typeit = false
@@ -365,7 +376,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     RootMe= ""
     Email = "marcescriba86@gmail.com"
     Phone = ""
-    RSS = ""
+    RSS = "/index.xml"
 
   # Page global config
   # 文章页面全局配置
@@ -466,20 +477,20 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
       enable = true
       Twitter = true
       Facebook = true
-      Linkedin = false
+      Linkedin = true
       Whatsapp = true
       Pinterest = false
       Tumblr = false
       HackerNews = true
-      Reddit = false
+      Reddit = true
       VK = false
       Buffer = false
       Xing = false
-      Line = true
+      Line = false
       Instapaper = false
       Pocket = false
       Flipboard = false
-      Weibo = true
+      Weibo = false
       Blogger = false
       Baidu = false
       Odnoklassniki = false
@@ -612,8 +623,8 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
       # Publisher info
       # 出版者信息
       [params.page.seo.publisher]
-        name = ""
-        logoUrl = ""
+        name = "unlord l4b"
+        logoUrl = "/og-default.png"
 
   # TypeIt config
   # TypeIt 配置

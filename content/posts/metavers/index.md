@@ -10,7 +10,7 @@ resources:
 - name: "featured-image"
   src: "metavers.jpg"
 
-tags: ["TFG","metaverse",]
+tags: ["TFG", "metaverso"]
 categories: ["unlord"]
 
 lightgallery: true

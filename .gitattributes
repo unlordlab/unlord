@@ -1,0 +1,26 @@
+# Normaliza los finales de linea en el repositorio.
+#
+# Hasta ahora el repo mezclaba convenciones: config.toml guardado en CRLF
+# (viene de subirlo por la web de GitHub, los commits "Add files via
+# upload") y los .md en LF. Eso hace que cualquier edicion desde un
+# editor de Windows amenace con reescribir ficheros enteros y deje
+# diffs ilegibles de cientos de lineas por cambiar dos.
+#
+# Con text=auto git guarda SIEMPRE LF internamente y convierte al checkout
+# segun el sistema. Deja de importar con que editor se toque cada fichero.
+* text=auto
+
+# Binarios: que git no intente convertir nada ni calcular diffs de texto
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.pdf    binary
+*.mp4    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.eot    binary

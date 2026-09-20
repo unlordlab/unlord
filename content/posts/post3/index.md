@@ -10,7 +10,7 @@ resources:
 - name: "featured-image"
   src: "fvsi.jpg"
 
-tags: ["Metaverso", "SelfDigital", "Flickr", "Instagram", "Redes Sociales", "EvolucionDigital"]
+tags: ["metaverso", "self digital", "Flickr", "Instagram", "redes sociales", "evolución digital"]
 categories: ["unlord"]
 
 lightgallery: true
