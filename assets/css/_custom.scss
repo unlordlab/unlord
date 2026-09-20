@@ -385,6 +385,21 @@ body[theme=dark] .single-title::before {
 // El tema fuerza .single .post-footer .post-tags * { display: inline }
 // con especificidad (0,3,1): hay que igualarla para ganar.
 .home[data-home=posts] .summary .post-footer .post-tags a,
+// El contenedor debe poder cortar ENTRE etiquetas. El tema las separa con
+// ",&nbsp;" (single/footer.html:53 y summary.html:68), y un &nbsp; es un
+// espacio NO separable: sin esto la lista entera es un bloque indivisible
+// que se sale de su caja y se monta encima del "Regresar | Inicio", que va
+// en la misma linea (single/footer.html:60).
+// Medido: scrollWidth 425 sobre un clientWidth de 312.
+//
+// overflow-wrap:anywhere permite cortar donde haga falta, pero el nowrap de
+// cada <a> gana dentro de ella: corta entre etiquetas y nunca dentro de una.
+.post-tags,
+.single .post-footer .post-tags,
+.home[data-home=posts] .summary .post-footer .post-tags {
+  overflow-wrap: anywhere;
+}
+
 .single .post-footer .post-tags a {
   color: $riso-red;
   border-bottom: 1px solid rgba(198, 40, 40, .5);
