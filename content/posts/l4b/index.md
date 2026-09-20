@@ -5,10 +5,10 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "De GeoCities a las plataformas: por qué dejamos de construir nuestro propio rincón en Internet y qué perdimos al mudarnos a las casas de otros."
-images: ["1.jpeg"]
+images: ["geocities.jpg"]
 resources:
 - name: "featured-image"
-  src: "1.jpeg"
+  src: "geocities.jpg"
 
 tags: ["internet", "cultura",]
 categories: ["unlord"]
