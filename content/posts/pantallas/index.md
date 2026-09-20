@@ -1,15 +1,15 @@
 ---
 weight: 1
 title: "La pantalla no era el enemigo."
-date: 2026-20-09 
+date: 2026-09-20
 Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Una reflexión sobre cómo el pánico moral hacia las pantallas oculta el verdadero problema: la arquitectura algorítmica y el capitalismo de plataformas."
-images: ["rlhfai.png"]
+images: ["pantallas.jpg"]
 resources:
 - name: "featured-image"
-  src: "rlhfai.png"
+  src: "pantallas.jpg"
 tags: ["tecnología", "sociedad", "algoritmos", "educación", "meta", "pantallas"]
 lightgallery: true
 ---
