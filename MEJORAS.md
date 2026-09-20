@@ -255,7 +255,7 @@ Google mide Core Web Vitals para posicionar. `content/` pesa **32 MB**.
   Sin esto, el día que Cloudflare actualice su imagen de build, el despliegue rompe con
   `can't evaluate field Author in type page.Site`.
 
-- [ ] 🤖 **2.6 · Añadir un `.gitattributes`** ⬅️ *pendiente*
+- [x] 🤖 **2.6 · Añadir un `.gitattributes`** ⬅️ *pendiente*
   El repo tiene convenciones mezcladas: `config.toml` está guardado en CRLF (porque lo
   subiste por la web de GitHub, los commits *"Add files via upload"*) y los `.md` en LF.
   Eso hace que cualquier edición desde un editor de Windows amenace con reescribir
@@ -366,7 +366,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   Todo tu perfil es el subtítulo de la portada. Con CV, TFG y un proyecto como RSU, una
   `/about/` con tu recorrido y cómo contactarte vale más que un PDF en el menú.
 
-- [ ] 🤖 **4.2 · El buscador está apagado**
+- [x] 🤖 **4.2 · El buscador está apagado**
   `enable = false` con `type = "algolia"` y las claves vacías.
   → `type = "lunr"` + `enable = true`: local, gratis, sin servicios externos.
   Encaja con tu discurso de tecnologías libres.
@@ -375,13 +375,13 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   Los 8 posts con categoría tienen la misma: `"unlord"`. `pantallas` no tiene ninguna.
   - Propuesta: *Educación crítica*, *Cultura digital*, *Tecnopolítica*, *Proyectos*.
 
-- [ ] 🤖 **4.4 · Tags inconsistentes**
+- [x] 🤖 **4.4 · Tags inconsistentes**
   `"Metaverso"` y `"metaverse"` conviven como etiquetas distintas. Mezcla de castellano,
   catalán e inglés. CamelCase (`"SelfDigital"`, `"EvolucionDigital"`) junto a frases con
   espacios (`"salud mental"`, `"comunitats en línia"`).
   → Unificar a minúsculas y un idioma.
 
-- [ ] 🤖 **4.5 · `defaultTheme = "dark"` forzado** → `"auto"`, respeta la preferencia del sistema.
+- [x] 🤖 **4.5 · `defaultTheme = "dark"` forzado** → `"auto"`, respeta la preferencia del sistema.
 
 - [x] 🤖 **4.6 · URLs absolutas hardcodeadas**
   Logo: `https://unlordl4b.pages.dev/posts/icono.PNG`
@@ -389,7 +389,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   El día que pongas dominio propio, se rompen las dos.
   → Rutas relativas (`/icono.PNG`) y ficheros en `static/`.
 
-- [ ] 🤖 **4.7 · Botones de compartir mal elegidos**
+- [x] 🤖 **4.7 · Botones de compartir mal elegidos**
   Activos: Weibo, Line, HackerNews. **Desactivados: LinkedIn y Mastodon** — justamente
   donde vive tu audiencia y donde tú tienes cuenta.
 
@@ -407,7 +407,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
 ## FASE 5 — Comentarios y privacidad
 
-- [ ] 🙋 **5.1 · Valine está registrando IPs de tus visitantes sin aviso**
+- [~] 🙋 **5.1 · Valine está registrando IPs de tus visitantes sin aviso** ⬅️ *casi*
 
   ```toml
   [params.page.comment.valine]
@@ -427,7 +427,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   *(Necesito que actives Discussions en un repo tuyo y me pases `repoId`/`categoryId`,
   o te guío por giscus.app.)*
 
-- [ ] 🙋 **5.2 · No tienes analítica de ningún tipo** (`analytics.enable = false`).
+- [x] 🙋 **5.2 · No tienes analítica de ningún tipo** (`analytics.enable = false`).
   Estás publicando a ciegas.
   → **Cloudflare Web Analytics**: gratis, sin cookies, sin banner, y ya estás en Cloudflare.
   Se activa desde el panel sin tocar código. Alternativas autoalojadas: Umami, Plausible.
@@ -459,15 +459,44 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   - *L4b / Flickr vs Instagram* → Hacker News y Lobsters funcionan bien con nostalgia de
     internet temprano, aunque en inglés.
 
-- [ ] 🤖 **6.4 · Tu RSS existe pero está escondido**
+- [x] 🤖 **6.4 · Tu RSS existe pero está escondido**
   No está en el menú y `RSS = ""` en `[params.social]`. Tu audiencia (fediverso, gente
   crítica con las plataformas) es precisamente la que usa lectores RSS.
   → Ponerlo visible. Y valorar `rssFullText = true` para que te lean en el lector.
 
-- [ ] 🤖 **6.5 · Atribución en el fediverso**
+- [x] 🤖 **6.5 · Atribución en el fediverso**
   Mastodon 4.3+ lee `<meta name="fediverse:creator" content="@marcescriba@mastodon.social">`
   y muestra tu cuenta en las tarjetas de enlace. Una línea en
   `layouts/partials/head/custom.html` y compartir tu blog te acredita a ti.
+
+- [ ] 🙋 **5.1b · Borrar la aplicación de LeanCloud** ⬅️ *pendiente, solo tú*
+  Valine ya está desactivado y las claves vaciadas del `config.toml`, **pero eso no
+  las borra del historial de git**, donde siguen para siempre y son públicas.
+  El único arreglo real es entrar en LeanCloud y **borrar la aplicación**.
+
+- [ ] 🙋 **5.1c · Instalar la app de giscus** ⬅️ *pendiente, solo tú*
+  [github.com/apps/giscus](https://github.com/apps/giscus) → *Install* → solo en
+  `unlordlab/unlord`. Sin eso el recuadro de comentarios carga pero da error.
+  Todo lo demás ya está configurado y verificado.
+
+- [ ] 🙋 **6.9 · Suscripción por correo** ⬅️ *nuevo*
+  Como la de [askell.blog](https://www.askell.blog/), que usa **Ghost 6.64** con su
+  widget *Portal*. Eso no se puede copiar: Ghost es una plataforma con base de datos
+  y servidor de correo detrás. Hugo es estático, no hay backend donde guardar
+  suscriptores ni desde donde enviar. Hace falta un servicio externo.
+
+  | Opción | A favor | En contra |
+  |---|---|---|
+  | **Buttondown** *(recomendada)* | RSS-a-correo automático: publicas y sale el envío solo. Gratis hasta 100 suscriptores. Proyecto independiente. La lista es tuya y se exporta. | ~9 $/mes al pasar de 100 |
+  | **Listmonk** autoalojado | Código abierto, control total, sin intermediarios. Coherente con el discurso del blog. | Necesita servidor y un SMTP de verdad; desde una IP doméstica los correos van a spam. Mantenimiento real |
+  | **No hacer nada** | Tu audiencia (fediverso, gente crítica con las plataformas) ya usa lectores RSS, y el feed acaba de volverse visible | No tienes lista propia |
+
+  ⚠️ **Aviso legal:** un formulario de correo recoge dato personal. Haría falta una
+  nota de privacidad y doble confirmación (*double opt-in*). Buttondown lo trae de
+  serie. Es distinto de la analítica de Cloudflare, que no recoge nada personal.
+
+  Si eliges Buttondown, lo monto entero (formulario, estilos acordes al tema y la
+  automatización); solo necesito que crees la cuenta y me pases la clave del formulario.
 
 - [ ] 🙋 **6.6 · El CV como página, no como PDF**
   Una `/cv/` en HTML se indexa, se lee en móvil y se enlaza. El PDF queda como descarga
@@ -480,40 +509,54 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
   Enlazarlos retiene lectores y ayuda al posicionamiento.
 
-- [ ] 🤖 **6.8 · Rellenar `[params.page.seo.publisher]`**
+- [x] 🤖 **6.8 · Rellenar `[params.page.seo.publisher]`**
   `name` y `logoUrl` están vacíos y salen así en el JSON-LD.
 
 ---
 
 ## Qué toca ahora
 
-**Solo tú puedes hacerlo (5 min, y es lo más urgente):**
+**A un clic tuyo, y bloquean cosas ya hechas:**
 
-1. **2.5b** — `HUGO_VERSION = 0.135.0` en Cloudflare Pages → Settings → Environment
-   variables. Sin esto tu web puede dejar de desplegarse sin previo aviso.
+1. **5.1c** — instalar la app de [giscus](https://github.com/apps/giscus) en
+   `unlordlab/unlord`. Todo lo demás de los comentarios ya está configurado.
+2. **5.1b** — borrar la aplicación de LeanCloud. Las claves siguen en el historial
+   de git y son públicas; vaciarlas del `config.toml` no las borra de ahí.
 
-**Decisiones que espero de ti para seguir:**
+**Lo que de verdad mueve la aguja:**
 
-2. **1.4b** — ¿la tarjeta Open Graph te sirve o la rehacemos?
-3. **1.6b** — política sobre crawlers de IA
-4. **2.1b** — cuáles de los 15,3 MB sin referenciar son restos y cuáles contenido
-5. **1.9** — revisa las 8 descripciones nuevas en el PR y cambia lo que no suene a ti
-6. **4.3 / 4.8** — categorías reales, y qué redes quieres enlazar
+3. **Google Search Console** — verificar el sitio y enviar `sitemap.xml`. Comprobado
+   que no hay ningún `noindex`: eres indexable, lo que falta es avisar a Google.
+4. **6.1** — dominio propio. Todo lo de promoción se apoya en esto.
+5. **1.7** — HTTPS para RSU Terminal, que sigue enlazado como `http://178.104.148.117/`.
 
-**Cuando tengas un rato tú (fuera del código):**
+**Decisiones que espero de ti:**
 
-7. **6.1** — dominio propio *(todo lo demás se apoya en esto)*
-8. **1.7** — Cloudflare Tunnel para RSU Terminal, y te cambio el enlace
-9. **5.2** — activar Cloudflare Web Analytics (es un clic en el panel)
+6. **1.6b** — política sobre crawlers de IA.
+7. **2.1b** — cuáles de los 15,3 MB sin referenciar son restos y cuáles contenido.
+8. **4.3** — categorías reales (hoy las 8 son `"unlord"`).
+9. **4.8** — qué redes enlazar. Siguen 73 de 75 vacías.
+10. **6.9** — si quieres boletín por correo, y con qué.
 
 **Cuando tengas una tarde:**
 
-10. **3.1 + 3.3 + 3.4** — separar el sitio del tema. Arregla de una vez la
-    incompatibilidad con Hugo moderno y te devuelve la capacidad de actualizar.
-
-**Progresivo:** el resto de las fases 4, 5 y 6, sin prisa.
+11. **3.1 + 3.3 + 3.4** — separar el sitio del tema. Arregla la incompatibilidad con
+    Hugo moderno y te devuelve la capacidad de actualizar.
 
 ---
+
+## Hecho hasta ahora
+
+| | |
+|---|---|
+| SEO | `<title>`, idioma, `robots.txt`, sitemap, descripciones, JSON-LD |
+| Rendimiento | −91 % de peso en móvil; `content/` de 32 a 22 MB |
+| Build | Ya no se rompe con Hugo moderno; versión fijada en 0.135.0 |
+| Estética | Bubblegum claro, negro/crema oscuro, Sniglet + Departure Mono, acento rojo |
+| Accesibilidad | Todo pasa WCAG AA; enlaces visibles y subrayados |
+| Contenido | Página *Acerca de mí*, menú en castellano, etiquetas unificadas |
+| Funciones | Buscador local (lunr), RSS visible, `fediverse:creator`, analítica |
+| Privacidad | Valine fuera; giscus configurado (falta instalar su app) |
 
 ## Lo que quedó en `config.toml` tras la fase 1
 
