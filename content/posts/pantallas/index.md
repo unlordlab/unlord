@@ -1,6 +1,6 @@
 ---
 weight: 1
-title: "La pantalla no era el enemigo."
+title: "La pantallas no eran el enemigo."
 date: 2026-09-20
 Draft:  false
 author: "unlord"
