@@ -1,8 +1,18 @@
-title: "La pantalla no era el enemigo"
-date: 2026-09-20T12:34:47+02:00
-draft: false
+---
+weight: 1
+title: "La pantalla no era el enemigo."
+date: 2026-20-09 
+Draft:  false
+author: "unlord"
+authorLink: "https://unlordl4b.pages.dev/"
 description: "Una reflexión sobre cómo el pánico moral hacia las pantallas oculta el verdadero problema: la arquitectura algorítmica y el capitalismo de plataformas."
-tags: ["tecnología", "sociedad", "algoritmos", "educación", "meta"]
+images: ["rlhfai.png"]
+resources:
+- name: "featured-image"
+  src: "rlhfai.png"
+tags: ["tecnología", "sociedad", "algoritmos", "educación", "meta", "pantallas"]
+lightgallery: true
+---
 
 El juicio contra Meta no ha abierto únicamente una grieta legal. Ha abierto, sobre todo, una grieta simbólica. Durante demasiados años, la conversación pública sobre las pantallas se ha movido dentro de una comodidad ideológica extraordinaria. Y, a mi juicio, preocupante: las pantallas son malas, los jóvenes están enganchados, los padres están preocupados, los políticos prometen restricciones y las empresas fingen sorpresa. Todo el mundo parece tener un enemigo claro —la pantalla— y, precisamente por eso, el verdadero problema permanece invisible.
 
