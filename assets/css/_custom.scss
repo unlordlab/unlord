@@ -339,7 +339,10 @@ body[theme=dark] hr {
 // En modo claro la estructura va en la magenta del tema Bubblegum, que
 // sobre el rosa da 7.25:1. El rojo teja chocaba con el fondo.
 $riso-red: #8a1f5c;
-$riso-red-dark: #ff6f61;
+// En modo oscuro la estructura va en la crema del tema Dark de
+// cyberspace.online. Ese tema es monocromo: crema sobre negro, sin
+// color de acento. El coral #ff6f61 chocaba con la paleta.
+$riso-red-dark: #efe5c0;
 
 // --- Raya bajo la cabecera ---------------------------------------
 .header-wrapper {
@@ -386,7 +389,7 @@ body[theme=dark] .single-title::before {
 body[theme=dark] .home[data-home=posts] .summary .post-footer .post-tags a,
 body[theme=dark] .single .post-footer .post-tags a {
   color: $riso-red-dark;
-  border-bottom-color: rgba(255, 111, 97, .45);
+  border-bottom-color: rgba(239, 229, 192, .45);
 
   &:hover { border-bottom-color: $riso-red-dark; }
 }
@@ -443,5 +446,5 @@ body[theme=dark] hr {
   background: rgba(138, 31, 92, .22);
 }
 body[theme=dark] ::selection {
-  background: rgba(255, 111, 97, .28);
+  background: rgba(239, 229, 192, .24);
 }

@@ -81,29 +81,34 @@ $code-color:                     #8a1f5c;
 $code-background-color:          #fbd8e8;
 $code-info-color:                #a24e7a;
 
-// --- Tema oscuro: tinta ------------------------------------------
-$global-background-color-dark:     #16161a;
-$global-font-color-dark:           #dedcd6;
-$global-font-secondary-color-dark: #9a9aa2;
-$global-link-color-dark:           #dedcd6;
-$global-link-hover-color-dark:     #ff6f61;
-$global-border-color-dark:         #2b2b32;
+// --- Tema oscuro: el DARK de cyberspace.online -------------------
+// Valores leidos de su tema Dark en el navegador:
+//   --cs-bg #000000   --cs-fg #efe5c0   --cs-fg-dim #a89984
+// Esta vez no hace falta desviarse: 16.64:1 y 7.55:1, los dos AAA.
+// Es monocromo, crema sobre negro. No hay color de acento: lo que
+// distingue a un enlace es el subrayado, igual que en el original.
+$global-background-color-dark:     #000000;
+$global-font-color-dark:           #efe5c0;
+$global-font-secondary-color-dark: #a89984;
+$global-link-color-dark:           #efe5c0;
+$global-link-hover-color-dark:     #ffffff;
+$global-border-color-dark:         #3a352c;
 
-$header-background-color-dark:     #101013;
-$header-hover-color-dark:          #ff6f61;
-$search-background-color-dark:     #24242b;
+$header-background-color-dark:     #000000;
+$header-hover-color-dark:          #ffffff;
+$search-background-color-dark:     #1a1812;
 
-$single-link-color-dark:           #ff6f61;
+$single-link-color-dark:           #efe5c0;
 $single-link-hover-color-dark:     #ffffff;
 
-$table-background-color-dark:      #1c1c22;
-$table-thead-color-dark:           #24242b;
-$blockquote-color-dark:            #ff6f61;
-$pagination-link-color-dark:       #dedcd6;
-$pagination-link-hover-color-dark: #ff6f61;
-$code-color-dark:                  #ff9d92;
-$code-background-color-dark:       #1e1e25;
-$code-info-color-dark:             #8b8b93;
+$table-background-color-dark:      #0d0c09;
+$table-thead-color-dark:           #1a1812;
+$blockquote-color-dark:            #efe5c0;
+$pagination-link-color-dark:       #efe5c0;
+$pagination-link-hover-color-dark: #ffffff;
+$code-color-dark:                  #efe5c0;
+$code-background-color-dark:       #12110d;
+$code-info-color-dark:             #a89984;
 
 $scrollbar-color:                  #f0b9d2;
 $scrollbar-hover-color:            #6b1a4a;

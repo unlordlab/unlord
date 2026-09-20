@@ -312,6 +312,29 @@ Este es el problema de fondo. Tu repo **es** el repo de LoveIt, con tu contenido
 **Lo que ya está bien y no hay que tocar:** el `alt` de las 8 imágenes está escrito y es
 descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
+- [ ] 🙋 **4.0 · Selector de temas con nombres visibles** ⬅️ *nuevo*
+  Sobre lo de "renombrarlo como Bubblegum": LoveIt **no muestra nombres de tema**
+  en la interfaz. Solo tiene el conmutador claro/oscuro (el iconito de la esquina),
+  sin la lista que ves en cyberspace.online:
+
+  > `Theme: Dark Light LCD C64 VT320 Matrix Poetry Brutalist GRiD Crypt Bubblegum`
+
+  Por eso ahora mismo el nombre "Bubblegum" vive en los comentarios y en la paleta
+  del código, no en pantalla.
+
+  Si lo que quieres es un selector con nombres visibles como el suyo, es bastante
+  más trabajo y merece su propia tarea:
+  - Una plantilla nueva para el selector (partial + su sitio en el layout).
+  - Varias paletas conviviendo, en vez de dos. Hoy el tema son variables SCSS
+    compiladas; habría que pasarlas a **custom properties de CSS** para poder
+    cambiarlas en caliente, que es justo lo que hace Cyberspace con `--cs-bg`,
+    `--cs-fg` y `--cs-fg-dim` sobre un `data-theme` en el `<html>`.
+  - Persistencia en `localStorage` y evitar el parpadeo al cargar.
+  - Decidir qué pasa con las fuentes: en Cyberspace cambian con el tema
+    (Bubblegum usa Sniglet, Dark usa JetBrains Mono).
+
+  **Dímelo y lo planteo aparte.**
+
 - [ ] 🙋 **4.1 · No tienes página "Sobre mí"**
   Todo tu perfil es el subtítulo de la portada. Con CV, TFG y un proyecto como RSU, una
   `/about/` con tu recorrido y cómo contactarte vale más que un PDF en el menú.
