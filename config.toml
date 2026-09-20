@@ -609,7 +609,10 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
         inputPosition = "bottom"
         lazyLoading = true
         lightTheme = "light"
-        darkTheme = "dark"
+        # transparent_dark: sin fondo propio, se funde con el negro del tema.
+        # En claro no hay equivalente: giscus no tiene "transparent_light",
+        # asi que ahi sigue saliendo un recuadro blanco sobre el rosa.
+        darkTheme = "transparent_dark"
     # Third-party library config
     # 第三方库配置
     [params.page.library]
