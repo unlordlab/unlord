@@ -1,0 +1,15 @@
+# Cabeceras HTTP que aplica Cloudflare Pages.
+# Este fichero se copia a la raiz del sitio generado y Cloudflare lo lee de ahi.
+
+# El CV fuera del indice de Google.
+#
+# Un PDF no puede llevar <meta name="robots">, porque no es HTML: la unica
+# forma de sacarlo del indice es esta cabecera.
+#
+# OJO, la trampa clasica: NO se anade un Disallow en robots.txt para esto.
+# Disallow impide RASTREAR, no INDEXAR. Y si Google no puede descargar el
+# fichero, tampoco puede leer este noindex, asi que la URL podria seguir
+# apareciendo en los resultados (sin descripcion) por estar enlazada desde
+# el menu de todas las paginas. Las dos cosas juntas se anulan entre si.
+/posts/cvmescribar.pdf
+  X-Robots-Tag: noindex
