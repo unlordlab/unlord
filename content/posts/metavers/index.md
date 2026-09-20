@@ -6,10 +6,10 @@ draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "El metavers. Les noves coordenades de la desigualtat."
-images: ["dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"]
+images: ["metavers.jpg"]
 resources:
 - name: "featured-image"
-  src: "dfcqkw-ce874c4c-7232-46e9-8e2c-07fdfa30e212 (1).jpg"
+  src: "metavers.jpg"
 
 tags: ["TFG","metaverse",]
 categories: ["unlord"]
