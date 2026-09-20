@@ -1,8 +1,9 @@
+# Googlebot necesita descargar el CSS y el JS para renderizar la pagina y
+# comprobar que se ve bien en movil. Bloquearlos juega en contra.
+# Antes aqui habia: Disallow: /images/ , /js/ y /css/
+# /images/ ni siquiera existe en el sitio generado.
 User-agent: *
-
-Disallow: /images/
-Disallow: /js/
-Disallow: /css/
+Allow: /
 
 User-agent: MJ12bot
 Disallow: /
