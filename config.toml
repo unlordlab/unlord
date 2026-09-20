@@ -10,12 +10,22 @@ enableRobotsTXT = true
 # Usado por el JSON-LD y el RSS
 copyright = "CC BY-SA 4.0 - Marc Escriba"
 # Numero de posts por pagina (estaba dentro de [params.header.title] por error)
-paginate = 12
+# Forma moderna: paginate quedo deprecado en Hugo 0.128 y es ERROR desde 0.140
+[pagination]
+  pagerSize = 12
 
 [module]
   [module.hugoVersion]
+    # Rango verificado construyendo el sitio con cada version:
+    #   0.121.2 OK (pero ignora [pagination], anterior a 0.128)
+    #   0.128.2 OK   0.135.0 OK
+    #   0.139.4 FALLA   0.140.2 FALLA   0.166.0 FALLA
+    # El tope lo marca el TEMA, no esta configuracion: usa .Site.Author
+    # (deprecado en 0.124) y .Site.IsMultiLingual, eliminados despues.
+    # Se arregla al separar el sitio del tema y actualizar a LoveIt v0.3.1.
     extended = true
-    min = "0.62.0"
+    min = "0.128.0"
+    max = "0.135.0"
     
     # Author config
 # 作者配置
