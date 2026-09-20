@@ -26,7 +26,7 @@ Aquí aparece una de las grandes paradojas contemporáneas. Muchos padres prohí
 
 Y quizás ahí reside la verdadera renuncia de muchos padres. No la renuncia a controlar el tiempo de sus hijos, sino la renuncia a comprender el entorno técnico en el que viven. Resulta más sencillo moralizar que aprender. Más fácil repetir «TikTok destruye cerebros» que analizar qué plataformas y qué motivos se esconden detrás de ellas para estar diseñadas para competir por microsegundos de atención utilizando principios extraídos de la psicología conductista, la neurociencia y el *gambling* digital.
 
-No es lo mismo una red social como Instagram que [Letterboxd](https://letterboxd.com), que es básicamente una red social para cinéfilos, algo así como un *Goodreads* para películas. La propia plataforma se define como una red social para el descubrimiento y la conversación sobre cine.
+No es lo mismo una red social como Instagram que [Letterboxd](https://letterboxd.com), que es básicamente una red social para cinéfilos, algo así como un *Goodreads* para películas. La propia plataforma se define como una red social para el descubrimiento y la conversación sobre cine. Así que hay que tener cuidado en meterlo todo en el mismo saco.
 
 Determinadas plataformas actuales no buscan únicamente ser usadas. Buscan convertirse en el ambiente mismo donde ocurre la experiencia social. El capitalismo de plataformas ya no vende productos: organiza percepción, deseo y temporalidad. El *scroll* infinito no es una simple característica inofensiva de diseño. Es una tecnología temporal que elimina el final y destruye la pausa. Convierte la experiencia en un flujo continuo donde desaparece la posibilidad de distancia crítica.
 
