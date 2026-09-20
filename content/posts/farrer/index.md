@@ -10,7 +10,7 @@ resources:
 - name: "featured-image"
   src: "farrer.jpg"
 
-tags: ["comunitats en línia","educació social","salut mental","estudi de cas"]
+tags: ["comunitats en línia", "educació social", "salud mental", "estudi de cas"]
 categories: ["unlord"]
 
 lightgallery: true

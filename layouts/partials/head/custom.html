@@ -1,0 +1,14 @@
+{{- /* Meta tags propias del sitio.                                          */ -}}
+{{- /*                                                                       */ -}}
+{{- /* El tema no traia ningun gancho para anadir cosas al <head>: baseof     */ -}}
+{{- /* solo incluye head/meta.html, head/link.html y head/seo.html, los tres  */ -}}
+{{- /* del tema. Este fichero es ese gancho, para no tener que tocar los      */ -}}
+{{- /* partials del tema cada vez que haga falta una etiqueta nueva.         */ -}}
+
+{{- /* Atribucion en el fediverso.                                           */ -}}
+{{- /* Mastodon 4.3 y posteriores leen esta etiqueta y muestran la cuenta    */ -}}
+{{- /* del autor en la tarjeta de enlace. Sin ella, compartir el blog no     */ -}}
+{{- /* acredita a nadie.                                                     */ -}}
+{{- with .Site.Params.fediverseCreator -}}
+    <meta name="fediverse:creator" content="{{ . }}">
+{{- end -}}

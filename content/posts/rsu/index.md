@@ -10,7 +10,7 @@ resources:
 - name: "featured-image"
   src: "terminal.jpg"
 
-tags: ["Mercados financieros","RSU","Redistribution Research Unit","Terminal"]
+tags: ["mercados financieros", "RSU", "Redistribution Research Unit", "terminal"]
 categories: ["unlord"]
 
 lightgallery: false

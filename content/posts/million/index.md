@@ -10,7 +10,7 @@ resources:
 - name: "featured-image"
   src: "ceci.jpg"
 
-tags: ["Trap","Cecilio G","Boomer","Música","Choque generacional"]
+tags: ["trap", "Cecilio G", "boomer", "música", "choque generacional"]
 categories: ["unlord"]
 
 lightgallery: true
