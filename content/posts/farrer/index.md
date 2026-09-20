@@ -16,11 +16,6 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-### **Estudi de cas: L'impacte terapèutic de les comunitats en línia en la millora del benestar emocional. El cas de la Sra. Maria Ferrer.**
-
-
-***
-
 ## Introducció.
 
 Aquest estudi de cas explora els efectes terapèutics de les comunitats en línia com a recurs per a la intervenció socioeducativa. Els educadors socials poden utilitzar plataformes digitals per fomentar vincles positius, especialment apropiats en contextos de vulnerabilitat emocional i aïllament social de les persones i, així, reduir els riscos associats a l’aïllament promovent l’empoderament personal.

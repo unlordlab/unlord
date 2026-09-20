@@ -90,7 +90,10 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
   fingerprint = ""
   # date format
   # 日期格式
-  dateFormat = "2006-01-02"
+  # Go .Format no traduce los meses, asi que "2 de January de 2006" saldria
+  # en ingles y "2 de enero de 2006" pondria "enero" literal todo el anyo.
+  # Formato numerico: no depende de localizacion.
+  dateFormat = "02/01/2006"
   # website title for Open Graph and Twitter Cards
   # 网站标题, 用于 Open Graph 和 Twitter Cards
   title = "unlord l4b"

@@ -152,3 +152,83 @@ code, pre, kbd, samp {
   font-family: var(--code-font-family);
   font-feature-settings: normal;
 }
+
+// ==================================================================
+// Ajustes que no se pueden hacer cambiando una variable
+//
+// _custom.scss lo importa style.scss EL ULTIMO, asi que estas reglas
+// ganan sin necesidad de !important ni de tocar el codigo del tema.
+// ==================================================================
+
+// --- El fondo verde escrito a mano -------------------------------
+// _core/_base.scss:50 tiene "background-color: #5A6F68" a pelo dentro
+// de body[theme=dark], puenteando la variable. Es el origen del tono
+// embarrado del modo oscuro. Se neutraliza aqui en vez de editar el
+// tema, para que el arreglo sobreviva a la separacion sitio/tema.
+body[theme=dark] {
+  background-color: $global-background-color-dark;
+}
+
+// --- "Meta" partido en "Me" / "ta" -------------------------------
+// _core/_base.scss:45 aplica overflow-wrap: break-word a TODO el body.
+// En parrafos largos tiene sentido; en etiquetas y menus parte palabras
+// cortas a la mitad. En la portada se leia "Educacion, Me" / "ta".
+.post-tags,
+.post-footer,
+.menu,
+.single-title,
+.home-profile .home-title {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+// --- La bio de la portada ----------------------------------------
+// 60 palabras centradas en serif: en movil ocupan la pantalla entera y
+// hay que hacer scroll pasando un muro de texto antes de ver un post.
+// No se toca el texto (es del autor), pero se le da una medida legible
+// y se afloja el interlineado.
+.home .home-profile .home-subtitle {
+  max-width: 34rem;
+  margin: 0 auto;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+// --- La barra CONTENIDO ------------------------------------------
+// Era un bloque gris macizo que pesaba mas que el propio titulo del
+// post. Borde fino y fondo transparente: seguir estando, sin gritar.
+#toc-static .details-summary,
+.toc .toc-title {
+  background: transparent;
+  border: 1px solid $global-border-color;
+  font-size: .95rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body[theme=dark] #toc-static .details-summary,
+body[theme=dark] .toc .toc-title {
+  border-color: $global-border-color-dark;
+}
+
+// --- El logo de la cabecera --------------------------------------
+// icono.PNG es un dibujo oscuro sobre fondo transparente: sobre la
+// cabecera oscura se leia como un parche claro. Se invierte solo en
+// modo oscuro para que se integre.
+body[theme=dark] .header-title .logo {
+  filter: invert(1) brightness(1.6);
+}
+
+// --- Separadores -------------------------------------------------
+// El tema usa puntos discontinuos entre posts en la portada. Una linea
+// fina y sobria acompana mejor a la tipografia editorial.
+.home .summary:not(:last-child)::after,
+hr {
+  border: 0;
+  border-top: 1px solid $global-border-color;
+}
+
+body[theme=dark] .home .summary:not(:last-child)::after,
+body[theme=dark] hr {
+  border-top-color: $global-border-color-dark;
+}
