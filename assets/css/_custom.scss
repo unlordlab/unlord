@@ -232,3 +232,35 @@ body[theme=dark] .home .summary:not(:last-child)::after,
 body[theme=dark] hr {
   border-top-color: $global-border-color-dark;
 }
+
+// --- Imagenes de la portada al 100% -------------------------------
+// _page/_home.scss:90 metia cada imagen destacada en una caja de
+// proporcion fija 10:3 y la recortaba para rellenarla:
+//
+//     .featured-image-preview { padding: 30% 0 0; position: relative; }
+//     img { position: absolute; width: 100%; height: 100%;
+//           &.lazyloaded { object-fit: cover; } }
+//
+// Las imagenes del blog son 3:2 (1024x682), asi que perdian una franja
+// arriba y otra abajo, y lo que quedaba parecia una ampliacion.
+//
+// Con height:auto la caja adopta la proporcion real de la imagen. El
+// hueco se sigue reservando antes de cargar porque plugin/img.html
+// emite los atributos width y height, de los que el navegador deduce
+// el aspect-ratio: no hay salto de maquetacion.
+// El tema usa .home[data-home=posts] .summary .featured-image-preview
+// img.lazyloaded, especificidad (0,4,1). Hay que igualarla o no gana.
+.home[data-home=posts] .summary .featured-image-preview {
+  padding: 0;
+  position: static;
+
+  img,
+  img.lazyloaded {
+    position: static;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    // deshace el hack del polyfill object-fit-images, que va desactivado
+    font-family: inherit;
+  }
+}
