@@ -1,32 +1,124 @@
-{{- /* lazysizes and lightgallery */ -}}
+{{- /* lazysizes + lightgallery, con procesado de imagen de Hugo */ -}}
+{{- /*                                                                        */ -}}
+{{- /* Antes, el data-srcset apuntaba TRES veces al mismo fichero original    */ -}}
+{{- /* (1x, 1.5x, 2x), porque SrcSmall/SrcLarge nunca se pasaban. Resultado:  */ -}}
+{{- /* un movil se descargaba el PNG de 3 MB igual que un escritorio.         */ -}}
+{{- /*                                                                        */ -}}
+{{- /* Ahora se generan variantes reales en WebP (480/960/1440/1920w) y se    */ -}}
+{{- /* declaran con descriptores 'w', que es lo que data-sizes="auto" de      */ -}}
+{{- /* lazysizes sabe aprovechar.                                             */ -}}
+{{- /*                                                                        */ -}}
+{{- /* Pasan sin tocar: SVG, GIF animados, rutas de static/ y URLs remotas.   */ -}}
+
 {{- $src := .Src -}}
 {{- $width := .Width -}}
 {{- $height := .Height -}}
-{{- with dict "Path" $src "Resources" .Resources | partial "function/resource.html" -}}
+{{- $srcset := "" -}}
+
+{{- $res := dict "Path" .Src "Resources" .Resources | partial "function/resource.html" -}}
+
+{{- /* Respaldo para las imagenes destacadas.                                  */ -}}
+{{- /*                                                                         */ -}}
+{{- /* posts/single.html y _default/summary.html convierten el recurso a       */ -}}
+{{- /* RelPermalink ANTES de llamar aqui, asi que .Src llega como              */ -}}
+{{- /* "/posts/x/foo.jpg" y no como "foo.jpg".                                 */ -}}
+{{- /*                                                                         */ -}}
+{{- /* Y GetMatch por nombre tampoco sirve, porque el front matter renombra    */ -}}
+{{- /* el recurso:                                                             */ -}}
+{{- /*     resources:                                                          */ -}}
+{{- /*     - name: "featured-image"                                            */ -}}
+{{- /*       src: "foo.jpg"                                                    */ -}}
+{{- /* su .Name pasa a ser "featured-image". Hay que casar por RelPermalink.   */ -}}
+{{- /* Sin esto, las destacadas se servian sin procesar.                       */ -}}
+
+{{- if and (not $res) .Resources -}}
+    {{- $want := .Src -}}
+    {{- range .Resources.ByType "image" -}}
+        {{- if eq .RelPermalink $want -}}
+            {{- $res = . -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- /* Formatos que Hugo puede redimensionar sin estropear */ -}}
+{{- $processable := slice "jpeg" "png" "webp" "tiff" "bmp" -}}
+{{- $isImg := false -}}
+{{- with $res -}}
     {{- $src = .RelPermalink -}}
-    {{- $width = $width | default .Width -}}
-    {{- $height = $height | default .Height -}}
+    {{- if and (eq .ResourceType "image") (in $processable .MediaType.SubType) -}}
+        {{- $isImg = true -}}
+    {{- end -}}
 {{- end -}}
 
-{{- $small := .SrcSmall | default $src -}}
-{{- with dict "Path" .SrcSmall "Resources" .Resources | partial "function/resource.html" -}}
-    {{- $small = .RelPermalink -}}
+{{- $small := .SrcSmall -}}
+{{- $large := .SrcLarge -}}
+
+{{- if $isImg -}}
+    {{- $ow := $res.Width -}}
+    {{- $width = $width | default $ow -}}
+    {{- $height = $height | default $res.Height -}}
+
+    {{- /* Solo reducimos, nunca ampliamos */ -}}
+    {{- $targets := slice -}}
+    {{- range (slice 480 960 1440 1920) -}}
+        {{- if lt . $ow -}}
+            {{- $targets = $targets | append . -}}
+        {{- end -}}
+    {{- end -}}
+    {{- $targets = $targets | append $ow -}}
+
+    {{- $parts := slice -}}
+    {{- $variants := slice -}}
+    {{- range $targets -}}
+        {{- $v := $res.Resize (printf "%dx webp q80 Lanczos" .) -}}
+        {{- $variants = $variants | append $v -}}
+        {{- $parts = $parts | append (printf "%s %dw" $v.RelPermalink .) -}}
+    {{- end -}}
+    {{- $srcset = delimit $parts ", " -}}
+
+    {{- $biggest := index $variants (sub (len $variants) 1) -}}
+    {{- $smallest := index $variants 0 -}}
+    {{- $src = $biggest.RelPermalink -}}
+    {{- if not $small -}}{{- $small = $smallest.RelPermalink -}}{{- end -}}
+    {{- if not $large -}}{{- $large = $biggest.RelPermalink -}}{{- end -}}
+{{- else -}}
+    {{- /* Comportamiento original para lo que no se puede procesar */ -}}
+    {{- with $res -}}
+        {{- if eq .ResourceType "image" -}}
+            {{- $width = $width | default .Width -}}
+            {{- $height = $height | default .Height -}}
+        {{- end -}}
+    {{- end -}}
+    {{- $small = $small | default $src -}}
+    {{- with dict "Path" .SrcSmall "Resources" .Resources | partial "function/resource.html" -}}
+        {{- $small = .RelPermalink -}}
+    {{- end -}}
+    {{- $large = $large | default $src -}}
+    {{- with dict "Path" .SrcLarge "Resources" .Resources | partial "function/resource.html" -}}
+        {{- $large = .RelPermalink -}}
+    {{- end -}}
+    {{- $srcset = printf "%s, %s 1.5x, %s 2x" $small $src $large -}}
 {{- end -}}
 
-{{- $large := .SrcLarge | default $src -}}
-{{- with dict "Path" .SrcLarge "Resources" .Resources | partial "function/resource.html" -}}
-    {{- $large = .RelPermalink -}}
-{{- end -}}
-
-{{- $alt := .Alt | default $src -}}
+{{- /* Antes era "| default $src": sin Alt, un lector de pantalla leia la    */ -}}
+{{- /* ruta del fichero ("barra posts barra icono punto PNG"). Para una      */ -}}
+{{- /* imagen decorativa, alt="" es lo correcto; el logo ya va dentro de un  */ -}}
+{{- /* <a title="..."> en header.html.                                       */ -}}
+{{- $alt := .Alt | default .Title -}}
 {{- $loading := resources.Get "svg/loading.svg" | minify -}}
+
+{{- /* Go trata data-srcset como contexto de URL (le quita el prefijo "data-")  */ -}}
+{{- /* y, si se interpola la cadena entera, la percent-encodea o la sustituye   */ -}}
+{{- /* por #ZgotmplZ. Se emite el atributo completo ya formado para evitarlo.   */ -}}
+{{- $srcsetAttr := printf "data-srcset=%q" $srcset | safeHTMLAttr -}}
+
 {{- if .Linked -}}
     <a class="lightgallery" href="{{ $large | safeURL }}" title="{{ .Title | default $alt }}" data-thumbnail="{{ $small | safeURL }}"{{ with .Caption }} data-sub-html="<h2>{{ . }}</h2>{{ with $.Title }}<p>{{ . }}</p>{{ end }}"{{ end }}{{ with .Rel }} rel="{{ . }}"{{ end }}>
         <img
             class="lazyload{{ with .Class }} {{ . }}{{ end }}"
             src="{{ $loading.RelPermalink }}"
             data-src="{{ $src | safeURL }}"
-            data-srcset="{{ $small | safeURL }}, {{ $src | safeURL }} 1.5x, {{ $large | safeURL }} 2x"
+            {{ $srcsetAttr }}
             data-sizes="auto"
             alt="{{ $alt }}"
             {{- with $width }} width="{{ . }}"{{ end }}
@@ -37,7 +129,7 @@
         class="lazyload{{ with .Class }} {{ . }}{{ end }}"
         src="{{ $loading.RelPermalink }}"
         data-src="{{ $src | safeURL }}"
-        data-srcset="{{ $small | safeURL }}, {{ $src | safeURL }} 1.5x, {{ $large | safeURL }} 2x"
+        {{ $srcsetAttr }}
         data-sizes="auto"
         alt="{{ $alt }}"
         title="{{ .Title | default $alt }}"
