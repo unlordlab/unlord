@@ -6,10 +6,10 @@ Draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "RLHF (Reinforcement Learning from Human Feedback). El algoritmo de la angustia."
-images: ["rlhfai.png"]
+images: ["rlhfai.jpg"]
 resources:
 - name: "featured-image"
-  src: "rlhfai.png"
+  src: "rlhfai.jpg"
 
 tags: ["algoritmos","IA","salud mental","RLHF"]
 categories: ["unlord"]
