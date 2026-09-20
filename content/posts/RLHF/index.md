@@ -16,11 +16,6 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-### **RLHF (Reinforcement Learning from Human Feedback). El algoritmo de la angustia.**
-
-
-***
-
 Hay algo profundamente ominoso en el hecho anunciado por OpenAI días atrás. Más de un millón de personas cada semana conversan con ChatGPT acerca del suicidio (Matsakis, 2025 [^2] ). Eso supone que alrededor del 0,15 % de los usuarios activos le confían semanalmente signos de emergencias de salud mental como psicosis, angustia o ideación suicida a un modelo de lenguaje. Hay una imagen que define mejor que cualquier estadística la condición mental de nuestra época: un usuario, solo en una habitación, de madrugada, teclea en un chat de inteligencia artificial frases que ningún humano ha escuchado. No busca información, sino una presencia. No pide datos, sino una cuerda.
 
 La noticia es, en sí misma, un diagnóstico. No de la tecnología por sí misma, sino de la época que la produce. Un mundo saturado de promesas tecnológicas que nos arrastra a una contradicción brutal: la inteligencia artificial llega al borde de lo íntimo, siempre dispuesta 24/7 a ayudarnos, mientras produce las condiciones para que ese sufrimiento —el dolor, la soledad, la interlocución con máquinas— se perpetúe sin mediación efectiva.

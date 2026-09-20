@@ -16,9 +16,6 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-
-### **Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G.**
-
 > “La música popular siempre ha sido el lugar donde los jóvenes pueden decirle a sus mayores: ‘No somos como vosotros’.”
 {{< style "text-align: right;" >}}-- Simon Frith{{< /style >}}
 

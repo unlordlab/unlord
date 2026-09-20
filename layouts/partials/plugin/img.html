@@ -112,13 +112,24 @@
 {{- /* por #ZgotmplZ. Se emite el atributo completo ya formado para evitarlo.   */ -}}
 {{- $srcsetAttr := printf "data-srcset=%q" $srcset | safeHTMLAttr -}}
 
+{{- /* Reserva del hueco, para que no salte la maquetacion al cargar.      */ -}}
+{{- /* Los atributos width/height no bastan: el src inicial es el SVG de   */ -}}
+{{- /* carga (60x60) y, segun la especificacion, la proporcion intrinseca  */ -}}
+{{- /* del contenido YA cargado manda sobre los atributos. El hueco salia  */ -}}
+{{- /* cuadrado y saltaba a 3:2 al aparecer la foto. Con aspect-ratio      */ -}}
+{{- /* explicito se reserva desde el primer pintado.                       */ -}}
+{{- $ratioAttr := "" -}}
+{{- if and $width $height -}}
+    {{- $ratioAttr = printf "style=%q" (printf "aspect-ratio: %v / %v" $width $height) | safeHTMLAttr -}}
+{{- end -}}
+
 {{- if .Linked -}}
     <a class="lightgallery" href="{{ $large | safeURL }}" title="{{ .Title | default $alt }}" data-thumbnail="{{ $small | safeURL }}"{{ with .Caption }} data-sub-html="<h2>{{ . }}</h2>{{ with $.Title }}<p>{{ . }}</p>{{ end }}"{{ end }}{{ with .Rel }} rel="{{ . }}"{{ end }}>
         <img
             class="lazyload{{ with .Class }} {{ . }}{{ end }}"
             src="{{ $loading.RelPermalink }}"
             data-src="{{ $src | safeURL }}"
-            {{ $srcsetAttr }}
+            {{ $srcsetAttr }} {{ $ratioAttr }}
             data-sizes="auto"
             alt="{{ $alt }}"
             {{- with $width }} width="{{ . }}"{{ end }}
@@ -129,7 +140,7 @@
         class="lazyload{{ with .Class }} {{ . }}{{ end }}"
         src="{{ $loading.RelPermalink }}"
         data-src="{{ $src | safeURL }}"
-        {{ $srcsetAttr }}
+        {{ $srcsetAttr }} {{ $ratioAttr }}
         data-sizes="auto"
         alt="{{ $alt }}"
         title="{{ .Title | default $alt }}"

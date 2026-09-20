@@ -152,3 +152,233 @@ code, pre, kbd, samp {
   font-family: var(--code-font-family);
   font-feature-settings: normal;
 }
+
+// ==================================================================
+// Ajustes que no se pueden hacer cambiando una variable
+//
+// _custom.scss lo importa style.scss EL ULTIMO, asi que estas reglas
+// ganan sin necesidad de !important ni de tocar el codigo del tema.
+// ==================================================================
+
+// --- El fondo verde escrito a mano -------------------------------
+// _core/_base.scss:50 tiene "background-color: #5A6F68" a pelo dentro
+// de body[theme=dark], puenteando la variable. Es el origen del tono
+// embarrado del modo oscuro. Se neutraliza aqui en vez de editar el
+// tema, para que el arreglo sobreviva a la separacion sitio/tema.
+body[theme=dark] {
+  background-color: $global-background-color-dark;
+}
+
+// --- "Meta" partido en "Me" / "ta" -------------------------------
+// _core/_base.scss:45 aplica overflow-wrap: break-word a TODO el body.
+// En parrafos largos tiene sentido; en etiquetas y menus parte palabras
+// cortas a la mitad. En la portada se leia "Educacion, Me" / "ta".
+.post-tags,
+.post-footer,
+.menu,
+.single-title,
+.home-profile .home-title {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+// --- La bio de la portada ----------------------------------------
+// 60 palabras centradas en serif: en movil ocupan la pantalla entera y
+// hay que hacer scroll pasando un muro de texto antes de ver un post.
+// No se toca el texto (es del autor), pero se le da una medida legible
+// y se afloja el interlineado.
+.home .home-profile .home-subtitle {
+  max-width: 34rem;
+  margin: 0 auto;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+// --- La barra CONTENIDO ------------------------------------------
+// Era un bloque gris macizo que pesaba mas que el propio titulo del
+// post. Borde fino y fondo transparente: seguir estando, sin gritar.
+#toc-static .details-summary,
+.toc .toc-title {
+  background: transparent;
+  border: 1px solid $global-border-color;
+  font-size: .95rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body[theme=dark] #toc-static .details-summary,
+body[theme=dark] .toc .toc-title {
+  border-color: $global-border-color-dark;
+}
+
+// --- El logo de la cabecera --------------------------------------
+// icono.PNG es un dibujo oscuro sobre fondo transparente: sobre la
+// cabecera oscura se leia como un parche claro. Se invierte solo en
+// modo oscuro para que se integre.
+body[theme=dark] .header-title .logo {
+  filter: invert(1) brightness(1.6);
+}
+
+// --- Separadores -------------------------------------------------
+// El tema usa puntos discontinuos entre posts en la portada. Una linea
+// fina y sobria acompana mejor a la tipografia editorial.
+.home .summary:not(:last-child)::after,
+hr {
+  border: 0;
+  border-top: 1px solid $global-border-color;
+}
+
+body[theme=dark] .home .summary:not(:last-child)::after,
+body[theme=dark] hr {
+  border-top-color: $global-border-color-dark;
+}
+
+// --- Imagenes de la portada al 100% -------------------------------
+// _page/_home.scss:90 metia cada imagen destacada en una caja de
+// proporcion fija 10:3 y la recortaba para rellenarla:
+//
+//     .featured-image-preview { padding: 30% 0 0; position: relative; }
+//     img { position: absolute; width: 100%; height: 100%;
+//           &.lazyloaded { object-fit: cover; } }
+//
+// Las imagenes del blog son 3:2 (1024x682), asi que perdian una franja
+// arriba y otra abajo, y lo que quedaba parecia una ampliacion.
+//
+// Con height:auto la caja adopta la proporcion real de la imagen. El
+// hueco se sigue reservando antes de cargar porque plugin/img.html
+// emite los atributos width y height, de los que el navegador deduce
+// el aspect-ratio: no hay salto de maquetacion.
+// El tema usa .home[data-home=posts] .summary .featured-image-preview
+// img.lazyloaded, especificidad (0,4,1). Hay que igualarla o no gana.
+.home[data-home=posts] .summary .featured-image-preview {
+  padding: 0;
+  position: static;
+
+  img,
+  img.lazyloaded {
+    position: static;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    // deshace el hack del polyfill object-fit-images, que va desactivado
+    font-family: inherit;
+  }
+}
+
+// ==================================================================
+// VARIANTE B — el rojo como estructura
+//
+// Misma base de papel y tinta que la variante A, mismos contrastes.
+// Lo que cambia es el papel del rojo: en la A solo aparece en enlaces
+// y hover; aqui sostiene la maquetacion. Imita el lenguaje de las
+// propias ilustraciones del blog, donde el rojo no decora sino que
+// marca: bandas, subrayados, bloques de titulo.
+// ==================================================================
+
+$riso-red: #b3241a;
+$riso-red-dark: #ff6f61;
+
+// --- Raya bajo la cabecera ---------------------------------------
+.header-wrapper {
+  border-bottom: 2px solid $riso-red;
+}
+body[theme=dark] .header-wrapper {
+  border-bottom-color: $riso-red-dark;
+}
+
+// --- Marca roja a la izquierda de cada titulo --------------------
+.single-title {
+  position: relative;
+  padding-left: .9rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .18em;
+    bottom: .18em;
+    width: 4px;
+    background: $riso-red;
+  }
+}
+body[theme=dark] .single-title::before {
+  background: $riso-red-dark;
+}
+
+// --- Etiquetas subrayadas en rojo --------------------------------
+// Nada de fichas con borde: la plantilla intercala comas literales
+// (",&nbsp;" en _default/summary.html:68) que no se pueden ocultar por
+// CSS, asi que caja + coma queda redundante. Y una etiqueta de varias
+// palabras partia el recuadro por la mitad.
+// El tema fuerza .single .post-footer .post-tags * { display: inline }
+// con especificidad (0,3,1): hay que igualarla para ganar.
+.home[data-home=posts] .summary .post-footer .post-tags a,
+.single .post-footer .post-tags a {
+  color: $riso-red;
+  border-bottom: 1px solid rgba(179, 36, 26, .45);
+  white-space: nowrap;
+
+  &:hover { border-bottom-color: $riso-red; }
+}
+body[theme=dark] .home[data-home=posts] .summary .post-footer .post-tags a,
+body[theme=dark] .single .post-footer .post-tags a {
+  color: $riso-red-dark;
+  border-bottom-color: rgba(255, 111, 97, .45);
+
+  &:hover { border-bottom-color: $riso-red-dark; }
+}
+
+// --- "Leer mas" como llamada, no como enlace suelto --------------
+// El enlace "Leer mas" no lleva clase: en _default/summary.html:63 es
+// simplemente el primer <a> de .post-footer.
+.post-footer > a:first-of-type {
+  display: inline-block;
+  padding: .15rem 0;
+  border-bottom: 2px solid $riso-red;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+body[theme=dark] .post-footer > a:first-of-type {
+  border-bottom-color: $riso-red-dark;
+}
+
+// --- Citas con banda gruesa --------------------------------------
+blockquote {
+  border-left: 4px solid $riso-red;
+  padding-left: 1rem;
+}
+body[theme=dark] blockquote {
+  border-left-color: $riso-red-dark;
+}
+
+// --- La barra CONTENIDO, perfilada en rojo -----------------------
+#toc-static .details-summary,
+.toc .toc-title {
+  border-color: $riso-red;
+  color: $riso-red;
+}
+body[theme=dark] #toc-static .details-summary,
+body[theme=dark] .toc .toc-title {
+  border-color: $riso-red-dark;
+  color: $riso-red-dark;
+}
+
+// --- Separadores de la portada -----------------------------------
+.home .summary:not(:last-child)::after,
+hr {
+  border-top: 2px solid $riso-red;
+  opacity: .25;
+}
+body[theme=dark] .home .summary:not(:last-child)::after,
+body[theme=dark] hr {
+  border-top-color: $riso-red-dark;
+}
+
+// --- Seleccion de texto ------------------------------------------
+::selection {
+  background: rgba(179, 36, 26, .22);
+}
+body[theme=dark] ::selection {
+  background: rgba(255, 111, 97, .28);
+}
