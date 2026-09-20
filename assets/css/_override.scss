@@ -2,3 +2,31 @@
 // Override Variables
 // 覆盖变量
 // ==============================
+
+// ------------------------------------------------------------------
+// Tipografia editorial
+//
+// Este fichero se importa en style.scss JUSTO DESPUES de _variables
+// (que declara todo con !default) y ANTES de _core/variables (que
+// vuelca estas variables a custom properties de CSS). Es el punto
+// correcto para cambiarlas sin tocar el codigo del tema.
+//
+// Las fuentes van autoalojadas en static/fonts/ (ver _custom.scss).
+// No se usa Google Fonts: cada visita filtraria la IP del lector a
+// un tercero, que es justo lo contrario de lo que defiende el blog.
+// Las 9 variantes pesan 159 KB en total.
+// ------------------------------------------------------------------
+
+// Cuerpo: serif, para ensayos de 900-2200 palabras
+$global-font-family: "Literata", Georgia, Cambria, "Times New Roman", Emoji, serif;
+
+// Titulares y cabecera: grotesca geometrica
+$header-title-font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Emoji, sans-serif;
+
+// Codigo: sustituye a Source Code Pro, que ademas no estaba autoalojada
+$code-font-family: "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+// Literata tiene una altura-x generosa pero ojo pequeno: 17px se lee
+// mejor que 16px. El interlineado sube en proporcion (1.7rem = ~29px).
+$global-font-size: 17px;
+$global-line-height: 1.7rem;

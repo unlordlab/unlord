@@ -18,3 +18,9 @@ $RECYCLE.BIN/
 
 # Linux
 .directory
+
+# Artefactos de build de Hugo (se regeneran en cada despliegue)
+/.hugo_build.lock
+/resources/_gen/images/
+/resources/_gen/assets/css/
+/resources/_gen/assets/lib/

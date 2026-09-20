@@ -2,3 +2,153 @@
 // Custom style
 // 自定义样式
 // ==============================
+
+// ------------------------------------------------------------------
+// Fuentes autoalojadas (static/fonts/, servidas desde /fonts/)
+//
+// Descargadas de Fontsource. Todas con licencia SIL OFL.
+//   Literata        cuerpo    400, 400 italica, 600, 700
+//   Space Grotesk   titulares 500, 700
+//   JetBrains Mono  codigo    400
+//
+// font-display: swap => el texto se lee desde el primer instante con la
+// fuente de respaldo y cambia al cargar, en vez de quedarse invisible.
+//
+// El unicode-range hace que el navegador solo descargue el subconjunto
+// que la pagina necesita. El castellano y el catalan (a e i o u con
+// tilde, dieresis, n con virgulilla, c cedilla, el punt volat) caben
+// enteros en "latin"; "latin-ext" se carga solo si aparece algo raro.
+// ------------------------------------------------------------------
+
+$subset-latin: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+  U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+  U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+
+$subset-latin-ext: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+  U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+  U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/literata-latin-400-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/literata-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range: $subset-latin-ext;
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/literata-latin-400-italic.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/literata-latin-600-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/literata-latin-700-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin-500-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin-700-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin-ext-700-normal.woff2") format("woff2");
+  unicode-range: $subset-latin-ext;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+// ------------------------------------------------------------------
+// Titulares en Space Grotesk
+//
+// El tema no tiene variable propia para los encabezados: hereda el tipo
+// del cuerpo. Se apuntan aqui a --header-title-font-family, que
+// _override.scss ya ha puesto en Space Grotesk.
+// ------------------------------------------------------------------
+
+h1, h2, h3, h4, h5, h6,
+.single-title,
+.home .home-profile .home-title,
+.archive .single-title {
+  font-family: var(--header-title-font-family);
+  font-weight: 700;
+  // Las grotescas geometricas piden un pelin de apretado en tamano grande
+  letter-spacing: -0.015em;
+}
+
+// ------------------------------------------------------------------
+// Ajustes finos de lectura
+// ------------------------------------------------------------------
+
+.page .content {
+  // Ligaduras y numeros de estilo antiguo: Literata los trae y quedan
+  // mejor en texto corrido que las versaditas por defecto.
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+
+  p {
+    // Evita "rios" en parrafos largos justificados por el navegador
+    text-wrap: pretty;
+  }
+}
+
+// Las citas en italica de Literata tienen mucho caracter: se aprovechan
+blockquote {
+  font-style: italic;
+}
+
+// El codigo en linea no debe heredar el serif del cuerpo
+code, pre, kbd, samp {
+  font-family: var(--code-font-family);
+  font-feature-settings: normal;
+}
