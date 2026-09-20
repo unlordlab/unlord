@@ -17,19 +17,18 @@
 // Las 9 variantes pesan 159 KB en total.
 // ------------------------------------------------------------------
 
-// Cuerpo: serif, para ensayos de 900-2200 palabras
-$global-font-family: "Literata", Georgia, Cambria, "Times New Roman", Emoji, serif;
+// Cuerpo: Sniglet, la redondeada del tema Bubblegum de cyberspace.online
+$global-font-family: "Sniglet", ui-rounded, "Segoe UI", system-ui, Emoji, sans-serif;
 
-// Titulares y cabecera: grotesca geometrica
-$header-title-font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Emoji, sans-serif;
+// Titulares y cabecera: Departure Mono, la monoespaciada de pixeles del mismo tema
+$header-title-font-family: "Departure Mono", ui-monospace, "JetBrains Mono", Menlo, monospace;
 
 // Codigo: sustituye a Source Code Pro, que ademas no estaba autoalojada
 $code-font-family: "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-// Literata tiene una altura-x generosa pero ojo pequeno: 17px se lee
-// mejor que 16px. El interlineado sube en proporcion (1.7rem = ~29px).
 $global-font-size: 17px;
-$global-line-height: 1.7rem;
+// Sniglet es redondeada y de trazo grueso: pide algo mas de aire que Literata
+$global-line-height: 1.8rem;
 
 // ==================================================================
 // PALETA — variante A: "papel y tinta"
@@ -53,29 +52,34 @@ $global-line-height: 1.7rem;
 // Aqui el rojo se usa con cuentagotas, solo en enlaces y hover.
 // ==================================================================
 
-// --- Tema claro: papel -------------------------------------------
-$global-background-color:        #faf9f6;
-$global-font-color:              #1a1a1c;
-$global-font-secondary-color:    #62626a;
-$global-link-color:              #1a1a1c;
-$global-link-hover-color:        #b3241a;
-$global-border-color:            #e3e1da;
+// --- Tema claro: BUBBLEGUM ---------------------------------------
+// Valores leidos del tema Bubblegum de cyberspace.online:
+//   --cs-bg #ffe4f1   --cs-fg #6b1a4a   --cs-fg-dim #b86b93
+// El atenuado original da 3.17:1 sobre el fondo, por debajo de AA.
+// Se sustituye por #a24e7a: mismo tono (329 grados) y saturacion,
+// solo mas oscuro, 4.51:1.
+$global-background-color:        #ffe4f1;
+$global-font-color:              #6b1a4a;
+$global-font-secondary-color:    #a24e7a;
+$global-link-color:              #6b1a4a;
+$global-link-hover-color:        #8a1f5c;
+$global-border-color:            #f3c9dd;
 
-$header-background-color:        #faf9f6;
-$header-hover-color:             #b3241a;
-$search-background-color:        #efeee8;
+$header-background-color:        #ffe4f1;
+$header-hover-color:             #8a1f5c;
+$search-background-color:        #fbd3e4;
 
-$single-link-color:              #b3241a;
-$single-link-hover-color:        #1a1a1c;
+$single-link-color:              #8a1f5c;
+$single-link-hover-color:        #6b1a4a;
 
-$table-background-color:         #fff;
-$table-thead-color:              #efeee8;
-$blockquote-color:               #b3241a;
-$pagination-link-color:          #1a1a1c;
-$pagination-link-hover-color:    #b3241a;
-$code-color:                     #b3241a;
-$code-background-color:          #f2f1ea;
-$code-info-color:                #7a7a82;
+$table-background-color:         #fff0f7;
+$table-thead-color:              #fbd3e4;
+$blockquote-color:               #8a1f5c;
+$pagination-link-color:          #6b1a4a;
+$pagination-link-hover-color:    #8a1f5c;
+$code-color:                     #8a1f5c;
+$code-background-color:          #fbd8e8;
+$code-info-color:                #a24e7a;
 
 // --- Tema oscuro: tinta ------------------------------------------
 $global-background-color-dark:     #16161a;
@@ -101,5 +105,5 @@ $code-color-dark:                  #ff9d92;
 $code-background-color-dark:       #1e1e25;
 $code-info-color-dark:             #8b8b93;
 
-$scrollbar-color:                  #c9c7c0;
-$scrollbar-hover-color:            #b3241a;
+$scrollbar-color:                  #f0b9d2;
+$scrollbar-hover-color:            #6b1a4a;

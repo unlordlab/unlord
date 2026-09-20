@@ -28,6 +28,46 @@ $subset-latin-ext: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
   U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
   U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 
+/* Sniglet y Departure Mono: las del tema Bubblegum de cyberspace.online.
+   Sniglet de Fontsource, Departure Mono del paquete oficial de Helena
+   Zhang. Las dos con licencia SIL OFL; la de Departure Mono queda en
+   static/fonts/licencias/. */
+
+@font-face {
+  font-family: "Sniglet";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/sniglet-latin-400-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Sniglet";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/sniglet-latin-ext-400-normal.woff2") format("woff2");
+  unicode-range: $subset-latin-ext;
+}
+
+@font-face {
+  font-family: "Sniglet";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/sniglet-latin-800-normal.woff2") format("woff2");
+  unicode-range: $subset-latin;
+}
+
+@font-face {
+  font-family: "Departure Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/departure-mono-400-normal.woff2") format("woff2");
+}
+
 @font-face {
   font-family: "Literata";
   font-style: normal;
@@ -117,14 +157,18 @@ $subset-latin-ext: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
 // _override.scss ya ha puesto en Space Grotesk.
 // ------------------------------------------------------------------
 
+// Departure Mono SOLO trae el peso 400. Pedirle 700 u 800 hace que el
+// navegador fabrique una negrita sintetica, que en una fuente de pixeles
+// sale emborronada. Se fija 400 y, como es monoespaciada, nada de
+// letter-spacing negativo: se apretarian los pixeles unos contra otros.
 h1, h2, h3, h4, h5, h6,
 .single-title,
+.home[data-home=posts] .summary .single-title,
 .home .home-profile .home-title,
 .archive .single-title {
   font-family: var(--header-title-font-family);
-  font-weight: 700;
-  // Las grotescas geometricas piden un pelin de apretado en tamano grande
-  letter-spacing: -0.015em;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 // ------------------------------------------------------------------
@@ -142,9 +186,18 @@ h1, h2, h3, h4, h5, h6,
   }
 }
 
-// Las citas en italica de Literata tienen mucho caracter: se aprovechan
+// Sniglet solo trae 400 y 800. Se mapea cualquier negrita a la 800 y se
+// evita la cursiva sintetica, que en una redondeada queda muy sucia.
+strong, b {
+  font-weight: 800;
+}
+
+em, i, blockquote, cite {
+  font-style: normal;
+}
+
 blockquote {
-  font-style: italic;
+  font-weight: 400;
 }
 
 // El codigo en linea no debe heredar el serif del cuerpo
@@ -254,6 +307,14 @@ body[theme=dark] hr {
   padding: 0;
   position: static;
 
+  // Mas pequenas en la portada, para que quepan mas posts por pantalla.
+  // Ojo: esto NO las empeora. Al reducir la caja, el navegador escoge del
+  // srcset una variante menor para menos pixeles de pantalla, asi que la
+  // densidad efectiva sube y se ven mas nitidas, no mas borrosas.
+  // En la pagina del post se siguen viendo a todo el ancho.
+  max-width: 24rem;
+  margin: .6rem auto;
+
   img,
   img.lazyloaded {
     position: static;
@@ -275,7 +336,9 @@ body[theme=dark] hr {
 // marca: bandas, subrayados, bloques de titulo.
 // ==================================================================
 
-$riso-red: #b3241a;
+// En modo claro la estructura va en la magenta del tema Bubblegum, que
+// sobre el rosa da 7.25:1. El rojo teja chocaba con el fondo.
+$riso-red: #8a1f5c;
 $riso-red-dark: #ff6f61;
 
 // --- Raya bajo la cabecera ---------------------------------------
@@ -315,7 +378,7 @@ body[theme=dark] .single-title::before {
 .home[data-home=posts] .summary .post-footer .post-tags a,
 .single .post-footer .post-tags a {
   color: $riso-red;
-  border-bottom: 1px solid rgba(179, 36, 26, .45);
+  border-bottom: 1px solid rgba(138, 31, 92, .45);
   white-space: nowrap;
 
   &:hover { border-bottom-color: $riso-red; }
@@ -377,7 +440,7 @@ body[theme=dark] hr {
 
 // --- Seleccion de texto ------------------------------------------
 ::selection {
-  background: rgba(179, 36, 26, .22);
+  background: rgba(138, 31, 92, .22);
 }
 body[theme=dark] ::selection {
   background: rgba(255, 111, 97, .28);
