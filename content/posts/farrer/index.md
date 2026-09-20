@@ -1,11 +1,10 @@
 ---
-weight: 1
 title: "Estudi de cas: L'impacte terapèutic de les comunitats en línia en la millora del benestar emocional. El cas de la Sra. Maria Ferrer."
 date: 2025-10-26 
-Draft:  false
+draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Estudi de cas: L'impacte terapèutic de les comunitats en línia en la millora del benestar emocional. El cas de la Sra. Maria Ferrer."
+description: "Estudi de cas sobre com les comunitats en línia poden millorar el benestar emocional en contextos d'aïllament, i què hi pot aportar l'educació social."
 images: ["farrer.jpg"]
 resources:
 - name: "featured-image"

@@ -1,11 +1,10 @@
 ---
-weight: 2
 title: "Eurovisión y la banalidad del mal: el castigo simbólico a los Estados genocidas."
 date: 2025-05-22 
-Draft:  false
+draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Eurovisión y la banalidad del mal: el castigo simbólico a los Estados genocidas."
+description: "Vetar a un Estado en Eurovisión mientras siguen los contratos de armas: el concurso como tribunal simbólico y la hipocresía del castigo sin consecuencias."
 images: ["eurovision.jpg"]
 resources:
 - name: "featured-image"

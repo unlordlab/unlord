@@ -1,11 +1,10 @@
 ---
-weight: 3
 title: "Treball fi de grau: El metavers. Les noves coordenades de la desigualtat."
 date: 2025-02-16
 draft:  false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "El metavers. Les noves coordenades de la desigualtat."
+description: "El meu treball final de grau a la UOC: com el metavers no elimina les desigualtats del món físic, sinó que hi afegeix coordenades noves."
 images: ["metavers.jpg"]
 resources:
 - name: "featured-image"

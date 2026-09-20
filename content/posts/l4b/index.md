@@ -1,11 +1,10 @@
 ---
-weight: 4
 title: "¿Por qué la gente dejó de crear su propio sitio en Internet?"
 date: 2023-09-01
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Imagen de las primeras páginas web en Geocities"
+description: "De GeoCities a las plataformas: por qué dejamos de construir nuestro propio rincón en Internet y qué perdimos al mudarnos a las casas de otros."
 images: ["1.jpeg"]
 resources:
 - name: "featured-image"

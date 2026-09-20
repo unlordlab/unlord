@@ -1,11 +1,10 @@
 ---
-weight: 2
 title: "Flickr vs. Instagram: La evolución del self digital"
 date: 2024-08-19
 draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Flickr vs. Instagram: La evolución del self digital"
+description: "Un proyecto interactivo que compara cómo nos retratábamos en Flickr y cómo lo hacemos en Instagram: del lugar al yo. Escribe una ciudad y compruébalo."
 images: ["fvsi.jpg"]
 resources:
 - name: "featured-image"

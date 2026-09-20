@@ -1,12 +1,11 @@
 ---
-weight: 1
 title: "Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G."
 date: 2025-08-25 
-Draft:  false
+draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
-description: "Million Dollar Baby: Un análisis sociocultural del Trap y el conflicto generacional a través de Cecilio G."
-images: ["ceci.mpg"]
+description: "Cecilio G, el trap y el choque generacional: qué dice del conflicto entre padres e hijos la música que unos escuchan y otros no soportan."
+images: ["ceci.jpg"]
 resources:
 - name: "featured-image"
   src: "ceci.jpg"
