@@ -5,8 +5,11 @@ draft: false
 author: "unlord"
 authorLink: "https://unlordl4b.pages.dev/"
 description: "Educación social, tecnología y bosques. Quién escribe aquí, y por qué lo hace desde una web propia y no desde un timeline ajeno."
-lightgallery: false
+images: ["unlord.jpg"]
+lightgallery: true
 ---
+
+![Marc Escribà en un paisaje de montaña, en blanco y negro tramado, con la palabra «unlord» sobre una banda roja](unlord.jpg)
 
 Soy **Marc Escribà**.
 

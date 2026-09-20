@@ -245,10 +245,10 @@ body[theme=dark] {
   max-width: 34rem;
   margin: 0 auto;
   // El tema lo deja a 1rem, el mismo cuerpo que un parrafo de post. Es
-  // una presentacion, no el contenido: baja a .875rem y cede el peso
-  // visual a los articulos.
-  font-size: .875rem;
-  line-height: 1.65;
+  // una presentacion, no el contenido: baja a .8rem y cede el peso
+  // visual a los articulos. Por debajo de esto empieza a costar leerlo.
+  font-size: .8rem;
+  line-height: 1.7;
   text-wrap: balance;
 }
 
@@ -554,4 +554,26 @@ body[theme=dark] .home[data-home=posts] .summary .content strong {
 .page .content a b,
 .page .content a strong {
   color: inherit;
+}
+
+// --- Imagenes del contenido sin pie de foto -----------------------
+// Fallo latente del tema. Sus reglas compiladas son:
+//
+//   .single .content figure img { width: 100%; height: auto }
+//   .single .content img        { max-width: 100%; min-height: 1em }
+//
+// El <figure> solo lo genera _markup/render-image.html cuando la imagen
+// lleva titulo en el markdown. Sin titulo no hay figure, y entonces
+// nadie pone height:auto: como plugin/img.html emite los atributos
+// width y height, el navegador respeta esa altura literal mientras
+// max-width le recorta el ancho. Resultado: la imagen sale aplastada.
+//
+// Visto con la foto de /about/: 1024x682 se mostraba como 480x682,
+// proporcion 0.70 en vez de 1.50.
+//
+// El aspect-ratio que emite la plantilla no basta: una altura explicita
+// gana siempre sobre aspect-ratio.
+.single .content img,
+.page .content img {
+  height: auto;
 }
