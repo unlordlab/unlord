@@ -16,8 +16,11 @@ other = "Artículos"
 # === Post ===
 
 # === Taxonomy ===
+# "Todos los {{ .Some }}" estaba en masculino fijo, asi que salia
+# "Todos los Etiquetas" y "Todos los Categorias". Se deja solo el
+# termino, que ademas lee mejor como titulo de seccion.
 [allSome]
-other = "Todos los {{ .Some }}"
+other = "{{ .Some }}"
 
 [tag]
 other = "Etiqueta"

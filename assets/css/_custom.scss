@@ -188,6 +188,7 @@ h1, h2, h3, h4, h5, h6,
 
 // Sniglet solo trae 400 y 800. Se mapea cualquier negrita a la 800 y se
 // evita la cursiva sintetica, que en una redondeada queda muy sucia.
+// Sniglet solo trae 400 y 800: cualquier negrita va al 800.
 strong, b {
   font-weight: 800;
 }
@@ -243,7 +244,11 @@ body[theme=dark] {
 .home .home-profile .home-subtitle {
   max-width: 34rem;
   margin: 0 auto;
-  line-height: 1.6;
+  // El tema lo deja a 1rem, el mismo cuerpo que un parrafo de post. Es
+  // una presentacion, no el contenido: baja a .8rem y cede el peso
+  // visual a los articulos. Por debajo de esto empieza a costar leerlo.
+  font-size: .8rem;
+  line-height: 1.7;
   text-wrap: balance;
 }
 
@@ -307,13 +312,8 @@ body[theme=dark] hr {
   padding: 0;
   position: static;
 
-  // Mas pequenas en la portada, para que quepan mas posts por pantalla.
-  // Ojo: esto NO las empeora. Al reducir la caja, el navegador escoge del
-  // srcset una variante menor para menos pixeles de pantalla, asi que la
-  // densidad efectiva sube y se ven mas nitidas, no mas borrosas.
-  // En la pagina del post se siguen viendo a todo el ancho.
-  max-width: 24rem;
-  margin: .6rem auto;
+  // Al ancho de la columna de texto, sin recuadro ni recorte.
+  margin: .6rem 0;
 
   img,
   img.lazyloaded {
@@ -493,4 +493,87 @@ body[theme=dark] .page .content a:not(.lightgallery) {
 .single .content sup a,
 .footnotes a {
   text-decoration: none;
+}
+
+// --- Titulo de las paginas sueltas --------------------------------
+// _page/_special.scss alinea a la derecha el titulo de las paginas
+// marcadas como "special" (las que no son posts, como /about/):
+//
+//     .special { .single-title, .single-subtitle { text-align: right; } }
+//
+// Con la marca roja de la variante riso, que va pegada a la izquierda,
+// el titulo quedaba en una punta y la marca en la otra. Se alinea a la
+// izquierda, igual que en los posts.
+.special {
+  .single-title,
+  .single-subtitle {
+    text-align: left;
+  }
+}
+
+
+// --- Negrita en el color de acento --------------------------------
+// Va al final a proposito: $riso-red se declara mas arriba, en el bloque
+// de la variante riso, y en SCSS una variable no existe antes de su
+// declaracion.
+//
+// Hay que igualar la especificidad del tema, que trae tres reglas
+// propias para la negrita y una de ellas con color escrito a pelo:
+//
+//   .single .content b, .single .content strong          { font-weight: bold }
+//   [theme=dark] .single .content b, ... strong          { color: #ddd }
+//   .home[...] .summary .content b, ... strong           { color: #a24e7a }
+//
+// Un simple ".content strong" (0,1,1) perdia contra las tres.
+
+.single .content b,
+.single .content strong,
+.page .content b,
+.page .content strong,
+.home[data-home=posts] .summary .content b,
+.home[data-home=posts] .summary .content strong {
+  // Sniglet solo trae 400 y 800: "bold" (700) seria una negrita sintetica
+  font-weight: 800;
+  color: $riso-red;
+}
+
+body[theme=dark] .single .content b,
+body[theme=dark] .single .content strong,
+body[theme=dark] .page .content b,
+body[theme=dark] .page .content strong,
+body[theme=dark] .home[data-home=posts] .summary .content b,
+body[theme=dark] .home[data-home=posts] .summary .content strong {
+  color: $riso-red-dark;
+}
+
+// Dentro de un enlace manda el color del enlace, no el de la negrita: si
+// no, una negrita enlazada perderia su referencia visual y pareceria
+// texto suelto en rojo.
+.single .content a b,
+.single .content a strong,
+.page .content a b,
+.page .content a strong {
+  color: inherit;
+}
+
+// --- Imagenes del contenido sin pie de foto -----------------------
+// Fallo latente del tema. Sus reglas compiladas son:
+//
+//   .single .content figure img { width: 100%; height: auto }
+//   .single .content img        { max-width: 100%; min-height: 1em }
+//
+// El <figure> solo lo genera _markup/render-image.html cuando la imagen
+// lleva titulo en el markdown. Sin titulo no hay figure, y entonces
+// nadie pone height:auto: como plugin/img.html emite los atributos
+// width y height, el navegador respeta esa altura literal mientras
+// max-width le recorta el ancho. Resultado: la imagen sale aplastada.
+//
+// Visto con la foto de /about/: 1024x682 se mostraba como 480x682,
+// proporcion 0.70 en vez de 1.50.
+//
+// El aspect-ratio que emite la plantilla no basta: una altura explicita
+// gana siempre sobre aspect-ratio.
+.single .content img,
+.page .content img {
+  height: auto;
 }

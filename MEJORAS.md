@@ -25,7 +25,34 @@ construyendo el sitio con Hugo y comparando el HTML generado antes y después.
 | Imágenes en móvil | 4773 KB | 438 KB (**−91 %**) |
 | `content/` | 32,3 MB | 22,6 MB |
 | Favicons 404 | 2 por carga | 0 |
-| Tipografía | system-ui | Literata + Space Grotesk |
+| Tipografía | system-ui | Sniglet + Departure Mono |
+| Fondo claro | `#5e6365` gris medio | `#ffe4f1` rosa Bubblegum |
+| Fondo oscuro | `#5a6f68` verde salvia | `#000000` negro |
+| Enlaces en texto | invisibles | rojo + subrayado |
+| Imágenes en portada | recortadas a franja 10:3 | enteras, y más pequeñas |
+
+### Trabajo de estética (PRs #2 a #5, todos mergeados)
+
+Partía de un problema medible, no de gusto: los dos temas estaban a media
+luminancia, así que ni el texto oscuro ni el claro funcionaban sobre ellos.
+
+| Contraste | Antes | Ahora claro | Ahora oscuro |
+|---|---|---|---|
+| Título y párrafos | 2,82 – 3,07 | 9,41 | 16,64 |
+| Enlaces en texto | **1,43** | 4,72 | 7,70 |
+| Metadatos | 2,31 – 2,61 | 4,51 | 7,55 |
+
+WCAG AA pide 4,5:1. Antes fallaban todos.
+
+- Paleta clara tomada del tema **Bubblegum** de cyberspace.online
+  (`#ffe4f1` / `#6b1a4a`), leyendo sus custom properties en el navegador.
+- Paleta oscura tomada de su tema **Dark** (`#000000` / `#efe5c0`).
+- Acento rojo en los dos temas: `#c62828` en claro, `#ff6f61` en oscuro.
+- Tipografía **Sniglet + Departure Mono**, autoalojadas, SIL OFL.
+- Los enlaces del contenido recuperan el subrayado, que el tema eliminaba
+  con `text-decoration: none`.
+- Imágenes de portada enteras y a 24 rem.
+- Título duplicado eliminado en 4 posts, fechas en `02/01/2006`.
 
 ### Dos cosas urgentes que aparecieron por el camino
 
@@ -75,7 +102,7 @@ Son fallos que están afectando al sitio ahora mismo. Ninguno es estético.
     porque `farrer` y `metavers` están en catalán. Alternativa barata: `language: ca`
     en el front matter de esos dos.
 
-- [ ] 🙋 **1.4 · La imagen social (Open Graph) está rota**
+- [x] 🙋 **1.4 · La imagen social (Open Graph) está rota**
   `images = ["/static/favicon.ico"]` — dos fallos:
   1. `static/` no existe en el output de Hugo (se aplana a la raíz) → sería `/favicon.ico`.
   2. Un `.ico` no sirve como tarjeta social.
@@ -335,7 +362,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
   **Dímelo y lo planteo aparte.**
 
-- [ ] 🙋 **4.1 · No tienes página "Sobre mí"**
+- [~] 🙋 **4.1 · No tienes página "Sobre mí"** ⬅️ *en curso*
   Todo tu perfil es el subtítulo de la portada. Con CV, TFG y un proyecto como RSU, una
   `/about/` con tu recorrido y cómo contactarte vale más que un PDF en el menú.
 

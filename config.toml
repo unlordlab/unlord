@@ -39,6 +39,14 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 [menu]
  [[menu.main]]
     weight = 4
+    identifier = "about"
+    pre = ""
+    post = ""
+    name = "Acerca de mí"
+    url = "/about/"
+    title = ""
+  [[menu.main]]
+    weight = 5
     identifier = "CV"
     pre = ""
     post = ""
@@ -54,7 +62,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     # you can add extra information after the name (HTML format is supported), such as icons
     # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
     post = ""
-    name = "Posts"
+    name = "Artículos"
     url = "/posts/"
     # title will be shown when you hover on this menu link
     # 当您将鼠标悬停在此菜单链接上时, 将显示标题
@@ -64,7 +72,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     identifier = "tags"
     pre = ""
     post = ""
-    name = "Tags"
+    name = "Etiquetas"
     url = "/tags/"
     title = ""
   [[menu.main]]
@@ -72,7 +80,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     identifier = "categories"
     pre = ""
     post = ""
-    name = "Categories"
+    name = "Categorías"
     url = "/categories/"
     title = ""
 
@@ -118,7 +126,9 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     [params.header.title]
       # URL of the LOGO
       # LOGO 的 URL
-      logo = "/posts/icono.PNG"
+      # Sin icono: el logotipo es la propia palabra, en Departure Mono.
+      # icono.PNG sigue usandose como favicon desde static/.
+      logo = ""
       # title name
       # 标题名称
       name = "unlord l4b"
