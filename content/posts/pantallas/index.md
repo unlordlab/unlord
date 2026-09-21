@@ -1,5 +1,5 @@
 ---
-title: "La pantallas no eran el enemigo."
+title: "Las pantallas no eran el enemigo."
 date: 2026-09-20
 draft: false
 author: "unlord"
