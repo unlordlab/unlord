@@ -1,0 +1,97 @@
+{{- /* Tarjeta Open Graph: la imagen que sale al compartir un enlace.       */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Las redes piden 1200x630 (1.91:1). Las destacadas de este blog      */ -}}
+{{- /* miden 1024x682 (3:2), asi que antes las recortaban ellas por su     */ -}}
+{{- /* cuenta, por arriba y por abajo.                                     */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Y recortar aqui no valia: las destacadas son carteles que YA llevan */ -}}
+{{- /* el titulo impreso dentro, y un recorte al centro se lo come. Por    */ -}}
+{{- /* eso el cartel se encaja entero y se rellenan los lados.             */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Para las paginas sin cartel se compone una tarjeta con el fondo     */ -}}
+{{- /* generico y el titulo escrito encima, ahi si.                        */ -}}
+
+{{- $pagina := . -}}
+{{- $ancho := 1200 -}}
+{{- $alto := 630 -}}
+{{- $marco := "#0b0b0b" -}}
+
+{{- /* La destacada. Se busca por RelPermalink y no por nombre de fichero  */ -}}
+{{- /* porque el front matter la renombra a "featured-image", y entonces   */ -}}
+{{- /* GetMatch por su nombre original no la encuentra.                    */ -}}
+{{- $cartel := "" -}}
+{{- with $pagina.Resources.GetMatch "featured-image" -}}
+    {{- $cartel = . -}}
+{{- end -}}
+{{- if not $cartel -}}
+    {{- range $pagina.Resources.ByType "image" -}}
+        {{- if and (not $cartel) (eq .Name "featured-image") -}}
+            {{- $cartel = . -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $tarjeta := "" -}}
+
+{{- if not $pagina.IsPage -}}
+    {{- with resources.Get "images/og-default.png" -}}
+        {{- $tarjeta = .Fill (printf "%dx%d Center jpg q88" $ancho $alto) -}}
+    {{- end -}}
+{{- else if $cartel -}}
+    {{- /* Cabe entero y se rellena lo que sobra. El reparto se calcula   */ -}}
+    {{- /* con la resta, no con dos mitades, porque si la diferencia es   */ -}}
+    {{- /* impar dos mitades dejan la imagen en 1199 y no en 1200.        */ -}}
+    {{- $encajado := $cartel.Fit (printf "%dx%d" $ancho $alto) -}}
+    {{- $sobraX := sub $ancho $encajado.Width -}}
+    {{- $sobraY := sub $alto $encajado.Height -}}
+    {{- $izq := div $sobraX 2 -}}
+    {{- $arr := div $sobraY 2 -}}
+    {{- $tarjeta = $encajado | images.Filter
+        (images.Padding $arr (sub $sobraX $izq) (sub $sobraY $arr) $izq $marco) -}}
+    {{- $tarjeta = $tarjeta.Process "jpg q88" -}}
+{{- else -}}
+    {{- $fondo := resources.Get "images/og-default.png" -}}
+    {{- $fuente := resources.Get "fonts/DepartureMono-Regular.otf" -}}
+    {{- if and $fondo $fuente -}}
+        {{- /* og-default.png ya es una tarjeta hecha, con el logotipo, la  */ -}}
+        {{- /* descripcion y el dominio. Escribir encima se le monta todo,  */ -}}
+        {{- /* asi que primero se apaga del todo y queda un lienzo negro.   */ -}}
+        {{- $lienzo := $fondo.Fill (printf "%dx%d Center jpg q88" $ancho $alto) -}}
+
+        {{- /* images.Text no parte lineas solo. Departure Mono es de      */ -}}
+        {{- /* ancho fijo: a 54px cada caracter ocupa ~32px, asi que en    */ -}}
+        {{- /* los 1060px utiles caben 32 por linea. Se parte por palabra. */ -}}
+        {{- $limite := 32 -}}
+        {{- $lineas := slice -}}
+        {{- $actual := "" -}}
+        {{- range (split $pagina.Title " ") -}}
+            {{- $palabra := . -}}
+            {{- if eq $actual "" -}}
+                {{- $actual = $palabra -}}
+            {{- else if le (len (printf "%s %s" $actual $palabra)) $limite -}}
+                {{- $actual = printf "%s %s" $actual $palabra -}}
+            {{- else -}}
+                {{- $lineas = $lineas | append $actual -}}
+                {{- $actual = $palabra -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if ne $actual "" -}}
+            {{- $lineas = $lineas | append $actual -}}
+        {{- end -}}
+        {{- $lineas = first 4 $lineas -}}
+
+        {{- /* El bloque se sube segun cuantas lineas ocupe, para que      */ -}}
+        {{- /* quede centrado en vertical sin pisar la firma.              */ -}}
+        {{- $y := sub 290 (div (mul (len $lineas) 74) 2) -}}
+        {{- $tarjeta = $lienzo | images.Filter
+            (images.Brightness -100)
+            (images.Text (delimit $lineas "\n") (dict
+                "font" $fuente "size" 54 "x" 70 "y" $y
+                "color" "#efe5c0" "linespacing" 20))
+            (images.Text "unlord l4b" (dict
+                "font" $fuente "size" 30 "x" 70 "y" 520
+                "color" "#ff6f61")) -}}
+    {{- end -}}
+{{- end -}}
+
+{{- return $tarjeta -}}
