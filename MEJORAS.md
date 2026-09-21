@@ -315,18 +315,37 @@ Este es el problema de fondo. Tu repo **es** el repo de LoveIt, con tu contenido
   ⚠️ **Es un cambio grande.** Implica repo nuevo y reconfigurar Cloudflare Pages.
   Media tarde, y quita el 80 % de la deuda técnica. **Decide tú si lo hacemos.**
 
-- [ ] 🙋 **3.3 · El tema usa APIs de Hugo ya eliminadas** ⬅️ *nuevo, diagnosticado*
-  Esto es lo que te bloquea en Hugo ≤ 0.135. Dos llamadas obsoletas:
+- [x] 🤖 **3.3 · El tema usaba APIs de Hugo ya eliminadas**
+  Esto era lo que clavaba el sitio en Hugo 0.135 (septiembre de 2024). La ficha
+  hablaba de dos llamadas; contándolas todas eran **28, repartidas por 11 ficheros**:
 
-  | Fichero | Línea | Llamada | Estado en Hugo |
+  | Llamada | Veces | Sustituida por | Estado en Hugo |
   |---|---|---|---|
-  | `layouts/partials/head/seo.html` | 29, 125 | `.Site.Author.name` | deprecada 0.124, **eliminada 0.141** |
-  | `layouts/partials/header.html` | 60 | `.Site.IsMultiLingual` | deprecada 0.124, **eliminada 0.141** |
+  | `.Site.Author.name` / `.email` / `.link` | 19 | `.Site.Params.author.*` | **eliminada en 0.141** |
+  | `.Site.LanguageCode` | 6 | `.Site.Language.LanguageCode` | deprecada en 0.158 |
+  | `.Site.IsMultiLingual` | 3 | `hugo.IsMultilingual` | **eliminada en 0.141** |
 
-  Se pueden parchear a mano (`.Site.Params.author.name` y `hugo.IsMultilingual`), pero
-  **no lo he hecho a propósito**: al separar el sitio del tema (3.1) y actualizar a
-  LoveIt v0.3.1 esto viene arreglado de fábrica, y parchear el tema vendorizado sería
-  trabajo que luego hay que tirar. Si prefieres el parche rápido mientras tanto, dímelo.
+  En `config.toml`, la tabla `[author]` pasa a `[params.author]`. Se renombra **en su
+  sitio**, sin mover el bloque: justo después viene `[menu]`, que es otra cabecera, así
+  que ninguna clave cambia de tabla. (Mover el bloque dentro de `[params]` habría metido
+  en `params.author` las claves sueltas que siguen a esa cabecera — es el mismo fallo
+  de la Fase 1, cuando `[outputs]` se tragó `title` y `languageCode`.)
+
+  **Verificado construyendo con cada versión**: 0.128.2, 0.135.0, 0.139.4, 0.140.2,
+  0.145.0 y 0.166.0, todas OK. La 0.121.2 falla, porque `hugo.IsMultilingual` no
+  existe hasta la 0.124 — de ahí que el mínimo siga en 0.128.0.
+
+  Y lo que importa: el sitio generado con 0.135 es **idéntico byte a byte** antes y
+  después. El parche no cambia nada de lo que se publica, solo deja de llamar a lo que
+  ya no existe.
+
+  Quedan tres avisos de deprecación con Hugo 0.158+, **a propósito**: sus sustitutos
+  (`.Language.Locale`, `hugo.Data` y la clave `locale`) no existen en 0.135, que es la
+  versión fijada hoy en Cloudflare. Son avisos, no errores. Se limpian después de subir
+  `HUGO_VERSION`.
+
+  ⬅️ **Ahora te toca a ti**: en Cloudflare Pages → Settings → Environment variables,
+  cambia `HUGO_VERSION` de `0.135.0` a `0.166.0` y lanza un *Retry deployment*.
 
 - [ ] 🙋 **3.5 · Sacar el repositorio de las búsquedas (repo privado)** ⬅️ *nuevo*
 
