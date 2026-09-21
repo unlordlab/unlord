@@ -48,19 +48,27 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 [module]
   [module.hugoVersion]
     # Rango verificado construyendo el sitio con cada version:
-    #   0.121.2 OK (pero ignora [pagination], anterior a 0.128)
-    #   0.128.2 OK   0.135.0 OK
-    #   0.139.4 FALLA   0.140.2 FALLA   0.166.0 FALLA
-    # El tope lo marca el TEMA, no esta configuracion: usa .Site.Author
-    # (deprecado en 0.124) y .Site.IsMultiLingual, eliminados despues.
-    # Se arregla al separar el sitio del tema y actualizar a LoveIt v0.3.1.
+    #   0.121.2 FALLA (hugo.IsMultilingual no existe hasta 0.124)
+    #   0.128.2 OK   0.135.0 OK   0.139.4 OK
+    #   0.140.2 OK   0.145.0 OK   0.166.0 OK
+    #
+    # El tope lo marcaba el TEMA: usaba .Site.Author y
+    # .Site.IsMultiLingual, que Hugo elimino en la 0.141. Ya estan
+    # sustituidos, asi que el sitio vuelve a construir con Hugo
+    # moderno sin tocar nada mas.
+    #
+    # Quedan tres avisos de deprecacion en 0.158+, y se quedan a
+    # proposito: sus sustitutos (.Language.Locale, hugo.Data y la
+    # clave locale) no existen en 0.135, que es la version que
+    # Cloudflare tiene fijada hoy. Son avisos, no errores. Se
+    # arreglan despues de subir HUGO_VERSION en el panel.
     extended = true
     min = "0.128.0"
-    max = "0.135.0"
+    max = "0.166.0"
     
     # Author config
 # 作者配置
-[author]
+[params.author]
   name = "unlord"
   email = "unl4b@proton.me"
   link = ""
