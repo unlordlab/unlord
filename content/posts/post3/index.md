@@ -16,13 +16,47 @@ categories: ["unlord"]
 lightgallery: true
 ---
 
-Hubo un tiempo, no tan lejano, en que subir una foto de un viaje significaba subir **el sitio**. La plaza, la fachada, la luz de las seis de la tarde. Uno volvía de Lisboa con cuarenta fotos de Lisboa.
+Hubo un tiempo, no tan lejano, en que subir una foto de un viaje significaba subir **el sitio**. La plaza, la fachada, la luz de las seis de la tarde. Uno volvía de Barcelona con cuarenta fotos de Barcelona.
 
-Hoy uno vuelve de Lisboa con cuarenta fotos de sí mismo en Lisboa.
+Hoy uno vuelve de Barcelona con cuarenta fotos de sí mismo en Barcelona.
 
-Esa es la intuición que quería poner a prueba. No como afirmación de sobremesa, sino mirando las imágenes de verdad.
+Esa es la intuición que quería poner a prueba. No como afirmación de sobremesa, sino mirando las imágenes de verdad. Y al mirarlas, lo que apareció no fue solo un cambio de tema. Fue un cambio de sitio: el sujeto se ha mudado de un lado de la cámara al otro.
 
 <!--more-->
+
+## Cuando el self estaba detrás de la cámara
+
+Conviene empezar por algo que se olvida enseguida: **la foto de un sitio siempre habló de quien la hacía**. El que fotografiaba una plaza no desaparecía de la imagen, se escondía en ella. Estaba en la hora a la que decidió volver, en el punto donde plantó el trípode, en lo que dejó fuera del encuadre.
+
+Esa era la forma antigua del self en la fotografía: **indirecta, y sostenida por la destreza**. Uno no decía quién era, lo demostraba. Y lo demostraba con una lista concreta de saberes: entender la luz, tener paciencia, componer, revelar, saber qué no fotografiar.
+
+Flickr heredó ese contrato casi intacto. Sus fotos venían con la ficha técnica pegada —apertura, velocidad, ISO, objetivo—, y eso no era un detalle de frikis: era la prueba del oficio, el equivalente a enseñar el proceso y no solo el resultado. En los comentarios se discutía el encuadre y el revelado. El reconocimiento se contaba por foto, no por persona: uno acumulaba **obra**.
+
+De ahí salía una identidad perfectamente reconocible: *yo soy el que sabe esperar la luz*. El sitio era el sujeto de la imagen. El autor, el mérito invisible que la había hecho posible.
+
+## Cómo se desplazó
+
+Entonces la técnica dejó de escasear.
+
+El móvil puso una cámara decente en todos los bolsillos. El filtro hizo en un toque lo que antes era una tarde de revelado. El automatismo resolvió la exposición. Y ahí está el giro, menos glamuroso de lo que parece: **cuando una habilidad se reparte entre todos, deja de servir para distinguir a nadie**.
+
+Si cualquiera saca una foto correcta de la misma plaza, la pericia deja de ser una credencial. Deja de ser un capital. Y una identidad que se sostenía sobre esa pericia se queda, de golpe, sin suelo.
+
+Lo único que un filtro no puede replicar es quién eres tú y dónde estás. Así que el self hizo lo que hace cualquiera cuando su moneda se devalúa: cambió de moneda. Salió de detrás de la cámara y se puso delante.
+
+## Y cómo se reconfiguró
+
+El desplazamiento físico es lo de menos. Lo que importa es lo que cambia al llegar al otro lado.
+
+**El self deja de ser autor y pasa a ser motivo.** Antes era la causa de la foto; ahora es su contenido. Antes se demostraba; ahora se exhibe. Lo que se ganaba con una imagen difícil pasa a reclamarse por presencia.
+
+**Cambia la unidad de cuenta.** Flickr contaba favoritos por fotografía: lo que crecía era la obra. Instagram cuenta seguidores por persona: lo que crece es la audiencia. Y una audiencia no se fideliza con un encuadre, se fideliza con una cara. La métrica no es un accesorio del sistema: es lo que empuja el rostro hacia el centro del cuadro.
+
+**Y el sitio cambia de papel dos veces.** Primero deja de ser el sujeto y pasa a ser decorado. Después deja de ser decorado y pasa a ser **credencial**: ya no se fotografía el lugar, se usa. Certifica que has estado, que has podido pagarlo, que tu vida se parece a la que se supone deseable.
+
+La postal decía «mira qué bonito es esto». El post dice «mira quién soy yo aquí». Y para eso el sitio tiene que ser reconocible en medio segundo, porque si no, no certifica nada. De ahí que los mismos veinte encuadres se repitan un millón de veces: ya no son paisajes, son **sellos**.
+
+Lo que se ha reconfigurado, entonces, no es la afición a salir en las fotos. Es de dónde saca uno la prueba de que vale algo. Antes la daba lo que sabías hacer. Ahora la da dónde has conseguido estar.
 
 ## Dos plataformas, dos maneras de estar en el mundo
 
@@ -71,15 +105,19 @@ Por eso la mitad derecha de esta herramienta funciona con publicaciones elegidas
 
 ## Lo que apareció al elegirlas
 
-Empecé por tres ciudades de costa: Lisboa, Barcelona y Nápoles. Y al ir mirando publicaciones una por una, mi intuición de partida se sostuvo peor de lo que esperaba.
+Elegí tres sitios de costa deliberadamente distintos entre sí. **Barcelona**, una ciudad con siglos de vida propia antes de que existiera la fotografía. **Miami**, un destino levantado en buena medida para ser mirado: art déco, palmeras alineadas, un skyline que hace de fondo. Y **Santorini**, el caso extremo, donde el mismo encuadre lleva tanto tiempo repitiéndose que ya no es un paisaje, es un sello.
 
-Barcelona la confirma sin matices: cuerpos en primer plano, la ciudad detrás y fuera de foco. Nápoles la desmiente entera: lo que encontré fueron callejones engalanados, un balcón azul con el Vesubio al fondo, un atardecer sobre el mar sin nadie dentro. Lisboa se quedó a medias, y su imagen más reveladora no tiene a ninguna persona: es una playa con un rótulo encima que dice *My Favorite Beach*.
+Conviene decirlo sin rodeos: los elegí **porque ahí el fenómeno se ve**. Eso no es una muestra, es una selección. Sospecho que con sitios sin postal —un puerto industrial, un pueblo de interior— la mitad derecha se parecería bastante más a la izquierda, pero no lo he comprobado: lo digo como conjetura, no como hallazgo.
 
-Ahí el sitio no ha desaparecido. Se ha convertido en mercancía.
+Aun así, al ir mirando publicaciones una por una, aparecieron dos cosas que no esperaba.
 
-Así que el desplazamiento no va del lugar a la persona, o no solo. Va del lugar **visto** al lugar **presentado**, con alguien delante o sin nadie. Flickr te enseñaba una plaza. Instagram te la vende, y a veces el envoltorio es un cuerpo y a veces es una tipografía encima del mar.
+La primera es que **el desplazamiento no es total**. Incluso en Santorini el buscador devuelve todavía vistas sin nadie dentro: cúpulas al atardecer, una mesa puesta frente a la caldera. La fotografía del sitio no ha desaparecido. Ha pasado a segunda fila.
 
-Conviene decir lo obvio: son ocho publicaciones que elegí yo. No es una muestra, es un puñado de ejemplos. Sirven para mirar, no para demostrar.
+La segunda es la más interesante de las nueve. En Barcelona apareció una figura **de espaldas** ante la cascada de la Ciutadella. Ocupa el centro del encuadre, la imagen entera, y sin embargo no se le ve la cara y el sitio se reconoce sin esfuerzo. No es la foto del lugar ni es el retrato: es exactamente el punto medio del trayecto, congelado. La persona ya está delante de la cámara, pero todavía no ha reclamado el papel principal.
+
+Eso ayuda a afinar la tesis. El movimiento no va del lugar a la persona sin más. Va del lugar **visto** al lugar **presentado**, y admite grados: el sitio solo, el sitio con alguien dentro, alguien con el sitio detrás, alguien y el sitio ya casi fuera de cuadro.
+
+Dicho lo cual, lo obvio: son nueve publicaciones que elegí yo. Sirven para mirar, no para demostrar.
 
 ---
 

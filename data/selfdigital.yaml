@@ -22,18 +22,8 @@
 
 ciudades:
 
-  # ---------------------------------------------------------------- Lisboa
-  lisboa: &lisboa
-    nombre: "Lisboa"
-    posts:
-      # Mujer con camara en la playa: el retrato desplaza al sitio.
-      - DcjEDbQlnsE
-      # Paisaje rotulado "My Favorite Beach - LISBON, PORTUGAL". Aqui no hay
-      # nadie en el encuadre, pero el sitio viene envuelto como un producto.
-      - Db_xq9GiOn0
-  lisbon: *lisboa
-
   # ------------------------------------------------------------- Barcelona
+  # La ciudad de siempre, con siglos de vida propia antes de la camara.
   barcelona: &barcelona
     nombre: "Barcelona"
     posts:
@@ -45,15 +35,29 @@ ciudades:
       # persona esta dentro del encuadre pero el sitio todavia se reconoce.
       - DbyZFSklLfg
 
-  # ---------------------------------------------------------------- Napoles
-  napoles: &napoles
-    nombre: "Nápoles"
+  # ----------------------------------------------------------------- Miami
+  # Destino construido para ser fotografiado: art deco, palmeras, skyline.
+  miami: &miami
+    nombre: "Miami"
     posts:
-      # Balcon azul con el Vesubio al fondo.
-      - DMUgzZEopiT
-      # Callejon napolitano engalanado, con gente de paso.
-      - DOV5H57gg27
-      # Atardecer sobre la costa, sin nadie en el encuadre.
-      - DORVLGwDJ1a
-  napoli: *napoles
-  naples: *napoles
+      # Conjunto de colores en plena calle, con palmeras y edificios detras.
+      - DI_tGP6g4fH
+      # En la playa, con los bloques de Miami Beach al fondo.
+      - DKr4NdzR2R6
+      # Ante una fachada art deco entre vegetacion tropical.
+      - DJkctrCPU0J
+
+  # ------------------------------------------------------------- Santorini
+  # El caso extremo: encuadres tan repetidos que funcionan como sello.
+  santorini: &santorini
+    nombre: "Santorini"
+    posts:
+      # Vestido azul largo con Oia y el mar detras.
+      - DO0fKgzjWH-
+      # Vestido amarillo en una terraza de Oia, a contraluz.
+      - DN5gcRXDPtq
+      # En la escalera, con las cupulas azules justo detras: el encuadre
+      # canonico de la isla, repetido un millon de veces.
+      - DXi1oQgCP5h
+  oia: *santorini
+  thira: *santorini
