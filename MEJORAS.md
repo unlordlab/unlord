@@ -440,14 +440,48 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   `unlordl4b.pages.dev` no se recuerda, no se cita y no te pertenece.
   Un `.cat`, `.es` o `.org` cuesta 10–15 €/año; en Cloudflare Pages se configura en 5 minutos.
 
-- [ ] 🙋 **6.2 · Tu TFG merece un DOI**
+- [ ] 🙋 **6.2 · Depositar el TFG en el O2 de la UOC**
   *"El metavers. Les noves coordenades de la desigualtat"* es un PDF de 1,9 MB enterrado
-  en un post de 398 palabras.
-  → Subirlo a **Zenodo** (gratis, da DOI, indexado en Google Scholar), vincular **ORCID**,
-  y enlazar desde el post. Lo convierte en algo citable en vez de un adjunto.
+  en un post de 348 palabras.
+  → **Depositarlo en el [O2, el repositorio de la UOC](https://biblioteca.uoc.edu/ca/servei/Publica-en-obert-a-lO2-Repositori-UOC/)**,
+  vincular **ORCID** y enlazar desde el post. Lo convierte en algo citable en vez de
+  un adjunto.
+
+  **Por qué el O2 y no Zenodo** (comprobado: el TFG no está en el O2 a día de hoy):
+  - Es el **repositorio institucional** de tu universidad. Lo cosechan OpenAIRE y
+    Recolecta, así que también llega a Google Scholar.
+  - URL permanente, y **mantienes la propiedad intelectual** eligiendo tú la licencia
+    Creative Commons.
+  - Le da **contexto académico**: aparece junto a los trabajos de tu grado, no suelto.
+  - Se hace desde el Campus. Más de 6.000 estudiantes ya lo han hecho.
+
+  **Zenodo queda como opción posterior, no excluyente.** Da DOI y permanencia (política
+  citada: *"retained for the lifetime of the repository… CERN… the next 20 years at
+  least"*), pero tiene un inconveniente que conviene saber antes: **es prácticamente
+  irreversible**. Si retiras el documento, el DOI y la URL se conservan y queda una
+  *tombstone page* pública diciendo que existió y se retiró. No cedes propiedad
+  intelectual, pero sí te comprometes a la permanencia.
   Los campos `ORCID`, `Googlescholar` y `Researchgate` ya están en tu config esperando.
   → Lo mismo para el estudio de caso de la Sra. Maria Ferrer: tiene público académico real
   en educación social.
+
+  **Por qué importa:** hoy el TFG es un adjunto. Quien investigue sobre metaverso y
+  desigualdad **no lo va a encontrar nunca**, porque Google Scholar no rastrea PDFs
+  sueltos en blogs personales. Y aunque lo encuentre, no puede citarlo bien: no tiene
+  identificador estable, y si cambias de dominio el enlace muere.
+
+  Cualquiera de los dos repositorios resuelve lo mismo: identificador permanente,
+  indexación en Scholar y preservación independiente del blog.
+
+  **6.2b · Desarrollar el post del TFG** ⬅️ *añadido*
+  El post son **348 palabras**, básicamente un enlace de descarga. Si se toca, merece
+  la pena convertirlo en una entrada de verdad: por qué lo escribiste, qué encontraste,
+  qué te sorprendió. Eso **sí lo indexa Google**, al contrario que el PDF, y es lo que
+  llevaría gente al documento. Lo mismo aplica al post de la Sra. Ferrer.
+
+  **Cuando tengas el DOI y el ORCID**, dímelos: actualizo el post con la cita formal y
+  relleno los campos `ORCID`, `Googlescholar` y `Researchgate` del `config.toml`, que
+  siguen vacíos desde el principio.
 
 - [ ] 🙋 **6.3 · Dónde difundir, por tipo de post**
   - *Pantallas, RLHF, Metaverso* → Mastodon (`#EducacióDigital`, `#Tecnopolítica`),
