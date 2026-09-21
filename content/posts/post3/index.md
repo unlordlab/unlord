@@ -121,4 +121,4 @@ Dicho lo cual, lo obvio: son nueve publicaciones que elegí yo. Sirven para mira
 
 ---
 
-La herramienta seguirá creciendo: iré añadiendo ciudades a la selección de Instagram. Si se te ocurre alguna que ilustre bien el contraste, [escríbeme](mailto:unl4b@proton.me).
+La herramienta seguirá creciendo: iré añadiendo ciudades a la selección de Instagram. Si se te ocurre alguna que ilustre bien el contraste, {{< correo >}}.

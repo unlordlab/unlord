@@ -1,0 +1,10 @@
+{{- /* Enlace de correo con la direccion ofuscada.                         */ -}}
+{{- /*                                                                     */ -}}
+{{- /*   {{< correo >}}              -> usa el texto "escribeme"           */ -}}
+{{- /*   {{< correo "dime algo" >}}  -> usa ese texto                      */ -}}
+{{- /*                                                                     */ -}}
+{{- /* La direccion sale de [params.social].Email, para no repetirla.        */ -}}
+{{- $direccion := .Site.Params.social.Email -}}
+{{- $texto := .Get 0 | default "escríbeme" -}}
+{{- $href := printf "mailto:%s" $direccion | partial "function/ofuscar.html" -}}
+<a href="{{ $href | safeURL }}">{{ $texto }}</a>

@@ -15,14 +15,11 @@
                 {{- . -}}
             </language>
         {{- end -}}
-        {{- with .Site.Params.author.email -}}
-            <managingEditor>
-                {{- . }}{{ with $.Site.Params.author.name }} ({{ . }}){{ end -}}
-            </managingEditor>
-            <webMaster>
-                {{- . }}{{ with $.Site.Params.author.name }} ({{ . }}){{ end -}}
-            </webMaster>
-        {{- end -}}
+        {{- /* Aqui iban <managingEditor> y <webMaster> con la direccion de   */ -}}
+        {{- /* correo en claro. Son campos opcionales de RSS 2.0 que casi     */ -}}
+        {{- /* ningun lector muestra, y el feed es tan rastreable como el     */ -}}
+        {{- /* HTML: publicaban la direccion en 45 ficheros del sitio.        */ -}}
+        {{- /* La autoria de cada entrada sigue yendo en <author>.            */ -}}
         {{- with .Site.Copyright -}}
             <copyright>
                 {{- . -}}
