@@ -451,8 +451,12 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 - [ ] 🙋 **4.9 · Tu email está en texto plano** en `config.toml` y por tanto en el HTML público.
   Los bots de spam lo recolectan. → Formulario o dirección alias.
 
-- [ ] 🙋 **4.10 · `post3` es un stub de 115 palabras** que solo dice "clica aquí".
-  → Desarrollarlo o marcarlo `hiddenFromHomePage: true`.
+- [x] 🤖 **4.10 · `post3` era un stub de 115 palabras** que solo decía "clica aquí".
+  Reescrito a ~1.000 palabras, con la herramienta "El self digital" incrustada
+  (Flickr vía Openverse contra un corpus de Instagram elegido a mano) y una
+  sección sobre lo que apareció al elegir las publicaciones.
+  Corpus inicial: Lisboa, Barcelona y Nápoles, 8 publicaciones verificadas una
+  a una. Para añadir más ciudades, ver `data/selfdigital.yaml`.
 
 ---
 

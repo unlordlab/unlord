@@ -69,6 +69,18 @@ Lo llamativo no es que Meta cerrara. Es que la plataforma que nació abierta, la
 
 Por eso la mitad derecha de esta herramienta funciona con publicaciones elegidas **a mano**, una a una. Es lo único que la plataforma permite, y lo digo sin ironía: es exactamente la diferencia entre un archivo y un escaparate.
 
+## Lo que apareció al elegirlas
+
+Empecé por tres ciudades de costa: Lisboa, Barcelona y Nápoles. Y al ir mirando publicaciones una por una, mi intuición de partida se sostuvo peor de lo que esperaba.
+
+Barcelona la confirma sin matices: cuerpos en primer plano, la ciudad detrás y fuera de foco. Nápoles la desmiente entera: lo que encontré fueron callejones engalanados, un balcón azul con el Vesubio al fondo, un atardecer sobre el mar sin nadie dentro. Lisboa se quedó a medias, y su imagen más reveladora no tiene a ninguna persona: es una playa con un rótulo encima que dice *My Favorite Beach*.
+
+Ahí el sitio no ha desaparecido. Se ha convertido en mercancía.
+
+Así que el desplazamiento no va del lugar a la persona, o no solo. Va del lugar **visto** al lugar **presentado**, con alguien delante o sin nadie. Flickr te enseñaba una plaza. Instagram te la vende, y a veces el envoltorio es un cuerpo y a veces es una tipografía encima del mar.
+
+Conviene decir lo obvio: son ocho publicaciones que elegí yo. No es una muestra, es un puñado de ejemplos. Sirven para mirar, no para demostrar.
+
 ---
 
 La herramienta seguirá creciendo: iré añadiendo ciudades a la selección de Instagram. Si se te ocurre alguna que ilustre bien el contraste, [escríbeme](mailto:unl4b@proton.me).
