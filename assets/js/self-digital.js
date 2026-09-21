@@ -1,7 +1,15 @@
 /* Herramienta "El self digital".
  *
- * Flickr en vivo (su API responde con CORS y devuelve JSON, comprobado) e
- * Instagram como corpus curado a mano, porque no se puede buscar.
+ * Flickr, a traves de Openverse. Instagram, corpus curado a mano.
+ *
+ * Por que Openverse y no la API de Flickr: desde 2025 Flickr solo da claves
+ * de API a cuentas Pro, que son de pago. Openverse (el buscador de contenido
+ * libre de WordPress) indexa Flickr, responde con CORS, no pide clave y solo
+ * devuelve material con licencia libre. Comprobado los tres puntos.
+ *
+ * Lo que se pierde por el camino: Openverse no expone la fecha de captura ni
+ * admite filtrarla, asi que la comparacion entre epocas no es posible. Queda
+ * la comparacion entre plataformas, que era la tesis original.
  */
 (function () {
   'use strict';
@@ -9,7 +17,6 @@
   var raiz = document.querySelector('.sd');
   if (!raiz) return;
 
-  var CLAVE = raiz.getAttribute('data-flickr-key') || '';
   var form = document.getElementById('sd-form');
   var entrada = document.getElementById('sd-ciudad');
   var estado = document.getElementById('sd-estado');
@@ -29,58 +36,67 @@
 
   function aviso(txt) { estado.textContent = txt; }
 
-  /* ---------------------------------------------------------------- Flickr */
+  /* ----------------------------------------------- Flickr, via Openverse */
 
-  function urlFlickr(ciudad, desde, hasta) {
+  function urlOpenverse(ciudad) {
     var p = {
-      method: 'flickr.photos.search',
-      api_key: CLAVE,
-      text: ciudad,
-      /* Licencias Creative Commons y dominio publico. Sin esto estariamos
-         mostrando fotos con todos los derechos reservados. */
-      license: '1,2,3,4,5,6,7,8,9,10',
-      min_taken_date: desde,
-      max_taken_date: hasta,
-      sort: 'relevance',
-      content_type: '1',
-      safe_search: '1',
-      per_page: '9',
-      extras: 'url_m,owner_name,license,date_taken',
-      format: 'json',
-      nojsoncallback: '1'
+      q: ciudad,
+      source: 'flickr',
+      page_size: '12',
+      /* Descarta enlaces rotos: sin esto salen huecos */
+      filter_dead: 'true',
+      category: 'photograph'
     };
-    return 'https://api.flickr.com/services/rest/?' +
+    return 'https://api.openverse.org/v1/images/?' +
       Object.keys(p).map(function (k) {
         return k + '=' + encodeURIComponent(p[k]);
       }).join('&');
   }
 
-  function pintarFlickr(destino, fotos) {
+  function pintarFotos(destino, fotos) {
     destino.innerHTML = '';
     if (!fotos.length) {
-      destino.innerHTML = '<p class="sd-vacio">Sin fotos con licencia libre para esta búsqueda.</p>';
+      destino.innerHTML = '<p class="sd-vacio">Sin fotos con licencia libre para esta ciudad.</p>';
       return;
     }
     fotos.forEach(function (f) {
-      if (!f.url_m) return;
+      /* La URL directa del CDN de Flickr admite sufijo de tamano: _n son
+         320px. Es mas rapida que la miniatura de Openverse, que se genera
+         bajo demanda (medido: 205ms frente a 563ms). Si el patron no casa,
+         se cae a la miniatura de Openverse. */
+      var src = null;
+      if (f.url && /_[a-z]?\.jpe?g$/i.test(f.url)) {
+        src = f.url.replace(/_[a-z]?\.jpe?g$/i, '_n.jpg');
+      }
+      src = src || f.thumbnail || f.url;
+      if (!src) return;
+
       var a = document.createElement('a');
       a.className = 'sd-foto';
-      a.href = 'https://www.flickr.com/photos/' + f.owner + '/' + f.id;
+      a.href = f.foreign_landing_url || '#';
       a.target = '_blank';
       a.rel = 'noopener';
       /* La atribucion no es opcional: las licencias CC la exigen. */
-      a.title = (f.title || 'Sin título') + ' — © ' + (f.ownername || 'desconocido');
+      a.title = (f.title || 'Sin título') + ' — ' + (f.creator || 'autor desconocido') +
+        ' (CC ' + (f.license || '').toUpperCase() + ' ' + (f.license_version || '') + ')';
 
       var img = document.createElement('img');
-      img.src = f.url_m;
       img.loading = 'lazy';
       img.alt = f.title || '';
+      /* Si la URL directa falla (foto borrada, tamano inexistente) se
+         reintenta UNA vez con la miniatura de Openverse. */
+      if (f.thumbnail && src !== f.thumbnail) {
+        img.addEventListener('error', function reintento() {
+          img.removeEventListener('error', reintento);
+          img.src = f.thumbnail;
+        });
+      }
+      img.src = src;
       a.appendChild(img);
 
       var pie = document.createElement('span');
       pie.className = 'sd-foto-pie';
-      pie.textContent = (f.ownername || 'desconocido') +
-        (f.datetaken ? ' · ' + f.datetaken.slice(0, 4) : '');
+      pie.textContent = (f.creator || 'desconocido') + ' · CC ' + (f.license || '').toUpperCase();
       a.appendChild(pie);
 
       destino.appendChild(a);
@@ -88,33 +104,20 @@
   }
 
   function buscarFlickr(ciudad) {
-    if (!CLAVE) {
-      document.getElementById('sd-flickr-viejo').innerHTML =
-        '<p class="sd-vacio">Falta la clave de la API.</p>';
-      document.getElementById('sd-flickr-nuevo').innerHTML = '';
-      return Promise.resolve();
-    }
-    var epocas = [
-      ['sd-flickr-viejo', '2004-01-01 00:00:00', '2010-12-31 23:59:59'],
-      ['sd-flickr-nuevo', '2016-01-01 00:00:00', '2030-12-31 23:59:59']
-    ];
-    return Promise.all(epocas.map(function (e) {
-      var destino = document.getElementById(e[0]);
-      destino.innerHTML = '<p class="sd-vacio">Buscando…</p>';
-      return fetch(urlFlickr(ciudad, e[1], e[2]))
-        .then(function (r) { return r.json(); })
-        .then(function (d) {
-          if (d.stat !== 'ok') {
-            destino.innerHTML = '<p class="sd-vacio">Flickr respondió: ' +
-              (d.message || 'error desconocido') + '</p>';
-            return;
-          }
-          pintarFlickr(destino, (d.photos && d.photos.photo) || []);
-        })
-        .catch(function () {
-          destino.innerHTML = '<p class="sd-vacio">No se pudo contactar con Flickr.</p>';
-        });
-    }));
+    var destino = document.getElementById('sd-flickr');
+    destino.innerHTML = '<p class="sd-vacio">Buscando…</p>';
+    return fetch(urlOpenverse(ciudad))
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        pintarFotos(destino, d.results || []);
+      })
+      .catch(function () {
+        destino.innerHTML = '<p class="sd-vacio">No se pudo contactar con Openverse. ' +
+          'Puede ser un límite temporal de peticiones: prueba en un minuto.</p>';
+      });
   }
 
   /* ------------------------------------------------------------- Instagram */

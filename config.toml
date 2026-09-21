@@ -140,11 +140,6 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
   # website description for RSS, SEO, Open Graph and Twitter Cards
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = "Blog de Marc Escriba sobre educacion critica, cultura digital y tecnopolitica: algoritmos, decrecimiento y tecnologias libres."
-  # Clave de la API de Flickr, para la herramienta "El self digital".
-  # Se consigue gratis en flickr.com/services/apps/create/apply/
-  # Va en el JavaScript, asi que es publica: para busqueda de solo
-  # lectura el riesgo es bajo y se puede revocar cuando se quiera.
-  flickrApiKey = ""
   # Cuenta del fediverso, para la etiqueta fediverse:creator.
   # Mastodon 4.3+ la lee y acredita al autor en la tarjeta de enlace.
   fediverseCreator = "@marcescriba@mastodon.social"

@@ -791,15 +791,6 @@ $radio-img: 6px;
   margin: 2rem 0;
 }
 
-.sd-aviso {
-  padding: .8rem 1rem;
-  border: 1px solid $riso-red;
-  border-radius: 4px;
-  font-size: .9rem;
-}
-
-body[theme=dark] .sd-aviso { border-color: $riso-red-dark; }
-
 .sd-label {
   display: block;
   font-family: var(--header-title-font-family);
@@ -881,24 +872,14 @@ body[theme=dark] .sd-estado { color: $global-font-secondary-color-dark; }
 
 body[theme=dark] .sd-col-titulo { border-bottom-color: $riso-red-dark; }
 
-.sd-col-nota,
-.sd-epoca-nota {
+.sd-col-nota {
   font-size: .8rem;
   line-height: 1.45;
   color: $global-font-secondary-color;
   margin: .2rem 0 .8rem;
 }
 
-body[theme=dark] .sd-col-nota,
-body[theme=dark] .sd-epoca-nota { color: $global-font-secondary-color-dark; }
-
-.sd-epoca { margin-bottom: 1.4rem; }
-
-.sd-epoca-titulo {
-  font-size: .9rem;
-  letter-spacing: .05em;
-  margin: 0;
-}
+body[theme=dark] .sd-col-nota { color: $global-font-secondary-color-dark; }
 
 // --- Rejilla de fotos de Flickr -----------------------------------
 .sd-rejilla {
@@ -1024,6 +1005,11 @@ body[theme=dark] .sd-muro { border-color: $global-border-color-dark; }
   font-size: .92rem;
 
   li { margin-bottom: .35rem; }
+
+  h4 {
+    font-size: .9rem;
+    margin: 1.1rem 0 .4rem;
+  }
 }
 
 .sd-muro-cierre {

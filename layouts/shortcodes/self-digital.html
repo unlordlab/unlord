@@ -1,32 +1,23 @@
-{{- /* Herramienta "El self digital": Flickr en vivo contra Instagram curado. */ -}}
+{{- /* Herramienta "El self digital": Flickr contra Instagram.                */ -}}
 {{- /*                                                                        */ -}}
-{{- /* Flickr se consulta EN VIVO desde el navegador: su API responde con     */ -}}
-{{- /* CORS y devuelve JSON, asi que no hace falta servidor. La clave va en   */ -}}
-{{- /* params.flickrApiKey del config.toml.                                   */ -}}
+{{- /* Flickr se consulta a traves de Openverse, el buscador de contenido     */ -}}
+{{- /* libre de WordPress, que lo indexa. Motivo: desde 2025 Flickr solo da   */ -}}
+{{- /* claves de API a cuentas Pro, de pago. Openverse responde con CORS, no  */ -}}
+{{- /* pide clave y solo devuelve material con licencia libre.                */ -}}
 {{- /*                                                                        */ -}}
 {{- /* Instagram NO se puede buscar: ver data/selfdigital.yaml. Se incrustan  */ -}}
 {{- /* posts elegidos a mano, y para las ciudades sin corpus se ofrece el     */ -}}
 {{- /* enlace a su buscador.                                                  */ -}}
 
-{{- $clave := .Site.Params.flickrApiKey | default "" -}}
 {{- $datos := .Site.Data.selfdigital | default dict -}}
 
-<div class="sd" data-flickr-key="{{ $clave }}">
-
-    {{- if not $clave -}}
-    <p class="sd-aviso">
-        <strong>Falta la clave de la API de Flickr.</strong>
-        Añádela en <code>config.toml</code> como <code>flickrApiKey</code>
-        dentro de <code>[params]</code>. Se consigue gratis en
-        <a href="https://www.flickr.com/services/apps/create/apply/" target="_blank" rel="noopener">flickr.com</a>.
-    </p>
-    {{- end -}}
+<div class="sd">
 
     <form class="sd-form" id="sd-form" autocomplete="off">
         <label class="sd-label" for="sd-ciudad">Escribe una ciudad</label>
         <div class="sd-fila">
             <input class="sd-input" type="text" id="sd-ciudad" name="ciudad"
-                   placeholder="Barcelona, Berlín, Tokio…" required>
+                   placeholder="Lisboa, Berlín, Tokio…" required>
             <button class="sd-boton" type="submit">Comparar</button>
         </div>
     </form>
@@ -35,57 +26,59 @@
 
     <div class="sd-resultados" id="sd-resultados" hidden>
 
-        {{- /* --- Columna Flickr: dos epocas de la misma ciudad --- */ -}}
         <section class="sd-col sd-col-flickr">
             <h3 class="sd-col-titulo">Flickr</h3>
-            <p class="sd-col-nota">Consultado en vivo. Solo fotos con licencia Creative Commons.</p>
-
-            <div class="sd-epoca">
-                <h4 class="sd-epoca-titulo">2004 &ndash; 2010</h4>
-                <p class="sd-epoca-nota">Los primeros años de la plataforma.</p>
-                <div class="sd-rejilla" id="sd-flickr-viejo"></div>
-            </div>
-
-            <div class="sd-epoca">
-                <h4 class="sd-epoca-titulo">2016 &ndash; hoy</h4>
-                <p class="sd-epoca-nota">Después de que Instagram se comiera el mundo.</p>
-                <div class="sd-rejilla" id="sd-flickr-nuevo"></div>
-            </div>
+            <p class="sd-col-nota">
+                Consultado en vivo a través de
+                <a href="https://openverse.org" target="_blank" rel="noopener">Openverse</a>.
+                Solo fotografías con licencia libre, con su autoría.
+            </p>
+            <div class="sd-rejilla" id="sd-flickr"></div>
         </section>
 
-        {{- /* --- Columna Instagram: corpus curado o enlace --- */ -}}
         <section class="sd-col sd-col-instagram">
             <h3 class="sd-col-titulo">Instagram</h3>
-            <p class="sd-col-nota">Selección hecha a mano. Instagram no permite buscar desde fuera.</p>
+            <p class="sd-col-nota">
+                Selección hecha a mano. Instagram no permite buscar desde fuera.
+            </p>
             <div id="sd-instagram"></div>
         </section>
 
     </div>
 
-    {{- /* El corpus curado viaja como JSON en la propia pagina */ -}}
+    {{- /* El corpus curado viaja como JSON en la propia pagina.              */ -}}
+    {{- /* safeJS es imprescindible: dentro de un <script>, html/template lo  */ -}}
+    {{- /* trata como contexto JS y lo escaparia como literal de cadena, asi  */ -}}
+    {{- /* que JSON.parse devolveria un string en vez de un objeto.           */ -}}
     <script type="application/json" id="sd-corpus">
         {{- $datos.ciudades | default dict | jsonify | safeJS -}}
     </script>
 
-    {{- /* --- Por que falta la mitad de Instagram --- */ -}}
+    {{- /* --- Las dos puertas, y como se han ido cerrando --- */ -}}
     <details class="sd-muro">
-        <summary>¿Por qué Instagram no se busca como Flickr?</summary>
+        <summary>¿Por qué las dos mitades no funcionan igual?</summary>
         <div class="sd-muro-cuerpo">
-            <p>No es una decisión de diseño. Está comprobado:</p>
+            <p>No es una decisión de diseño. Es lo que cada plataforma permite hoy, comprobado uno por uno:</p>
+
+            <h4>Instagram: cerrado</h4>
             <ul>
                 <li>La <strong>API Basic Display</strong> dejó de funcionar el <strong>4 de diciembre de 2024</strong>.</li>
                 <li>La <strong>Graph API</strong> exige cuenta de empresa, verificación de negocio y revisión de la aplicación por Meta. Y permite <strong>30 hashtags únicos por semana</strong>: treinta ciudades semanales entre todos los visitantes de esta página.</li>
                 <li>Su buscador <strong>exige sesión iniciada</strong>. Sin ella devuelve cero imágenes.</li>
                 <li>Y <strong>CORS impide leerlo</strong> desde otro dominio: la petición ni sale del navegador.</li>
             </ul>
-            <p>
-                Flickr, lanzada en 2004, sigue teniendo una API pública que cualquiera puede
-                usar desde el navegador. Instagram, lanzada en 2010, no. Esa diferencia no es
-                técnica: es la distancia entre una web pensada para conectar y otra pensada
-                para retener.
-            </p>
+
+            <h4>Flickr: cerrándose</h4>
+            <ul>
+                <li>Durante veinte años cualquiera podía pedir una clave de su API. Desde <strong>2025 hay que pagar</strong>: las claves nuevas son solo para cuentas Pro.</li>
+                <li>Su feed público sigue existiendo, pero <strong>CORS lo bloquea</strong> desde otro dominio.</li>
+                <li>Esta herramienta llega a sus fotos <strong>por la puerta de atrás</strong>: Openverse, un tercero que indexa lo que tiene licencia libre.</li>
+            </ul>
+
             <p class="sd-muro-cierre">
-                La mitad vacía de esta comparación <em>es</em> el resultado del experimento.
+                Una plataforma cerró de golpe. La otra está echando el cierre despacio.
+                Que esta comparación solo se pueda hacer a medias, y a través de un intermediario,
+                <em>es</em> el resultado del experimento.
             </p>
         </div>
     </details>
