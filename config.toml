@@ -70,7 +70,11 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 # 作者配置
 [params.author]
   name = "unlord"
-  email = "unl4b@proton.me"
+  # Sin correo aqui a proposito: el generador de RSS interno de Hugo lee
+  # esta clave y publicaba la direccion en claro en <managingEditor>,
+  # <webMaster> y el <author> de cada entrada, en 40 ficheros del sitio.
+  # La direccion vive en [params.social].Email, que si se ofusca.
+  # email = ""
   link = ""
 
 # Menu config

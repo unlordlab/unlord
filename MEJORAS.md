@@ -513,8 +513,30 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   Vacíos: `GitHub`, `Linkedin`, `ORCID`, `Researchgate`, `Googlescholar` — los relevantes
   para tu perfil. **Pásame los que quieras poner.**
 
-- [ ] 🙋 **4.9 · Tu email está en texto plano** en `config.toml` y por tanto en el HTML público.
-  Los bots de spam lo recolectan. → Formulario o dirección alias.
+- [x] 🤖 **4.9 · El correo estaba en texto plano** en el HTML público.
+  Aparecía literal en **45 ficheros** del sitio. Los recolectores de direcciones
+  rastrean páginas buscando el patrón `algo@algo.tld` y lo añaden a listas de spam.
+
+  Estaba en tres sitios distintos:
+
+  | Dónde | Qué se ha hecho |
+  |---|---|
+  | El icono de correo de la portada | la arroba pasa a `%40` en el `href` |
+  | El «escríbeme» del `post3` | shortcode `{{</* correo */>}}`, misma ofuscación |
+  | `<managingEditor>`, `<webMaster>` y `<author>` de **40 feeds RSS** | fuera |
+
+  El correo se quita de `[params.author]` y vive solo en `[params.social].Email`.
+  Motivo: el generador de RSS **interno de Hugo** lee esa clave y publicaba la
+  dirección en claro en todos los feeds, y sus plantillas no se pueden interceptar
+  desde el tema (el mismo problema de rutas que la tarea 3.6).
+
+  **Qué es y qué no es**: el navegador decodifica `%40` sin JavaScript, así que el
+  enlace funciona igual. No es cifrado — un recolector que decodifique el porcentaje
+  lo lee. Es una barrera barata contra la recolección masiva.
+
+  Se codifica **solo la arroba**, no los puntos: es la que rompe el patrón, y `%40`
+  es la codificación más trillada que existe en `mailto:`. `%2E` para el punto es
+  válido pero menos habitual, y esto es el canal de contacto del blog.
 
 - [x] 🤖 **4.10 · `post3` era un stub de 115 palabras** que solo decía "clica aquí".
   Reescrito a ~1.000 palabras, con la herramienta "El self digital" incrustada

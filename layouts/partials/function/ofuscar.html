@@ -1,0 +1,14 @@
+{{- /* Reescribe una direccion de correo ocultando la arroba.             */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Los recolectores de direcciones buscan el patron algo@algo.tld en   */ -}}
+{{- /* el texto crudo de la pagina. Con la arroba escrita como %40 ese    */ -}}
+{{- /* patron no aparece, y el enlace funciona igual y sin JavaScript,     */ -}}
+{{- /* porque decodificar el porcentaje es obligatorio en cualquier URI.   */ -}}
+{{- /*                                                                     */ -}}
+{{- /* No es cifrado: un recolector que decodifique el porcentaje lo lee.  */ -}}
+{{- /* una barrera barata contra la recoleccion masiva, no una garantia.   */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Primero se probo con entidades HTML (&#64;), pero Go escapa el "&"  */ -}}
+{{- /* del atributo a "&amp;" y el enlace quedaba roto.                    */ -}}
+{{- $salida := replace . "@" "%40" -}}
+{{- return $salida -}}

@@ -8,6 +8,15 @@
     {{- end -}}
     {{- $destination = printf (string $template) .Id -}}
 {{- end -}}
+
+{{- /* La ficha de correo publicaba mailto:direccion en claro, que es    */ -}}
+{{- /* justo el patron que buscan los recolectores de direcciones. Se    */ -}}
+{{- /* reescribe como entidades HTML: el navegador las decodifica al     */ -}}
+{{- /* leer el atributo, asi que el enlace sigue funcionando sin JS.     */ -}}
+{{- /* plugin/a.html ya aplica safeURL al destino, por eso no se escapa. */ -}}
+{{- if hasPrefix $destination "mailto:" -}}
+    {{- $destination = $destination | partial "function/ofuscar.html" -}}
+{{- end -}}
 {{- $rel := "me" -}}
 {{- with .Rel -}}
     {{- $rel = printf "%v %v" $rel . -}}
