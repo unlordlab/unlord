@@ -1,96 +1,18 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flickr vs. Instagram: La evolución del self digital.</title>
-    <style>
-        @font-face {
-            font-family: 'MetaversFont';
-            src: url('fonts/nom-de-la-font.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        body {
-            font-family: 'MetaversFont', Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-            background-color: #5A6F68;
-            color: #ffffff;
-        }
-        h1 {
-            font-family: 'MetaversFont', Arial, sans-serif;
-            color: #FFD700;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin: 20px auto;
-            max-width: 800px; /* Amplada màxima del paràgraf */
-            color: #e0e0e0;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-family: 'MetaversFont', Arial, sans-serif;
-        }
-        input {
-            background-color: #ffffff;
-            border: 2px solid #FFD700;
-            border-radius: 5px;
-            color: #333;
-        }
-        button {
-            cursor: pointer;
-            border: none;
-            background-color: #FFD700;
-            color: #333;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #FFC107;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- La herramienta ya no vive aqui: ahora es una pagina del blog, con su
+         tema, su tipografia y su indexacion. Esta pagina se queda solo como
+         redireccion, para no romper los enlaces antiguos. -->
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://unlordl4b.pages.dev/posts/post3/">
+    <meta http-equiv="refresh" content="0; url=/posts/post3/">
+    <title>Flickr vs. Instagram — se ha mudado</title>
 </head>
 <body>
-    <h1>Flickr vs. Instagram: La evolución del self digital.</h1>
-    <p>
-        He creado esta herramienta interactiva de observación en forma de divertimento que explora la transformación de la representación del 'self digital' a través del análisis comparativo de dos plataformas icónicas: <strong> Flickr e Instagram </strong>. La primera plataforma fue lanzada en el 2004 y la segunda en el 2010. <br>
-La premisa central es que la forma en que nos presentamos en línea ha evolucionado significativamente, pasando de un enfoque centrado en el entorno a otro donde el individuo se convierte en el protagonista absoluto.
-
-Para ilustrar esta tesis, el proyecto permite al usuario introducir el nombre de una ciudad. A continuación, se realizan búsquedas independientes en Flickr e Instagram para esta localidad. El objetivo es evidenciar cómo, en los resultados de Flickr, la ciudad o el paisaje solían ser el elemento central de la imagen (o las habilidades del fotografo/a), mientras que en Instagram, incluso en el contexto de una ciudad, la atención se desplaza hacia la persona, su rostro o su presencia. Esta comparación visual y directa revela de manera palpable el cambio en la narrativa visual: de documentar un lugar a proyectar una identidad personal curada y performativa en relación con ese lugar. En definitiva, el proyecto sirve como espejo de la evolución de nuestra 'selfie-cultura' y la redefinición del 'yo' en la era digital.
-
-    </p>
-    <p>Introduce una ciudad del mundo para explorarla en Flickr o Instagram:</p>
-    <input type="text" id="search" placeholder="Escribe una ciudad.">
-    <div>
-        <button onclick="searchFlickr()">Explorar en Flickr</button>
-        <button onclick="searchInstagram()">Explorar en Instagram</button>
-    </div>
-
-    <script>
-        function searchFlickr() {
-            const query = document.getElementById('search').value.trim();
-            if (!query) {
-                alert('Por favor, introduce una ciudad.');
-                return;
-            }
-            const flickrURL = `https://www.flickr.com/search/?text=${encodeURIComponent(query)}`;
-            window.open(flickrURL, '_blank');
-        }
-
-        function searchInstagram() {
-            const query = document.getElementById('search').value.trim();
-            if (!query) {
-                alert('Por favor, introduce una ciudad.');
-                return;
-            }
-            const instagramURL = `https://www.instagram.com/explore/tags/${encodeURIComponent(query)}/`;
-            window.open(instagramURL, '_blank');
-        }
-    </script>
+    <p>Esta herramienta se ha mudado a
+       <a href="/posts/post3/">Flickr vs. Instagram: La evolución del self digital</a>.</p>
 </body>
 </html>

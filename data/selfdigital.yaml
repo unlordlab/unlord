@@ -1,0 +1,27 @@
+# Corpus curado de Instagram para la herramienta "El self digital".
+#
+# Instagram NO se puede buscar por API: la Basic Display murio el 4/12/2024
+# y la Graph API exige cuenta de empresa, verificacion y revision, con un
+# limite de 30 hashtags por semana. Comprobado ademas que su buscador exige
+# sesion iniciada y que CORS impide leerlo desde otro dominio.
+#
+# Lo que SI funciona, y esta comprobado, es el incrustado oficial:
+#   https://www.instagram.com/p/<codigo>/embed/
+# Sin token, sin API y dentro de sus condiciones.
+#
+# Como anadir una ciudad:
+#   1. Busca la ciudad en Instagram y elige los posts que ilustren la tesis.
+#   2. Copia el CODIGO de la URL. De
+#        https://www.instagram.com/p/BsOGulcndj-/
+#      el codigo es  BsOGulcndj-
+#   3. Anade la ciudad aqui abajo. La clave va en minusculas y sin tildes:
+#      asi es como la busca la herramienta.
+#
+# Si una ciudad no esta en esta lista, la herramienta ofrece el enlace a la
+# busqueda de Instagram en vez de los incrustados.
+
+ciudades:
+  ejemplo:
+    nombre: "Ejemplo (borrar cuando haya ciudades de verdad)"
+    posts:
+      - BsOGulcndj-
