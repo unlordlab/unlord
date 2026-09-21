@@ -10,9 +10,12 @@
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     {{- end -}}
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    {{- with .Site.Params.app.iconColor -}}
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="{{ . }}">
-    {{- end -}}
+    {{- /* Aqui iba <link rel="mask-icon" href="/safari-pinned-tab.svg">,    */ -}}
+    {{- /* pero ese fichero no existe en static/: las 54 paginas del sitio  */ -}}
+    {{- /* pedian un icono que siempre devolvia 404. Era un icono para la   */ -}}
+    {{- /* pestana anclada de Safari en macOS, que ademas quedo obsoleto    */ -}}
+    {{- /* en Safari 12. Si algun dia se quiere, hace falta un SVG          */ -}}
+    {{- /* monocromo en static/ y volver a poner la linea.                  */ -}}
     <link rel="manifest" href="/site.webmanifest">
 {{- end -}}
 

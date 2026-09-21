@@ -178,43 +178,48 @@ Son fallos que están afectando al sitio ahora mismo. Ninguno es estético.
 
 Google mide Core Web Vitals para posicionar. `content/` pesa **32 MB**.
 
-- [ ] 🤖 **2.1 · Comprimir las imágenes**
+- [~] 🤖 **2.1 · Comprimir las imágenes fuente** ⬅️ *a medias, y ya casi no urge*
+  Lo que descarga el visitante está resuelto desde la 2.2: Hugo genera WebP
+  redimensionados (−91 %). Lo que quedaba pesado eran los **ficheros fuente**, que
+  solo afectan al tamaño del repo y al tiempo de construcción.
 
-  | Fichero | Peso |
-  |---|---|
-  | `content/posts/Línea del tiempo (1).png` | 3,9 MB |
-  | `content/posts/linia.png` | 3,9 MB *(duplicado del anterior)* |
-  | `content/posts/eurovision/eurovision.png` | 3,0 MB |
-  | `content/posts/million/million.pdf` | 2,4 MB |
-  | `content/posts/farrer/ferrer.png` | 2,1 MB |
-  | `content/posts/million/million dolar baby.png` | 1,9 MB |
-  | `content/posts/million/mdb.png` | 1,9 MB *(duplicado)* |
-  | `content/posts/metavers/metavers.pdf` | 1,9 MB |
-  | `content/posts/l4b/delated.png` | 1,3 MB |
+  La 2.1b se llevó por delante los peores (`eurovision.png` 3,0 MB, `ferrer.png`
+  2,1 MB, `million dolar baby.png` y `mdb.png` ~1,9 MB cada uno). `content/` baja de
+  **22,5 MB a 7,0 MB**.
 
-  Un PNG de 3,9 MB pasa a ~200 KB en WebP sin diferencia visible.
+  Lo que queda por encima de 500 KB son solo tres, y dos tienen motivo:
 
-  ⚠️ **Parcialmente resuelto por la 2.2.** Lo que descarga el visitante ya está
-  arreglado (Hugo genera WebP redimensionados: −91 %). Lo que queda pesado son los
-  **ficheros fuente del repo**, que solo afectan al tamaño del repo y al tiempo de
-  build. `linia.png` y `Línea del tiempo (1).png` ya se borraron (tarea 2.3).
-
-- [ ] 🙋 **2.1b · 15,3 MB de ficheros sin referenciar** ⬅️ *pendiente, decisión tuya*
-  Comprobado uno a uno: no los enlaza ni el markdown ni el front matter. **No los he
-  borrado porque hay contenido tuyo ahí dentro**, no basura:
-
-  | Fichero | Peso | Qué parece |
+  | Fichero | Peso | Qué hacer |
   |---|---|---|
-  | `million/million.pdf` | 2,5 MB | el ensayo en PDF, sin enlazar |
-  | `eurovision/eurovision.png` | 3,0 MB | versión antigua de la destacada (ahora `.jpg`) |
-  | `farrer/ferrer.png` | 2,1 MB | ídem |
-  | `million/million dolar baby.png` + `mdb.png` | 3,9 MB | dos copias de lo mismo |
-  | `million/cecivideo.mp4` | 1,2 MB | vídeo sin enlazar |
-  | `l4b/the delated cities.pdf` | 904 KB | PDF sin enlazar |
-  | `post3/fvsi.webp` | 453 KB | versión antigua de la destacada |
-  | resto (`RLHF/rlhfai.png`, `l4b/*.jpg/gif/webp`, `hugo research.txt`…) | ~1,2 MB | |
+  | `metavers/metavers.pdf` | 1,9 MB | es el TFG, se descarga entero: se queda |
+  | `l4b/delated.png` | 1,3 MB | candidato a WebP |
+  | `farrer/reddit.png` | 0,6 MB | candidato a WebP |
 
-  Dime cuáles son restos y cuáles quieres conservar (o enlazar desde el post).
+- [x] 🤖 **2.1b · 15,5 MB de ficheros sin referenciar, borrados**
+  Eran **22 ficheros** que no citaba ningún `index.md`. Y no solo ocupaban sitio en el
+  repositorio: Hugo publica todos los recursos de un *page bundle*, así que **estaban
+  colgados en internet**, accesibles para quien acertara la URL. Entre ellos, las
+  notas de trabajo del post de GeoCities (`hugo research.txt`, con el borrador y los
+  enlaces de investigación) y un PDF de 2013 que no era del autor.
+
+  | Qué | Cuántos |
+  |---|---|
+  | Versiones viejas de la destacada (el post usa la otra) | 8 |
+  | Descartes y material de trabajo | 9 |
+  | Con valor propio, borrados a petición del autor | 4 |
+  | Copia suelta del favicon en la raíz del repo | 1 |
+
+  Los 4 con valor: `million.pdf` (el ensayo en Google Docs), `cecivideo.mp4`,
+  `the delated cities.pdf` (ajeno, InDesign 2013) y `hugo research.txt`. Siguen en el
+  historial de git: se recuperan con `git checkout <commit>^ -- <ruta>`.
+
+  **Comprobado** construyendo antes y después: desaparecen exactamente esos ficheros,
+  **no desaparece ninguna página ni feed**, y de 390 enlaces a ficheros del sitio
+  **ninguno queda roto**.
+
+  De paso: `<link rel="mask-icon" href="/safari-pinned-tab.svg">` apuntaba a un fichero
+  que **no existe**, así que las 54 páginas pedían un icono que siempre daba 404. Era
+  para la pestaña anclada de Safari en macOS, obsoleto desde Safari 12. Retirado.
 
 - [x] 🤖 **2.2 · El `srcset` es decorativo: se sirve el original a todos los dispositivos**
   `layouts/partials/plugin/img.html` no hace **ningún** procesado de imagen. Genera:
