@@ -279,6 +279,21 @@ Google mide Core Web Vitals para posicionar. `content/` pesa **32 MB**.
 
 Este es el problema de fondo. Tu repo **es** el repo de LoveIt, con tu contenido encima.
 
+- [x] 🤖 **3.6 · Las páginas de etiqueta daban 404 con Hugo moderno** ⬅️ *regresión, detectada y arreglada*
+  Al subir `HUGO_VERSION` a 0.166 dejaron de generarse **las 70 páginas de término**
+  (`/tags/algoritmos/`, `/categories/unlord/`…). Los enlaces de etiqueta de todos los
+  posts pasaron a dar 404 en producción.
+
+  Causa: el tema tenía la plantilla en `layouts/taxonomy/list.html`, que es donde Hugo
+  la buscaba hasta la 0.135. Las versiones nuevas ya no miran ahí. Movida a
+  `layouts/_default/term.html`, que **sirve para las dos**.
+
+  ⚠️ **Cómo se coló**: Hugo no da error por esto, solo un aviso
+  (`found no layout file for "html" for kind "term"`). Verifiqué que el build no
+  tuviera *errores* y di por bueno el salto de versión. El aviso estaba en la salida
+  desde el primer momento y no lo miré. Verificado ahora: 70 páginas con 0.135 y 70
+  con 0.166, y su contenido solo difiere en el número de versión del pie.
+
 - [ ] 🙋 **3.1 · Separar el sitio del tema**
   Evidencias: `theme.toml`, `exampleSite/` (11 MB), `src/`, `.circleci/`, `.husky/`,
   `go.mod` con `module github.com/dillonzq/LoveIt`, `README.zh-cn.md`,
