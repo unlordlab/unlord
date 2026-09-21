@@ -34,7 +34,7 @@ Descifrando por qué las máquinas, siendo supuestamente objetivas, acaban repro
 
 La **infraestructura digital** no debería ser una caja negra inauditable. Defiendo el **código abierto** y los estándares libres como una garantía básica de soberanía tecnológica, privacidad y cooperación comunitaria.
 
-## En resumen:
+## Contralgoritmia:
 
 Aquí no hay **algoritmo** que decida si esto te llega. No hay métricas que me digan qué debería escribir para gustar más. No hay nadie optimizando tu atención, entre otras cosas porque no hay nada que optimizar: son textos largos sobre temas que no interesan a casi nadie, y esa es precisamente la gracia.
 Si has llegado hasta aquí, ya somos dos personas raras.
