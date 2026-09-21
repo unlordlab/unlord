@@ -442,7 +442,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
 - [ ] 🙋 **6.2 · Depositar el TFG en el O2 de la UOC**
   *"El metavers. Les noves coordenades de la desigualtat"* es un PDF de 1,9 MB enterrado
-  en un post de 398 palabras.
+  en un post de 348 palabras.
   → **Depositarlo en el [O2, el repositorio de la UOC](https://biblioteca.uoc.edu/ca/servei/Publica-en-obert-a-lO2-Repositori-UOC/)**,
   vincular **ORCID** y enlazar desde el post. Lo convierte en algo citable en vez de
   un adjunto.
