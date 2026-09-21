@@ -11,7 +11,7 @@ resources:
   src: "fvsi.jpg"
 
 tags: ["metaverso", "self digital", "Flickr", "Instagram", "redes sociales", "evolución digital"]
-categories: ["unlord"]
+categories: ["Ensayos"]
 
 lightgallery: true
 ---

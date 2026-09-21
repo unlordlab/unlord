@@ -11,7 +11,7 @@ resources:
   src: "terminal.jpg"
 
 tags: ["mercados financieros", "RSU", "Redistribution Research Unit", "terminal"]
-categories: ["unlord"]
+categories: ["Proyectos"]
 
 lightgallery: false
 ---

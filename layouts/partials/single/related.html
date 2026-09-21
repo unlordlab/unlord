@@ -14,6 +14,23 @@
 {{- $articulos := where .Site.RegularPages "Section" "posts" -}}
 {{- $relacionados := first 3 ($articulos.Related .) -}}
 
+{{- /* Relleno hasta tres con lo mas reciente.                            */ -}}
+{{- /*                                                                    */ -}}
+{{- /* Antes esto no hacia falta: los nueve posts compartian la categoria */ -}}
+{{- /* "unlord", asi que todos casaban con todos por los 30 puntos del    */ -}}
+{{- /* indice de categorias. Al repartirlas de verdad, "Proyectos" se     */ -}}
+{{- /* quedo con un solo post y el de RSU bajo a UN enlace, que para un   */ -}}
+{{- /* bloque que se llama "Seguir leyendo" es quedarse corto.            */ -}}
+{{- if lt (len $relacionados) 3 -}}
+    {{- range $articulos.ByDate.Reverse -}}
+        {{- if and (lt (len $relacionados) 3) (ne .RelPermalink $.RelPermalink) -}}
+            {{- if not (in $relacionados .) -}}
+                {{- $relacionados = $relacionados | append . -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
 {{- with $relacionados -}}
     <div class="related-posts">
         <h2 class="related-title">{{ T "relatedPosts" | default "Seguir leyendo" }}</h2>

@@ -11,7 +11,7 @@ resources:
   src: "metavers.jpg"
 
 tags: ["TFG", "metaverso"]
-categories: ["unlord"]
+categories: ["Trabajos académicos"]
 
 lightgallery: true
 ---

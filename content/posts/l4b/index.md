@@ -11,7 +11,7 @@ resources:
   src: "geocities.jpg"
 
 tags: ["internet", "cultura",]
-categories: ["unlord"]
+categories: ["Ensayos"]
 
 lightgallery: true
 ---

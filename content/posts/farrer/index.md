@@ -11,7 +11,7 @@ resources:
   src: "farrer.jpg"
 
 tags: ["comunitats en línia", "educació social", "salud mental", "estudi de cas"]
-categories: ["unlord"]
+categories: ["Trabajos académicos"]
 
 lightgallery: true
 ---

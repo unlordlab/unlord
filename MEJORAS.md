@@ -467,9 +467,29 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   → `type = "lunr"` + `enable = true`: local, gratis, sin servicios externos.
   Encaja con tu discurso de tecnologías libres.
 
-- [ ] 🙋 **4.3 · Tus categorías no categorizan**
-  Los 8 posts con categoría tienen la misma: `"unlord"`. `pantallas` no tiene ninguna.
-  - Propuesta: *Educación crítica*, *Cultura digital*, *Tecnopolítica*, *Proyectos*.
+- [x] 🤖 **4.3 · Las categorías no categorizaban**
+  Los 8 posts con categoría tenían la misma, `"unlord"`, y `pantallas` no tenía
+  ninguna. La página de Categorías era una lista con un solo cajón.
+
+  Repartidas **por tipo de texto**, no por tema. La propuesta anterior era temática
+  (*Cultura digital*, *Tecnopolítica*…), pero los temas se solapan y ya los cubren las
+  75 etiquetas. El tipo de texto dice algo que las etiquetas no dicen: si lo que vas a
+  abrir es un texto de blog o un trabajo de 60 páginas.
+
+  | Categoría | Posts |
+  |---|---|
+  | **Ensayos** | RLHF, Eurovisión, l4b, Million Dollar Baby, pantallas, Flickr vs. Instagram |
+  | **Trabajos académicos** | el TFG del metavers, el estudio de caso de la Sra. Ferrer |
+  | **Proyectos** | RSU Terminal |
+
+  `/categories/unlord/` estaba en el sitemap, así que se redirige a `/categories/`
+  con un 301 en `static/_redirects` en vez de dejar un 404.
+
+  **Efecto secundario que hubo que arreglar**: en `[related]` las categorías pesan 30
+  puntos. Mientras todas eran `"unlord"`, ese peso emparejaba a todos con todos. Al
+  repartirlas, *Proyectos* se quedó con un solo post y el de RSU bajó de 3 enlaces a 1
+  en «Seguir leyendo». El partial ahora rellena hasta tres con lo más reciente.
+  Verificado: los 9 posts tienen 3, y ninguno se enlaza a sí mismo.
 
 - [x] 🤖 **4.4 · Tags inconsistentes**
   `"Metaverso"` y `"metaverse"` conviven como etiquetas distintas. Mezcla de castellano,
