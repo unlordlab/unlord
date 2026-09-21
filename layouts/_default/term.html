@@ -1,3 +1,12 @@
+{{- /* Pagina de UN termino: /tags/algoritmos/, /categories/ensayos/.      */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Estaba en layouts/taxonomy/list.html, que es donde la buscaba Hugo  */ -}}
+{{- /* hasta la 0.135. Las versiones nuevas ya no miran ahi, asi que al    */ -}}
+{{- /* subir a 0.166 dejaron de generarse las 70 paginas de termino y los  */ -}}
+{{- /* enlaces de etiqueta de todos los posts pasaron a dar 404.           */ -}}
+{{- /* Hugo solo lo avisaba con un WARN, no con un error.                  */ -}}
+{{- /*                                                                     */ -}}
+{{- /* _default/term.html vale para las dos: 0.135 tambien la consulta.    */ -}}
 {{- define "title" -}}
     {{- .Title }} - {{ T .Data.Singular | default .Data.Singular }} - {{ .Site.Title -}}
 {{- end -}}
