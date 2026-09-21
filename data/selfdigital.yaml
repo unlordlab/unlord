@@ -21,7 +21,39 @@
 # busqueda de Instagram en vez de los incrustados.
 
 ciudades:
-  ejemplo:
-    nombre: "Ejemplo (borrar cuando haya ciudades de verdad)"
+
+  # ---------------------------------------------------------------- Lisboa
+  lisboa: &lisboa
+    nombre: "Lisboa"
     posts:
-      - BsOGulcndj-
+      # Mujer con camara en la playa: el retrato desplaza al sitio.
+      - DcjEDbQlnsE
+      # Paisaje rotulado "My Favorite Beach - LISBON, PORTUGAL". Aqui no hay
+      # nadie en el encuadre, pero el sitio viene envuelto como un producto.
+      - Db_xq9GiOn0
+  lisbon: *lisboa
+
+  # ------------------------------------------------------------- Barcelona
+  barcelona: &barcelona
+    nombre: "Barcelona"
+    posts:
+      # Mujer en biquini en un velero frente a la costa.
+      - DcTts5CCqoS
+      # Hombre en banador en la playa.
+      - DcMT24XPJom
+      # De espaldas ante la cascada de la Ciutadella: caso intermedio, la
+      # persona esta dentro del encuadre pero el sitio todavia se reconoce.
+      - DbyZFSklLfg
+
+  # ---------------------------------------------------------------- Napoles
+  napoles: &napoles
+    nombre: "Nápoles"
+    posts:
+      # Balcon azul con el Vesubio al fondo.
+      - DMUgzZEopiT
+      # Callejon napolitano engalanado, con gente de paso.
+      - DOV5H57gg27
+      # Atardecer sobre la costa, sin nadie en el encuadre.
+      - DORVLGwDJ1a
+  napoli: *napoles
+  naples: *napoles
