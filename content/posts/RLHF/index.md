@@ -11,7 +11,7 @@ resources:
   src: "rlhfai.jpg"
 
 tags: ["algoritmos","IA","salud mental","RLHF"]
-categories: ["unlord"]
+categories: ["Ensayos"]
 
 lightgallery: true
 ---

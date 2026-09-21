@@ -10,6 +10,7 @@ resources:
 - name: "featured-image"
   src: "pantallas.jpg"
 tags: ["tecnología", "sociedad", "algoritmos", "educación", "meta", "pantallas"]
+categories: ["Ensayos"]
 lightgallery: true
 ---
 

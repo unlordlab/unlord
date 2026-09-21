@@ -11,7 +11,7 @@ resources:
   src: "ceci.jpg"
 
 tags: ["trap", "Cecilio G", "boomer", "música", "choque generacional"]
-categories: ["unlord"]
+categories: ["Ensayos"]
 
 lightgallery: true
 ---

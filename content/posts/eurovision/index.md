@@ -11,7 +11,7 @@ resources:
   src: "eurovision.jpg"
 
 tags: ["Eurovisión", "genocidio", "Palestina", "Europa", "Gaza"]
-categories: ["unlord"]
+categories: ["Ensayos"]
 
 lightgallery: true
 ---

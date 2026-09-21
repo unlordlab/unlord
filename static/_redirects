@@ -1,0 +1,4 @@
+# /categories/unlord/ existio hasta que las categorias pasaron a ser tres.
+# Estaba en el sitemap, asi que se redirige en vez de dejar un 404.
+/categories/unlord/  /categories/  301
+/categories/unlord   /categories/  301
