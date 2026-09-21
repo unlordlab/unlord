@@ -377,6 +377,31 @@ body[theme=dark] .single-title::before {
   background: $riso-red-dark;
 }
 
+// En las paginas de archivo (Categorias, Etiquetas, Articulos) el tema
+// alinea el titulo a la DERECHA (_page/_archive.scss:3). La marca roja
+// estaba clavada al borde izquierdo del contenedor, asi que el texto se
+// iba a un lado y la marca se quedaba en el otro, separados por todo el
+// ancho de la pagina. Aqui la marca cambia de lado y vuelve a acompanar
+// al texto.
+.archive .single-title {
+  padding-left: 0;
+  padding-right: .9rem;
+
+  &::before {
+    left: auto;
+    right: 0;
+  }
+}
+
+// --- Tarjetas de categoria a la misma altura ---------------------
+// .categories-card usa align-items: center (_partial/_archive/_terms.scss:5),
+// asi que cada tarjeta se centra en vertical respecto a la mas alta de su
+// fila: "Trabajos academicos", con dos entradas, quedaba hundido frente a
+// "Ensayos", que tiene seis. Alineadas por arriba, que es como se leen.
+.archive .categories-card {
+  align-items: flex-start;
+}
+
 // --- Etiquetas subrayadas en rojo --------------------------------
 // Nada de fichas con borde: la plantilla intercala comas literales
 // (",&nbsp;" en _default/summary.html:68) que no se pueden ocultar por
