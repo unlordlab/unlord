@@ -549,7 +549,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
 ## FASE 5 — Comentarios y privacidad
 
-- [~] 🙋 **5.1 · Valine está registrando IPs de tus visitantes sin aviso** ⬅️ *casi*
+- [x] 🙋 **5.1 · Valine registraba IPs de tus visitantes sin aviso** ⬅️ *cerrado del todo*
 
   ```toml
   [params.page.comment.valine]
@@ -645,15 +645,24 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
   y muestra tu cuenta en las tarjetas de enlace. Una línea en
   `layouts/partials/head/custom.html` y compartir tu blog te acredita a ti.
 
-- [ ] 🙋 **5.1b · Borrar la aplicación de LeanCloud** ⬅️ *pendiente, solo tú*
-  Valine ya está desactivado y las claves vaciadas del `config.toml`, **pero eso no
-  las borra del historial de git**, donde siguen para siempre y son públicas.
-  El único arreglo real es entrar en LeanCloud y **borrar la aplicación**.
+- [x] 🙋 **5.1b · La aplicación de LeanCloud, borrada** *(21/09/2026)*
+  Valine quedó desactivado y las claves vaciadas del `config.toml`, pero eso no las
+  borraba del historial de git, donde siguen y son públicas. El único arreglo real
+  era borrar la aplicación, y está hecho: con la app fuera, esas claves ya no abren
+  nada aunque sigan publicadas.
 
-- [ ] 🙋 **5.1c · Instalar la app de giscus** ⬅️ *pendiente, solo tú*
-  [github.com/apps/giscus](https://github.com/apps/giscus) → *Install* → solo en
-  `unlordlab/unlord`. Sin eso el recuadro de comentarios carga pero da error.
-  Todo lo demás ya está configurado y verificado.
+  En el historial conviven **dos pares** de claves. El que empezaba por `tsT5IDJI…`
+  era el de este blog. El otro (`QGzwQXOq…`) viene de commits del autor del tema
+  (Dillon), no de aquí: no había nada que hacer con él.
+
+- [x] 🙋 **5.1c · La app de giscus, instalada** *(verificado 21/09/2026)*
+  Comprobado cargando un post en producción: el bloque de comentarios muestra
+  «0 reacciones», «0 comentarios» y el botón *Iniciar sesión con GitHub*, en español
+  y con el tema oscuro. Si la app no estuviera autorizada, ahí saldría un error en
+  su lugar.
+
+  El resto ya estaba: Discussions activadas en el repo, la categoría *Announcements*
+  existe, y `repoId` y `categoryId` están puestos.
 
 - [ ] 🙋 **6.9 · Suscripción por correo** ⬅️ *nuevo*
   Como la de [askell.blog](https://www.askell.blog/), que usa **Ghost 6.64** con su
