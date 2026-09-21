@@ -20,13 +20,19 @@ Eurovisión, ese espectáculo anual de luces, lentejuelas y diversidades escéni
 
 > Eurovisión ha dejado de ser un simple concurso de televisión para convertirse en una suerte de tribunal simbólico.
 
+## Un gesto que parece justicia
+
 A simple vista, prohibirles su participación puede parecer un gesto de justicia. Pero si se rasca la superficie, parece más un simulacro político que otra cosa. Un acto de escenificación moral que esconde una profunda hipocresía. Se vetan canciones, pero no los contratos de armas que siguen matando a población civil inocente ([Público](https://www.publico.es/politica/gobierno-formaliza-compra-armas-israel-pese-haberse-comprometido-cancelar-contrato.html)); se condenan guerras en el escenario, pero se financian en los despachos de Bruselas ([Euronews](https://es.euronews.com/my-europe/2024/10/09/siguen-los-paises-europeos-suministrando-armas-a-israel)).
 
 > Se vetan canciones, pero no los contratos de armas que siguen matando a población civil inocente.
 
+## La nueva banalidad del mal
+
 El filósofo alemán Hans Jonas, en _El principio de responsabilidad_ (1979), advertía: “El hombre moderno tiende a considerar buena la intención subjetiva de su acción, descuidando las consecuencias objetivas de la misma”. En otras palabras. Hay un peligro real cuando los actos simbólicos sustituyen a la acción ética verdadera. Hoy podríamos hablar, en términos arendtianos, de una nueva banalidad del mal: no la del burócrata que obedece sin pensar (como Eichmann), sino la de un continente que limpia su conciencia vetando un país en Eurovisión. Un gesto inocuo, mientras su complicidad económica, diplomática y militar continúa. Y, al parecer, al ciudadano de a pie le basta con este gesto simbólico para sentir que se ha hecho justicia. Un placebo moral para sentirse “del lado correcto de la historia” sin cuestionarse los engranajes reales de la complicidad.
 
 > Hoy podríamos hablar de una nueva banalidad del mal: la del continente que limpia su conciencia vetando a un país en Eurovisión..[] Un placebo moral para sentirse del lado correcto de la historia sin cuestionar los engranajes reales de la complicidad.
+
+## Lo que nunca se veta
 
 Israel, al igual que Rusia, es partícipe de crímenes documentados contra la población civil ([Human Rights Watch](https://www.hrw.org/es/news/2024/11/14/los-crimenes-contra-la-humanidad-cometidos-por-israel-en-gaza)). Mientras la Corte Internacional de Justicia evalúa si estos actos constituyen un genocidio (a mi parecer más que evidentes), muchos Estados europeos siguen manteniendo relaciones militares y comerciales con Israel. Su eventual exclusión de Eurovisión ‒en caso de que llegue a producirse‒ no cambiará la realidad en Gaza ni acabará con el sufrimiento. Al contrario, corre el riesgo de convertirse en un gesto vacío. Una nueva forma de “virtue signaling” institucional que permite a Europa mantener su fachada moral sin renunciar a los beneficios estructurales de su implicación en el conflicto.
 
@@ -37,6 +43,8 @@ La cultura, claro está, no es apolítica. Pero cuando se convierte en el único
 Eurovisión no es el problema en sí, sino el síntoma de una Europa que es incapaz de actuar con coherencia. Una Europa que canta alto en el escenario, pero que calla en los despachos donde realmente se deciden las guerras.
 
 > Cuando la cultura se convierte en el único canal de sanción, cabe preguntarse: ¿dónde está la acción real?..[] Eurovisión no es el problema en sí, sino el síntoma de una Europa que castiga desde el espectáculo y calla en los despachos.
+
+## Qué podría exigirse de verdad
 
 ¿Qué podría exigir la ciudadanía más allá de un veto simbólico? Embargos efectivos, auditorías públicas de exportaciones de armas, comisiones independientes, sanciones diplomáticas, juicios por crímenes de guerra. Porque si Europa quiere ocupar el “lado correcto de la historia”, no basta con afinar la voz en Eurovisión. Hace falta algo mucho más difícil. Actuar con responsabilidad y coherencia donde de verdad duele.
 

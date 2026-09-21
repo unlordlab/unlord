@@ -20,6 +20,31 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
+# Motor de contenido relacionado de Hugo, para el bloque "Seguir leyendo"
+# del pie de cada post. Se apoya sobre todo en las etiquetas; por eso
+# convenia unificarlas antes: con "Metaverso" y "metaverse" separadas no
+# habria emparejado nada.
+[related]
+  # Si no hay coincidencias, rellena con lo mas reciente antes que no
+  # mostrar nada.
+  includeNewer = true
+  # Umbral bajo a proposito: con 9 posts y casi todas las etiquetas usadas
+  # una sola vez, un umbral alto dejaba posts con UN solo relacionado, que
+  # queda pobre. Con 0 siempre salen tres: los que comparten etiqueta
+  # primero, y el resto por fecha. De ahi que el bloque se llame
+  # "Seguir leyendo" y no "Relacionados": es lo que de verdad es.
+  threshold = 0
+  toLower = true
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "categories"
+    weight = 30
+  [[related.indices]]
+    name = "date"
+    weight = 10
+
 [module]
   [module.hugoVersion]
     # Rango verificado construyendo el sitio con cada version:
@@ -37,7 +62,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 # 作者配置
 [author]
   name = "unlord"
-  email = "marcescriba86@gmail.com"
+  email = "unl4b@proton.me"
   link = ""
 
 # Menu config
@@ -272,10 +297,14 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
       enable = true
       # Gravatar Email for preferred avatar in home page
       # Gravatar 邮箱，用于优先在主页显示的头像
-      gravatarEmail = "marcescriba86@gmail.com"
+      # Vaciado a proposito. Gravatar servia el avatar desde gravatar.com,
+      # o sea una peticion a un tercero que ve la IP de cada visitante, y
+      # metia en el HTML el hash MD5 del correo. La misma imagen va ahora
+      # autoalojada en static/avatar.jpg.
+      gravatarEmail = ""
       # URL of avatar shown in home page
       # 主页显示头像的 URL
-      avatarURL = ""
+      avatarURL = "/avatar.jpg"
       # title shown in home page (HTML format is supported)
       # 主页显示的网站标题 (支持 HTML 格式)
       title = ""
@@ -374,7 +403,7 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     Plume = ""
     HackTheBox = ""
     RootMe= ""
-    Email = "marcescriba86@gmail.com"
+    Email = "unl4b@proton.me"
     Phone = ""
     RSS = "/index.xml"
 
