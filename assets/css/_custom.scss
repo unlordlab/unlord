@@ -707,9 +707,15 @@ $radio-img: 6px;
 // El enlace de lightgallery envuelve la imagen: si no se recorta aqui
 // tambien, el foco del teclado dibuja un rectangulo con las esquinas
 // vivas alrededor de una imagen redondeada.
+// OJO con el display aqui. Con inline-block el enlace se encoge al
+// tamano de su contenido, y como la imagen de dentro tiene width:100%,
+// ese 100% se calcula contra un contenedor que depende de la propia
+// imagen. Se resuelve con el marcador de carga de 60x60 y las imagenes
+// del cuerpo se quedaban en 60 pixeles.
+// Con block ocupa el ancho de la columna y el width:100% funciona.
 .single .content a.lightgallery,
 .page .content a.lightgallery {
-  display: inline-block;
+  display: block;
   border-radius: $radio-img;
   overflow: hidden;
 }
