@@ -718,3 +718,60 @@ $radio-img: 6px;
 .related-thumb {
   border-radius: 4px;
 }
+
+// --- El clearfix del tema estaba a medias -------------------------
+// _partial/_single/_footer.scss flota los enlaces anterior/siguiente:
+//
+//   .post-nav a.prev { float: left; }
+//   .post-nav a.next { float: right; }
+//   .post-nav::before, .post-nav::after { content:" "; display: table; }
+//
+// Es el patron clearfix clasico, pero le falta el "clear: both" del
+// ::after. Sin el, los flotantes no se limpian, .post-nav colapsa a
+// altura cero y lo que venga detras se le monta encima.
+//
+// El fallo estaba desde siempre; solo se hizo visible al anadir el
+// bloque "Seguir leyendo", cuyo borde superior rojo cruzaba el enlace
+// al post siguiente como si fuera un tachon.
+//
+// Se arregla la causa y no el sintoma: asi tambien queda bien cualquier
+// cosa que se ponga ahi en el futuro. Misma especificidad que el tema.
+.single .post-footer .post-nav::after {
+  clear: both;
+}
+
+// Y ya puestos, el diseno con float asume titulos CORTOS. Los de este
+// blog no lo son ("Estudi de cas: L'impacte terapeutic de les comunitats
+// en linia en la millora del benestar emocional..."), asi que cada
+// flotante se encogia a unos 120px y el texto caia casi en vertical: 490
+// pixeles de alto para dos enlaces.
+//
+// Con flex cada uno ocupa hasta la mitad y en movil se apilan enteros.
+.single .post-footer .post-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .8rem;
+
+  a.prev,
+  a.next {
+    // float deja de hacer falta y estorba dentro de un contenedor flex
+    float: none;
+    flex: 1 1 42%;
+    min-width: 0;
+  }
+
+  a.next {
+    text-align: right;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .single .post-footer .post-nav {
+    flex-direction: column;
+
+    a.next {
+      text-align: left;
+    }
+  }
+}
