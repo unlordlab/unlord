@@ -597,3 +597,124 @@ body[theme=dark] .home[data-home=posts] .summary .content strong {
 .page .content img {
   height: auto;
 }
+
+// --- Articulos relacionados ---------------------------------------
+// Bloque "Seguir leyendo" al pie de cada post. Ver
+// layouts/partials/single/related.html.
+.related-posts {
+  margin: 2.5rem 0 1rem;
+  padding-top: 1.2rem;
+  border-top: 2px solid $riso-red;
+}
+
+body[theme=dark] .related-posts {
+  border-top-color: $riso-red-dark;
+}
+
+.related-title {
+  font-size: .95rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin: 0 0 .9rem;
+}
+
+.related-list {
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+
+.related-item {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .45rem;
+  border: 1px solid $global-border-color;
+  border-radius: 2px;
+  // El tema subraya los enlaces del contenido; aqui no hace falta,
+  // la tarjeta entera ya se lee como algo pulsable.
+  text-decoration: none;
+
+  &:hover {
+    border-color: $riso-red;
+  }
+}
+
+body[theme=dark] .related-item {
+  border-color: $global-border-color-dark;
+
+  &:hover {
+    border-color: $riso-red-dark;
+  }
+}
+
+.related-thumb {
+  width: 84px;
+  height: auto;
+  flex: 0 0 84px;
+  border-radius: 2px;
+}
+
+.related-text {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 0;
+}
+
+.related-name {
+  font-weight: 800;
+  line-height: 1.3;
+  // Titulos largos: cortar entre palabras, no dentro
+  overflow-wrap: break-word;
+}
+
+.related-date {
+  font-size: .8rem;
+  color: $global-font-secondary-color;
+}
+
+body[theme=dark] .related-date {
+  color: $global-font-secondary-color-dark;
+}
+
+// En movil la miniatura se come demasiado ancho
+@media only screen and (max-width: 680px) {
+  .related-thumb {
+    width: 64px;
+    flex-basis: 64px;
+  }
+}
+
+// --- Esquinas redondeadas en las imagenes -------------------------
+// Un radio discreto: lo justo para suavizar el corte sin que parezca
+// una pegatina. Las ilustraciones son de semitono con bordes de papel,
+// asi que un radio grande pelearia con ellas.
+$radio-img: 6px;
+
+// Destacada de la pagina del post
+.single .featured-image img,
+// Destacada en la portada
+.home[data-home=posts] .summary .featured-image-preview img,
+.home[data-home=posts] .summary .featured-image-preview img.lazyloaded,
+// Imagenes dentro del texto, con y sin pie de foto
+.single .content img,
+.page .content img,
+.single .content figure img {
+  border-radius: $radio-img;
+}
+
+// El enlace de lightgallery envuelve la imagen: si no se recorta aqui
+// tambien, el foco del teclado dibuja un rectangulo con las esquinas
+// vivas alrededor de una imagen redondeada.
+.single .content a.lightgallery,
+.page .content a.lightgallery {
+  display: inline-block;
+  border-radius: $radio-img;
+  overflow: hidden;
+}
+
+// Miniatura de los relacionados: mas pequena, radio proporcional
+.related-thumb {
+  border-radius: 4px;
+}

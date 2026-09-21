@@ -1,0 +1,41 @@
+{{- /* Articulos relacionados.                                               */ -}}
+{{- /*                                                                       */ -}}
+{{- /* El blog tenia DOS enlaces internos en total: cada post era una isla.  */ -}}
+{{- /* Quien llegaba de Google a un texto suelto lo leia y se iba, porque no */ -}}
+{{- /* habia nada que lo llevara a otro.                                     */ -}}
+{{- /*                                                                       */ -}}
+{{- /* Usa el motor de contenido relacionado de Hugo, configurado en         */ -}}
+{{- /* config.toml bajo [related]. Se apoya en las etiquetas, que por eso    */ -}}
+{{- /* convenia unificar antes: con "Metaverso" y "metaverse" separadas no   */ -}}
+{{- /* habria emparejado nada.                                               */ -}}
+
+{{- /* Solo articulos: .Site.RegularPages incluye tambien las paginas      */ -}}
+{{- /* sueltas, y "Acerca de mi" se colaba como si fuera un post.            */ -}}
+{{- $articulos := where .Site.RegularPages "Section" "posts" -}}
+{{- $relacionados := first 3 ($articulos.Related .) -}}
+
+{{- with $relacionados -}}
+    <div class="related-posts">
+        <h2 class="related-title">{{ T "relatedPosts" | default "Seguir leyendo" }}</h2>
+        <div class="related-list">
+            {{- range . -}}
+                <a class="related-item" href="{{ .RelPermalink }}">
+                    {{- /* Miniatura, si el post tiene imagen destacada */ -}}
+                    {{- with .Resources.GetMatch "featured-image" -}}
+                        {{- $mini := .Resize "320x webp q75 Lanczos" -}}
+                        <img class="related-thumb lazyload"
+                             src="{{ (resources.Get "svg/loading.svg" | minify).RelPermalink }}"
+                             data-src="{{ $mini.RelPermalink }}"
+                             alt=""
+                             width="{{ $mini.Width }}" height="{{ $mini.Height }}"
+                             style="aspect-ratio: {{ $mini.Width }} / {{ $mini.Height }}" />
+                    {{- end -}}
+                    <span class="related-text">
+                        <span class="related-name">{{ .Title }}</span>
+                        <span class="related-date">{{ .PublishDate.Format (.Site.Params.dateFormat | default "02/01/2006") }}</span>
+                    </span>
+                </a>
+            {{- end -}}
+        </div>
+    </div>
+{{- end -}}
