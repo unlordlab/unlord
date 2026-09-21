@@ -781,3 +781,260 @@ $radio-img: 6px;
     }
   }
 }
+
+// ==================================================================
+// Herramienta "El self digital"
+// Ver layouts/shortcodes/self-digital.html
+// ==================================================================
+
+.sd {
+  margin: 2rem 0;
+}
+
+.sd-aviso {
+  padding: .8rem 1rem;
+  border: 1px solid $riso-red;
+  border-radius: 4px;
+  font-size: .9rem;
+}
+
+body[theme=dark] .sd-aviso { border-color: $riso-red-dark; }
+
+.sd-label {
+  display: block;
+  font-family: var(--header-title-font-family);
+  font-size: .85rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: .4rem;
+}
+
+.sd-fila {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.sd-input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: .55rem .7rem;
+  font-family: inherit;
+  font-size: 1rem;
+  color: inherit;
+  background: transparent;
+  border: 1px solid $global-border-color;
+  border-radius: 3px;
+
+  &:focus {
+    outline: none;
+    border-color: $riso-red;
+  }
+}
+
+body[theme=dark] .sd-input {
+  border-color: $global-border-color-dark;
+  &:focus { border-color: $riso-red-dark; }
+}
+
+.sd-boton {
+  padding: .55rem 1.2rem;
+  font-family: var(--header-title-font-family);
+  font-size: .95rem;
+  color: $global-background-color;
+  background: $riso-red;
+  border: 1px solid $riso-red;
+  border-radius: 3px;
+  cursor: pointer;
+
+  &:hover { opacity: .88; }
+}
+
+body[theme=dark] .sd-boton {
+  color: $global-background-color-dark;
+  background: $riso-red-dark;
+  border-color: $riso-red-dark;
+}
+
+.sd-estado {
+  margin: .7rem 0 0;
+  font-size: .85rem;
+  color: $global-font-secondary-color;
+}
+
+body[theme=dark] .sd-estado { color: $global-font-secondary-color-dark; }
+
+// --- Las dos columnas ---------------------------------------------
+.sd-resultados {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+  margin-top: 1.4rem;
+}
+
+.sd-col-titulo {
+  font-size: 1.1rem;
+  margin: 0 0 .2rem;
+  padding-bottom: .35rem;
+  border-bottom: 2px solid $riso-red;
+}
+
+body[theme=dark] .sd-col-titulo { border-bottom-color: $riso-red-dark; }
+
+.sd-col-nota,
+.sd-epoca-nota {
+  font-size: .8rem;
+  line-height: 1.45;
+  color: $global-font-secondary-color;
+  margin: .2rem 0 .8rem;
+}
+
+body[theme=dark] .sd-col-nota,
+body[theme=dark] .sd-epoca-nota { color: $global-font-secondary-color-dark; }
+
+.sd-epoca { margin-bottom: 1.4rem; }
+
+.sd-epoca-titulo {
+  font-size: .9rem;
+  letter-spacing: .05em;
+  margin: 0;
+}
+
+// --- Rejilla de fotos de Flickr -----------------------------------
+.sd-rejilla {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .4rem;
+}
+
+.sd-foto {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+  // El tema subraya los enlaces del contenido; aqui estorba
+  text-decoration: none;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  &:hover .sd-foto-pie { opacity: 1; }
+}
+
+// La atribucion no es decorativa: las licencias CC la exigen
+.sd-foto-pie {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: .25rem .35rem;
+  font-size: .62rem;
+  line-height: 1.2;
+  color: #fff;
+  background: rgba(0, 0, 0, .72);
+  opacity: 0;
+  transition: opacity .18s ease;
+  overflow-wrap: anywhere;
+}
+
+.sd-vacio {
+  grid-column: 1 / -1;
+  font-size: .82rem;
+  color: $global-font-secondary-color;
+  margin: 0;
+}
+
+body[theme=dark] .sd-vacio { color: $global-font-secondary-color-dark; }
+
+// --- Instagram: fachada antes de cargar ---------------------------
+.sd-ig { margin-bottom: 1rem; }
+
+.sd-ig-boton {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+  width: 100%;
+  padding: 1.1rem;
+  font-family: inherit;
+  font-size: .9rem;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 1px dashed $global-border-color;
+  border-radius: 4px;
+  cursor: pointer;
+
+  small {
+    font-size: .72rem;
+    color: $global-font-secondary-color;
+  }
+
+  &:hover { border-color: $riso-red; }
+}
+
+body[theme=dark] .sd-ig-boton {
+  border-color: $global-border-color-dark;
+  small { color: $global-font-secondary-color-dark; }
+  &:hover { border-color: $riso-red-dark; }
+}
+
+.sd-ig-icono {
+  font-size: 1.2rem;
+  color: $riso-red;
+}
+
+body[theme=dark] .sd-ig-icono { color: $riso-red-dark; }
+
+.sd-ig-iframe {
+  width: 100%;
+  min-height: 480px;
+  border: 0;
+  border-radius: 4px;
+}
+
+.sd-ig-enlace {
+  font-size: .88rem;
+  small { display: block; font-size: .75rem; }
+}
+
+// --- El bloque del muro -------------------------------------------
+.sd-muro {
+  margin-top: 2rem;
+  padding: .9rem 1.1rem;
+  border: 1px solid $global-border-color;
+  border-radius: 4px;
+
+  summary {
+    cursor: pointer;
+    font-family: var(--header-title-font-family);
+    font-size: .95rem;
+  }
+}
+
+body[theme=dark] .sd-muro { border-color: $global-border-color-dark; }
+
+.sd-muro-cuerpo {
+  margin-top: .9rem;
+  font-size: .92rem;
+
+  li { margin-bottom: .35rem; }
+}
+
+.sd-muro-cierre {
+  padding-left: .8rem;
+  border-left: 3px solid $riso-red;
+  font-weight: 800;
+}
+
+body[theme=dark] .sd-muro-cierre { border-left-color: $riso-red-dark; }
+
+// En movil, una columna debajo de otra
+@media only screen and (max-width: 860px) {
+  .sd-resultados { grid-template-columns: 1fr; }
+}

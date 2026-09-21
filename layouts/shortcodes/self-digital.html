@@ -1,0 +1,98 @@
+{{- /* Herramienta "El self digital": Flickr en vivo contra Instagram curado. */ -}}
+{{- /*                                                                        */ -}}
+{{- /* Flickr se consulta EN VIVO desde el navegador: su API responde con     */ -}}
+{{- /* CORS y devuelve JSON, asi que no hace falta servidor. La clave va en   */ -}}
+{{- /* params.flickrApiKey del config.toml.                                   */ -}}
+{{- /*                                                                        */ -}}
+{{- /* Instagram NO se puede buscar: ver data/selfdigital.yaml. Se incrustan  */ -}}
+{{- /* posts elegidos a mano, y para las ciudades sin corpus se ofrece el     */ -}}
+{{- /* enlace a su buscador.                                                  */ -}}
+
+{{- $clave := .Site.Params.flickrApiKey | default "" -}}
+{{- $datos := .Site.Data.selfdigital | default dict -}}
+
+<div class="sd" data-flickr-key="{{ $clave }}">
+
+    {{- if not $clave -}}
+    <p class="sd-aviso">
+        <strong>Falta la clave de la API de Flickr.</strong>
+        Añádela en <code>config.toml</code> como <code>flickrApiKey</code>
+        dentro de <code>[params]</code>. Se consigue gratis en
+        <a href="https://www.flickr.com/services/apps/create/apply/" target="_blank" rel="noopener">flickr.com</a>.
+    </p>
+    {{- end -}}
+
+    <form class="sd-form" id="sd-form" autocomplete="off">
+        <label class="sd-label" for="sd-ciudad">Escribe una ciudad</label>
+        <div class="sd-fila">
+            <input class="sd-input" type="text" id="sd-ciudad" name="ciudad"
+                   placeholder="Barcelona, Berlín, Tokio…" required>
+            <button class="sd-boton" type="submit">Comparar</button>
+        </div>
+    </form>
+
+    <div class="sd-estado" id="sd-estado" role="status" aria-live="polite"></div>
+
+    <div class="sd-resultados" id="sd-resultados" hidden>
+
+        {{- /* --- Columna Flickr: dos epocas de la misma ciudad --- */ -}}
+        <section class="sd-col sd-col-flickr">
+            <h3 class="sd-col-titulo">Flickr</h3>
+            <p class="sd-col-nota">Consultado en vivo. Solo fotos con licencia Creative Commons.</p>
+
+            <div class="sd-epoca">
+                <h4 class="sd-epoca-titulo">2004 &ndash; 2010</h4>
+                <p class="sd-epoca-nota">Los primeros años de la plataforma.</p>
+                <div class="sd-rejilla" id="sd-flickr-viejo"></div>
+            </div>
+
+            <div class="sd-epoca">
+                <h4 class="sd-epoca-titulo">2016 &ndash; hoy</h4>
+                <p class="sd-epoca-nota">Después de que Instagram se comiera el mundo.</p>
+                <div class="sd-rejilla" id="sd-flickr-nuevo"></div>
+            </div>
+        </section>
+
+        {{- /* --- Columna Instagram: corpus curado o enlace --- */ -}}
+        <section class="sd-col sd-col-instagram">
+            <h3 class="sd-col-titulo">Instagram</h3>
+            <p class="sd-col-nota">Selección hecha a mano. Instagram no permite buscar desde fuera.</p>
+            <div id="sd-instagram"></div>
+        </section>
+
+    </div>
+
+    {{- /* El corpus curado viaja como JSON en la propia pagina */ -}}
+    <script type="application/json" id="sd-corpus">
+        {{- $datos.ciudades | default dict | jsonify | safeJS -}}
+    </script>
+
+    {{- /* --- Por que falta la mitad de Instagram --- */ -}}
+    <details class="sd-muro">
+        <summary>¿Por qué Instagram no se busca como Flickr?</summary>
+        <div class="sd-muro-cuerpo">
+            <p>No es una decisión de diseño. Está comprobado:</p>
+            <ul>
+                <li>La <strong>API Basic Display</strong> dejó de funcionar el <strong>4 de diciembre de 2024</strong>.</li>
+                <li>La <strong>Graph API</strong> exige cuenta de empresa, verificación de negocio y revisión de la aplicación por Meta. Y permite <strong>30 hashtags únicos por semana</strong>: treinta ciudades semanales entre todos los visitantes de esta página.</li>
+                <li>Su buscador <strong>exige sesión iniciada</strong>. Sin ella devuelve cero imágenes.</li>
+                <li>Y <strong>CORS impide leerlo</strong> desde otro dominio: la petición ni sale del navegador.</li>
+            </ul>
+            <p>
+                Flickr, lanzada en 2004, sigue teniendo una API pública que cualquiera puede
+                usar desde el navegador. Instagram, lanzada en 2010, no. Esa diferencia no es
+                técnica: es la distancia entre una web pensada para conectar y otra pensada
+                para retener.
+            </p>
+            <p class="sd-muro-cierre">
+                La mitad vacía de esta comparación <em>es</em> el resultado del experimento.
+            </p>
+        </div>
+    </details>
+
+</div>
+
+{{- /* El JS va aqui y no en la configuracion de la pagina: asi la           */ -}}
+{{- /* herramienta es autocontenida y solo se carga donde se usa.            */ -}}
+{{- $js := resources.Get "js/self-digital.js" | minify | fingerprint -}}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
