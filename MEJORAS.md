@@ -111,14 +111,25 @@ Son fallos que están afectando al sitio ahora mismo. Ninguno es estético.
   - ✅ **Hecho (provisional):** ruta corregida a `/og-default.png` y generada una tarjeta
     1200×630 en `static/og-default.png` (logo invertido + Space Grotesk sobre fondo oscuro).
 
-- [ ] 🙋 **1.4b · Mejorar la tarjeta Open Graph** ⬅️ *pendiente*
-  La actual es funcional pero mejorable. Ideas a decidir:
-  - Diseño propio tuyo en vez del generado automáticamente.
-  - Usar un color de acento real de tu identidad (ahora hay un naranja puesto a ojo).
-  - Valorar **tarjetas por post**: Hugo puede generar una imagen distinta por artículo con
-    su título, en vez de la misma para todo el sitio. Es lo que hacen los blogs que se
-    comparten bien.
-  - Revisar cómo se ve recortada en Mastodon (16:9), WhatsApp (cuadrada) y LinkedIn.
+- [x] 🤖 **1.4b · Mejorar la tarjeta Open Graph**
+  La ficha decía que se compartía la misma imagen para todo el sitio. Eso ya no era
+  cierto: cada post publicaba su destacada. El problema real era otro, y había dos:
+
+  - Las destacadas miden **1024x682** y las redes piden **1200x630** (1.91:1), así que
+    recortaban ellas por su cuenta, por arriba y por abajo. Y recortar al centro no
+    valía como arreglo, porque las destacadas de este blog son **carteles que ya
+    llevan el título impreso dentro**: el recorte se lo comía.
+  - No se declaraban `og:image:width` ni `height`. Sin esos dos datos, varias
+    plataformas enseñan la tarjeta pequeña la primera vez que ven un enlace.
+
+  Ahora Hugo compone la tarjeta al construir (`partials/function/og-card.html`):
+  el cartel se encaja **entero** en 1200x630 y se rellenan los lados en negro. Las
+  páginas sin cartel (como `/about/`) llevan el título escrito con Departure Mono
+  sobre fondo negro, con la firma en rojo.
+
+  Se sustituyen `_internal/opengraph.html` y `_internal/twitter_cards.html` por
+  `partials/head/opengraph.html`, que sí declara medidas, tipo y `alt`.
+  Fuente `DepartureMono-Regular.otf` añadida a `assets/fonts/` (SIL OFL 1.1).
 
 - [x] 🤖 **1.5 · Imagen OG rota en el post `million`**
   `images: ["ceci.mpg"]` — el fichero real es `ceci.jpg`. Ese post se comparte sin imagen.
@@ -244,7 +255,7 @@ Google mide Core Web Vitals para posicionar. `content/` pesa **32 MB**.
   - ⚠️ Con el tema dentro del repo (y no importado como módulo), Hugo **no impone** ese
     rango: sirve como documentación, no como barrera.
 
-- [ ] 🙋 **2.5b · Fijar `HUGO_VERSION` en el panel de Cloudflare** ⬅️ *pendiente, solo tú puedes*
+- [x] 🙋 **2.5b · Fijar `HUGO_VERSION` en el panel de Cloudflare** ⬅️ *hecho y verificado en producción*
   Es el pin de verdad, y es lo único que impide que tu web deje de desplegarse.
   **Cloudflare Pages → tu proyecto → Settings → Environment variables → añade:**
 
@@ -413,7 +424,7 @@ descriptivo, los `figcaption` aportan contexto real, y el tema es limpio.
 
   **Dímelo y lo planteo aparte.**
 
-- [~] 🙋 **4.1 · No tienes página "Sobre mí"** ⬅️ *en curso*
+- [x] 🙋 **4.1 · Página "Acerca de mí"** ⬅️ *hecha: `/about/`, con foto y texto tuyo*
   Todo tu perfil es el subtítulo de la portada. Con CV, TFG y un proyecto como RSU, una
   `/about/` con tu recorrido y cómo contactarte vale más que un PDF en el menú.
 

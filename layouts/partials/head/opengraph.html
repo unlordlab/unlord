@@ -1,0 +1,57 @@
+{{- /* Etiquetas Open Graph y de Twitter.                                  */ -}}
+{{- /*                                                                     */ -}}
+{{- /* Sustituye a _internal/opengraph.html y _internal/twitter_cards.html */ -}}
+{{- /* por dos motivos:                                                    */ -}}
+{{- /*                                                                     */ -}}
+{{- /*  1. Los internos publican la imagen destacada tal cual. La del blog */ -}}
+{{- /*     mide 1024x682 y las redes piden 1.91:1, asi que la recortaban   */ -}}
+{{- /*     por su cuenta. Aqui se usa la tarjeta compuesta a 1200x630.     */ -}}
+{{- /*                                                                     */ -}}
+{{- /*  2. Los internos no declaran og:image:width ni height. Sin esos dos */ -}}
+{{- /*     datos, varias plataformas muestran la tarjeta pequena la        */ -}}
+{{- /*     primera vez que ven el enlace, hasta que descargan la imagen.   */ -}}
+
+{{- $params := .Scratch.Get "params" -}}
+{{- $descripcion := $params.description | default .Site.Params.description -}}
+
+<meta property="og:site_name" content="{{ .Site.Title }}">
+<meta property="og:title" content="{{ .Title | default .Site.Title }}">
+<meta property="og:description" content="{{ $descripcion }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:locale" content="{{ replace (.Site.Language.Lang | default "es") "-" "_" }}">
+
+{{- /* La tarjeta se compone para todo: los articulos se llevan su        */ -}}
+{{- /* cartel encajado, y la portada y las listas el fondo generico.      */ -}}
+{{- $imagen := partial "function/og-card.html" . -}}
+
+{{- if $imagen -}}
+    <meta property="og:image" content="{{ $imagen.Permalink }}">
+    <meta property="og:image:width" content="{{ $imagen.Width }}">
+    <meta property="og:image:height" content="{{ $imagen.Height }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:alt" content="{{ .Title | default .Site.Title }}">
+    <meta name="twitter:image" content="{{ $imagen.Permalink }}">
+{{- else -}}
+    {{- with .Site.Params.seo.image -}}
+        <meta property="og:image" content="{{ . | absURL }}">
+        <meta name="twitter:image" content="{{ . | absURL }}">
+    {{- end -}}
+{{- end -}}
+
+{{- if .IsPage -}}
+    {{- with .Section -}}<meta property="article:section" content="{{ . }}">{{- end -}}
+    {{- if not .PublishDate.IsZero -}}
+        <meta property="article:published_time" content="{{ .PublishDate.Format "2006-01-02T15:04:05-07:00" | safeHTML }}">
+    {{- end -}}
+    {{- if not .Lastmod.IsZero -}}
+        <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}">
+    {{- end -}}
+    {{- range .Params.tags -}}
+        <meta property="article:tag" content="{{ . }}">
+    {{- end -}}
+{{- end -}}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ .Title | default .Site.Title }}">
+<meta name="twitter:description" content="{{ $descripcion }}">
