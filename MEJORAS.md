@@ -317,6 +317,57 @@ Este es el problema de fondo. Tu repo **es** el repo de LoveIt, con tu contenido
   LoveIt v0.3.1 esto viene arreglado de fábrica, y parchear el tema vendorizado sería
   trabajo que luego hay que tirar. Si prefieres el parche rápido mientras tanto, dímelo.
 
+- [ ] 🙋 **3.5 · Sacar el repositorio de las búsquedas (repo privado)** ⬅️ *nuevo*
+
+  **El problema:** buscando "unlordl4b" en Brave (y probablemente en Google) salen los
+  commits y los PRs de GitHub, con el detalle de todo lo trabajado.
+
+  **Por qué no basta con darle a "hacer privado":** el repo es un *fork* de
+  `dillonzq/LoveIt`, y GitHub no lo permite. Documentación citada:
+  *"Public forks are not made private"*. No hay forma autoservicio de desvincularlo
+  de la red del original.
+
+  **Y la complicación de verdad:** Cloudflare Pages **no deja cambiar el repositorio
+  de un proyecto ya creado** (verificado; es una petición recurrente en su comunidad y
+  sigue sin existir). O sea que hace falta proyecto nuevo, y el nombre del proyecto
+  **es** la URL: `unlordl4b.pages.dev`.
+
+  ### Opción elegida: hacerlo ya, asumiendo unos minutos de caída
+
+  1. Claude crea el repositorio nuevo **privado** y sube el código.
+  2. Tú **borras** el proyecto de Pages actual y creas otro con el **mismo nombre**,
+     `unlordl4b`, apuntando al repo nuevo.
+  3. Reconfigurar lo que no viaja con el repositorio:
+     - `HUGO_VERSION = 0.135.0` y `HUGO_ENV = production` (Production, no Preview)
+     - **Web Analytics** → *Metrics* → *Enable*
+     - Comprobar que el despliegue sale verde antes de seguir
+  4. Tú borras el fork `unlordlab/unlord` → desaparecen commits y PRs de los buscadores.
+
+  ⚠️ **Riesgos a tener presentes:**
+  - Entre el paso 2 (borrar) y el 2 (crear) la web está caída y el nombre queda libre.
+  - Search Console está verificado contra esa URL; la etiqueta de verificación viaja en
+    el `config.toml`, así que debería seguir valiendo, pero conviene comprobarlo.
+  - Borrar el fork **no borra lo ya cacheado** por los buscadores. Caen en días o
+    semanas; para acelerar, *Retiradas* en Search Console (Brave y Bing van por su
+    cuenta).
+  - Los comentarios: **giscus exige repositorio público** (*"El repositorio es público,
+    de lo contrario, tus visitantes no podrán ver los comentarios"*). Hace falta un
+    segundo repo público y vacío, solo con Discussions, o quitar los comentarios.
+
+  ### Alternativa que elimina el problema de raíz
+
+  Subir el repo nuevo **sin historial**: no es que dejen de verse los commits, es que
+  dejan de existir. Y de paso desaparecen del historial las **claves de LeanCloud**,
+  que hoy siguen ahí (tarea 5.1b). Se pierde el registro de lo trabajado, aunque buena
+  parte está en este mismo documento.
+
+  ### Lo que lo volvería fácil: dominio propio primero (tarea 6.1)
+
+  Con dominio propio la URL deja de depender del nombre del proyecto de Pages. Se
+  podría crear el proyecto nuevo con otro nombre, verificarlo con calma y **mover el
+  dominio solo cuando funcione**: cero caída. Y Search Console se verifica una vez
+  contra el dominio y ya no se toca más.
+
 - [ ] 🙋 **3.4 · Hay ediciones tuyas dentro del código del tema**
   Por ejemplo `assets/css/_core/_base.scss:50` tiene un `background-color: #5A6F68`
   escrito a mano (es el fondo verdoso del modo oscuro), introducido en el commit
