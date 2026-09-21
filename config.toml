@@ -126,8 +126,12 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
 [params]
   # site default theme ["auto", "light", "dark"]
   # 网站默认主题 ["auto", "light", "dark"]
-  # "auto" respeta la preferencia del sistema operativo del lector
-  defaultTheme = "auto"
+  # "auto" respeta la preferencia del sistema operativo del lector, asi que
+  # quien lo tenga en claro veia el blog en claro. El sitio esta pensado en
+  # oscuro (fondo negro, crema y rojo), asi que ese es el de partida.
+  # El lector puede cambiarlo con el boton de la cabecera, y su eleccion se
+  # guarda: esto solo decide con cual se encuentra la primera vez.
+  defaultTheme = "dark"
   # public git repo url only then enableGitInfo is true
   # 公共 git 仓库路径，仅在 enableGitInfo 设为 true 时有效
   gitRepo = ""
