@@ -16,7 +16,7 @@ categories: ["Ensayos"]
 lightgallery: true
 ---
 
-Cada tres años se repite el mismo ritual. Para sorpresa de nadie —espero—, ya tenemos aquí los titulares que hablan de [«batacazo» y de «hundimiento histórico»](https://es.euronews.com/my-europe/2026/09/08/informe-pisa-2025-espana-registra-peores-notas-historicas-lectura-matematicas-ciencias). Los responsables prometen un pacto de Estado que nunca acaba de llegar y, en las dos semanas siguientes, ya nadie se acuerda.
+Cada tres años se repite el mismo ritual. Para sorpresa de nadie —espero—, ya tenemos aquí los titulares que hablan de ["batacazo" y de "hundimiento histórico"](https://es.euronews.com/my-europe/2026/09/08/informe-pisa-2025-espana-registra-peores-notas-historicas-lectura-matematicas-ciencias). Los responsables prometen un pacto de Estado que nunca acaba de llegar y, en las dos semanas siguientes, ya nadie se acuerda.
 
 <!--more-->
 
