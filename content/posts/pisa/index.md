@@ -34,6 +34,8 @@ Sin embargo, lo que omiten los titulares y los expertos de Twitter es la siniest
 
 Entremos, entonces, en el aula. Durante la última década, una constelación de «pedagogías alternativas» —el aprendizaje basado en proyectos, el rechazo a la instrucción directa, la ludificación— ha colonizado el sentido común educativo. Se nos vendió bajo un barniz emancipatorio, con un lenguaje pseudolibertario que prometía desmantelar la «escuela fábrica» del siglo XIX.
 
+Conviene precisar algo, porque cualquiera que pise un aula dirá con razón que allí no se hace tanto proyecto ni tanta cartulina como sugieren los documentos. Es verdad. El daño no está en que todas las clases hayan cambiado de método, sino en algo más sutil y más difícil de revertir: ha cambiado **lo que se considera legítimo pedir**. Un profesor que hoy exige memorizar, mandar deberes o suspender debe justificarse; el que propone una gincana, no. Esa asimetría no aparece en ninguna ley, pero se nota en cada claustro.
+
 Como advierte Pérez Rueda (2022) en *Las falsas alternativas*, conviene mirar más allá de la retórica. Lo que ha penetrado en el entorno escolar no es la pedagogía del oprimido de Freire (1970), sino la lógica de Silicon Valley.
 
 En este nuevo paradigma, el estudiante y sus emociones son colocados en el centro absoluto del ecosistema. El alumno ya no es un sujeto en formación que debe enfrentarse a la fricción de un conocimiento externo a él, sino que es reconfigurado como un consumidor de experiencias emocionales y un emprendedor de su propio aprendizaje.
@@ -43,6 +45,18 @@ Lógicamente, si el estudiante ocupa el centro, alguien tiene que desplazarse al
 Aquí está el nudo que el discurso «innovador» oculta con esmero —y con efectividad—: esta pedagogía de las emociones y de la autonomía no es la alternativa al neoliberalismo escolar, sino su forma más pura. Es el alumno como cliente cuya satisfacción hay que garantizar; el vocabulario de la empresa aplicado a la infancia.
 
 Se elimina el conflicto, el esfuerzo y la alienación temporal que requiere todo verdadero aprendizaje. En su lugar, tenemos un entorno de **hedonia depresiva** (Fisher, 2016): una hiperestimulación constante —proyectos efímeros, pantallas, debates sin base de conocimiento— que oculta un profundo vacío de significado. Se asume que el niño ya lleva dentro todo lo que necesita saber y que la escuela solo debe proporcionar el entorno para que eso florezca.
+
+## Pero esto pasa en todas partes
+
+Llegados a este punto conviene plantear la objeción antes de que la plantee otro, porque es la buena. Si el desplome fuera culpa de una deriva pedagógica nuestra, no debería ocurrir a la vez en medio mundo. Y ocurre: el promedio de la OCDE ha pasado de 489 puntos en lectura en 2015 a 461 en 2025 (OCDE, 2026). Veintiocho puntos de caída en sistemas educativos que no se parecen en nada entre sí.
+
+Es exactamente el mismo argumento que he usado más arriba contra los del móvil, así que sería tramposo no aplicármelo a mí. Hagámoslo, entonces, con los números delante: **la OCDE cae veintiocho puntos y España cuarenta y cinco**. Diecisiete de diferencia. Hay una marea que arrastra a todos y hay, encima, un agujero que es nuestro.
+
+A la marea hay que ponerle nombre, y uno evidente: los chavales evaluados en 2025 tenían once o doce años en 2020. Perdieron meses de escuela en el momento exacto en que se consolida la lectura compleja. El confinamiento no inventó nada, pero aceleró lo que ya venía y lo hizo, como siempre, cuesta abajo: en las casas con libros se notó menos.
+
+Y aquí está lo que de verdad quiero sostener, que no es que las pedagogías alternativas hayan provocado el incendio. Es algo peor. Es que habían vendido los extintores. Cuando llegó el golpe —la pandemia, las pantallas, lo que se quiera—, la escuela ya se había desprendido de las herramientas con las que podía haberlo amortiguado: la instrucción explícita, la exigencia sostenida, la idea misma de que hay un conocimiento que transmitir. Se quedó sin nada que oponer.
+
+Por eso la pregunta pertinente no es por qué caen todos. Es por qué los de abajo caen más.
 
 ## Del trampolín al espejo
 
@@ -54,7 +68,7 @@ Exacto: la familia que aporta en casa lo que la escuela ha decidido no dar. Libr
 
 Una escuela que deja de enseñar deja de ser un trampolín y se convierte en un espejo: devuelve a cada niño al lugar del cual venía. En nombre de la inclusión se genera más desigualdad, porque quien tiene una familia que refuerza sale adelante y quien solo depende de la escuela queda condenado a quedarse fuera. En otras palabras: al hijo del obrero se le abandona.
 
-Gramsci (1975) ya desconfiaba de la escuela «activa» precisamente porque la libertad sin método favorece a quien ya llega equipado de casa. De este modo perverso, se puede concebir PISA como un marcador de la reproducción de la desigualdad.
+Gramsci (1975) lo vio con una claridad incómoda, y conviene citarlo entero para no usarlo de coartada: no rechazaba lo activo, lo colocaba **al final**, como la fase que solo tiene sentido cuando el alumno ya domina los instrumentos. De lo que desconfiaba era del atajo, de saltarse el método en nombre de la libertad, porque esa libertad prematura favorece a quien ya llega equipado de casa. De este modo perverso, se puede concebir PISA como un marcador de la reproducción de la desigualdad.
 
 ## Contra la anestesia
 
