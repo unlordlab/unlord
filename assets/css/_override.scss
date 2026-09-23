@@ -52,34 +52,46 @@ $global-line-height: 1.8rem;
 // Aqui el rojo se usa con cuentagotas, solo en enlaces y hover.
 // ==================================================================
 
-// --- Tema claro: BUBBLEGUM ---------------------------------------
-// Valores leidos del tema Bubblegum de cyberspace.online:
-//   --cs-bg #ffe4f1   --cs-fg #6b1a4a   --cs-fg-dim #b86b93
-// El atenuado original da 3.17:1 sobre el fondo, por debajo de AA.
-// Se sustituye por #a24e7a: mismo tono (329 grados) y saturacion,
-// solo mas oscuro, 4.51:1.
-$global-background-color:        #ffe4f1;
-$global-font-color:              #6b1a4a;
-$global-font-secondary-color:    #a24e7a;
-$global-link-color:              #6b1a4a;
-$global-link-hover-color:        #c62828;
-$global-border-color:            #f3c9dd;
+// --- Tema claro: GRIS MEDIO --------------------------------------
+// Antes era el Bubblegum de cyberspace.online, rosa (#ffe4f1). Se
+// cambia a gris a peticion del autor.
+//
+// Es un gris MEDIO, no un blanco roto: 53% de luminancia frente al
+// 81% de un gris claro al uso. Se nota que la pagina tiene color en
+// lugar de parecer una hoja en blanco, y de dia no deslumbra.
+//
+// Apenas tiene temperatura (+6 puntos de rojo sobre azul), asi que no
+// tira ni a beige ni a azulado, y deja que el unico color de la
+// pagina sea el rojo del acento.
+//
+// Contrastes medidos sobre el fondo #c3c1bd:
+//     texto       #141310   10.34:1   AAA
+//     secundario  #474440    5.39:1   AA
+//     acento      #8f1810    5.07:1   AA
+// El acento es mas oscuro que el rojo anterior (#c62828) porque sobre
+// un fondo medio aquel se quedaba en 3.63:1, por debajo de AA.
+$global-background-color:        #c3c1bd;
+$global-font-color:              #141310;
+$global-font-secondary-color:    #474440;
+$global-link-color:              #141310;
+$global-link-hover-color:        #8f1810;
+$global-border-color:            #a8a5a0;
 
-$header-background-color:        #ffe4f1;
-$header-hover-color:             #c62828;
-$search-background-color:        #fbd3e4;
+$header-background-color:        #c3c1bd;
+$header-hover-color:             #8f1810;
+$search-background-color:        #b5b3ae;
 
-$single-link-color:              #c62828;
-$single-link-hover-color:        #6b1a4a;
+$single-link-color:              #8f1810;
+$single-link-hover-color:        #141310;
 
-$table-background-color:         #fff0f7;
-$table-thead-color:              #fbd3e4;
-$blockquote-color:               #c62828;
-$pagination-link-color:          #6b1a4a;
-$pagination-link-hover-color:    #c62828;
-$code-color:                     #c62828;
-$code-background-color:          #fbd8e8;
-$code-info-color:                #a24e7a;
+$table-background-color:         #cbc9c5;
+$table-thead-color:              #b5b3ae;
+$blockquote-color:               #8f1810;
+$pagination-link-color:          #141310;
+$pagination-link-hover-color:    #8f1810;
+$code-color:                     #8f1810;
+$code-background-color:          #b5b3ae;
+$code-info-color:                #474440;
 
 // --- Tema oscuro: el DARK de cyberspace.online -------------------
 // Valores leidos de su tema Dark en el navegador:
@@ -110,5 +122,7 @@ $code-color-dark:                  #ff6f61;
 $code-background-color-dark:       #12110d;
 $code-info-color-dark:             #a89984;
 
-$scrollbar-color:                  #f0b9d2;
-$scrollbar-hover-color:            #c62828;
+// La barra de desplazamiento la comparten los dos temas, asi que va
+// en un gris intermedio que funciona sobre el claro y sobre el negro.
+$scrollbar-color:                  #8a8781;
+$scrollbar-hover-color:            #8f1810;

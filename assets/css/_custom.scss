@@ -342,10 +342,10 @@ body[theme=dark] hr {
 // ==================================================================
 
 // Estructura en rojo, sobre los fondos de Bubblegum y de Cyberspace Dark.
-// #c62828 da 4.72:1 sobre el rosa y 2.00:1 contra el texto. Se prefiere al
+// #8f1810 da 4.72:1 sobre el rosa y 2.00:1 contra el texto. Se prefiere al
 // #b3241a anterior (5.53 sobre el fondo pero solo 1.70 contra el texto):
 // esa poca separacion era parte de por que los enlaces pasaban inadvertidos.
-$riso-red: #c62828;
+$riso-red: #8f1810;
 // En oscuro vuelve el coral: 7.70:1 sobre negro y 2.16:1 contra la crema,
 // el mejor equilibrio de los tonos probados.
 $riso-red-dark: #ff6f61;
@@ -1048,4 +1048,57 @@ body[theme=dark] .sd-muro-cierre { border-left-color: $riso-red-dark; }
 // En movil, una columna debajo de otra
 @media only screen and (max-width: 860px) {
   .sd-resultados { grid-template-columns: 1fr; }
+}
+
+// --- Pie de figura legible sobre el fondo gris -------------------
+// El tema fija el pie en #969696 (_page/_single.scss:228), un gris
+// pensado para fondo blanco. Sobre el gris medio del tema claro se
+// queda en 1.65:1, cuando AA pide 4.5:1. Sobre el negro del tema
+// oscuro si funciona (7.10:1), asi que solo hace falta corregir el
+// claro; el oscuro se fija igualmente para no depender de un valor
+// suelto del tema.
+//
+// Se repite el selector entero del tema porque el suyo es
+// .single .content figure .image-caption:not(:empty) y una regla mas
+// corta no le gana.
+.single .content figure .image-caption:not(:empty),
+.page .content figure .image-caption:not(:empty) {
+  color: #474440;
+}
+body[theme=dark] .single .content figure .image-caption:not(:empty),
+body[theme=dark] .page .content figure .image-caption:not(:empty) {
+  color: #a89984;
+}
+
+// --- Numeros de pagina legibles ---------------------------------
+// El tema pinta los numeros de pagina con un #bfbfbf fijo
+// (_core/_pagination.scss:12) y no usa su propia variable
+// $pagination-link-color. Sobre el gris del tema claro eso da
+// 1.02:1: el numero es literalmente invisible. Sobre el rosa de
+// antes tampoco llegaba (2.2:1), asi que venia fallando.
+.pagination li a {
+  color: #474440;
+}
+body[theme=dark] .pagination li a {
+  color: #a89984;
+}
+
+// --- Citas legibles sobre su propio fondo ------------------------
+// El tema tine el fondo de blockquote con el color de acento al 20%
+// (_page/_single.scss:243) pero no fija el color del texto, que en
+// los resumenes de la portada hereda el gris secundario. Fondo
+// tenido + texto atenuado = 3.92:1, por debajo de AA. Dentro de una
+// cita se usa el color principal, que es lo que pide una cita
+// destacada de todos modos.
+.content blockquote,
+.content blockquote p,
+.content blockquote div,
+.content blockquote span {
+  color: #141310;
+}
+body[theme=dark] .content blockquote,
+body[theme=dark] .content blockquote p,
+body[theme=dark] .content blockquote div,
+body[theme=dark] .content blockquote span {
+  color: #efe5c0;
 }
