@@ -28,7 +28,7 @@ Y hay un dato que conviene retener, porque en él está encerrada toda la histor
 
 Por supuesto, los resultados han sido recibidos con la predecible mezcla de pánico moral y miopía tecnocrática. Ya han salido los cuñados de turno a decir que si esto es culpa de las pantallas, del móvil y de la inteligencia artificial, y [cada comunidad autónoma ha corrido a legislar su propia prohibición](https://www.xataka.com/basics/moviles-aulas-que-prohibe-cada-comunidad-autonoma-este-curso-2026-27). Como si el teléfono móvil no existiese en los países que caen menos o directamente no caen en esta evaluación.
 
-Sin embargo, lo que omiten los titulares y los expertos de Twitter es la siniestra ironía que subyace a este fracaso. Este desastre no ha ocurrido porque la escuela se haya quedado anclada en el pasado, sino precisamente porque ha abrazado con un celo religioso —y nada inocente— el futuro que el mercado le tenía preparado.
+Aunque hay algo que omiten los titulares y los expertos que pululan por Twitter. La siniestra ironía que subyace a este fracaso y no es porque la escuela se haya quedado anclada en un pasado remoto, sino precisamente porque ha abrazado con celo religioso (y nada inocente) el futuro que el mercado le tenía preparado.
 
 ## El aula como simulacro
 
