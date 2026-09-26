@@ -142,12 +142,47 @@ Son fallos que están afectando al sitio ahora mismo. Ninguno es estético.
   - ✅ **Hecho:** `enableRobotsTXT = true`. Verificado: `/robots.txt`, 1060 bytes, con
     la directiva `Sitemap: https://unlordl4b.pages.dev/sitemap.xml`.
 
-- [ ] 🙋 **1.6b · Decidir la política sobre crawlers de IA** ⬅️ *pendiente*
-  Ahora mismo estás en "todo permitido" para `GPTBot`, `CCBot`, `ClaudeBot`,
-  `Google-Extended`, `PerplexityBot`… Tu `robots.txt` bloquea rastreadores de SEO
-  (Ahrefs, SISTRIX, MJ12bot) pero no dice nada de estos.
-  Escribiendo sobre sesgos algorítmicos, merece una decisión consciente en un sentido o
-  en otro — bloquearlos, permitirlos, o permitir solo algunos. Dime cuál y lo aplico.
+- [x] 🤖 **1.6b · Política sobre rastreadores de IA: bloquear el entrenamiento, dejar la cita**
+  Decidido por el autor. Hay tres familias de rastreadores y no hacen lo mismo:
+
+  | Familia | Qué hacen | Decisión |
+  |---|---|---|
+  | **Entrenamiento** | se llevan los textos para entrenar un modelo y no devuelven nada | **bloqueados** |
+  | **Búsqueda con cita** | leen para responder a alguien citando y enlazando | permitidos |
+  | **Disparados por una persona** | entran cuando alguien pega la URL y pide leerla | permitidos |
+
+  Bloqueados uno a uno en `layouts/robots.txt`: `GPTBot`, `ClaudeBot`, `anthropic-ai`,
+  `Claude-Web`, `Google-Extended`, `Applebot-Extended`, `Meta-ExternalAgent`,
+  `FacebookBot`, `CCBot`, `Bytespider`, `Amazonbot`, `cohere-ai`, `Diffbot`,
+  `Omgilibot`, `ImagesiftBot`, `AI2Bot`, `PanguBot`, `Timpibot`.
+
+  Permitidos de forma explícita, para que conste que es deliberado y no un descuido:
+  `OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`, `Claude-User`, `PerplexityBot`,
+  `Perplexity-User`, `DuckAssistBot`.
+
+  ⚠️ **Googlebot y Applebot no se tocan.** Solo se bloquean sus tokens de IA
+  (`Google-Extended`, `Applebot-Extended`). Bloquear los otros sacaría el blog del
+  buscador.
+
+  También se añade la señal **Content-Signal** de Cloudflare (2025):
+  `search=yes, ai-input=yes, ai-train=no`, que dice lo mismo en una línea; y la
+  cabecera `X-Robots-Tag: noai, noimageai` en todo el sitio, que cubre lo que
+  `robots.txt` no cubre —un PDF no lleva `<meta robots>`, pero sí cabeceras—.
+
+  **Qué es y qué no es**: `robots.txt` no impide nada, es una petición. OpenAI,
+  Anthropic, Google, Apple y Perplexity dicen respetarla en sus rastreadores de
+  entrenamiento; CCBot, Bytespider y Diffbot tienen peor historial. Lo único que corta
+  de verdad es el bloqueo por red del panel de Cloudflare, que está sin activar.
+
+- [ ] 🙋 **1.6c · Valorar el bloqueo de bots de IA por red en Cloudflare** ⬅️ *solo tú*
+  El `robots.txt` de la 1.6b es una petición educada. Si algún rastreador la ignora, no
+  hay nada que lo pare. Cloudflare tiene un interruptor que bloquea rastreadores de IA
+  **a nivel de red**, y ese sí corta.
+
+  Está en el panel: **tu proyecto → Security → Bots**, opción de bloquear rastreadores
+  de IA. El precio es que es un interruptor grueso: bloquea también a los que citan y
+  enlazan, así que deshace la mitad de la decisión de la 1.6b. Por eso se deja a tu
+  criterio y no se ha tocado.
 
 - [ ] 🙋 **1.7 · El enlace a RSU Terminal es HTTP contra una IP desnuda**
   En `content/posts/rsu/index.md`: `[RSU Terminal](http://178.104.148.117/)`.

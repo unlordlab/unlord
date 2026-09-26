@@ -11,5 +11,22 @@
 # fichero, tampoco puede leer este noindex, asi que la URL podria seguir
 # apareciendo en los resultados (sin descripcion) por estar enlazada desde
 # el menu de todas las paginas. Las dos cosas juntas se anulan entre si.
+
+# Senal de "no para IA" en todas las paginas.
+#
+# X-Robots-Tag: noai / noimageai no es un estandar de nadie: nacio en
+# DeviantArt y lo respetan unos cuantos rastreadores y plataformas. No
+# sustituye al robots.txt, lo acompana, y cubre lo que robots.txt no
+# puede cubrir: un fichero que no sea HTML no lleva <meta robots>, pero
+# si lleva cabeceras.
+#
+# El sitio deja pasar a los rastreadores que citan y enlazan, asi que
+# aqui NO se pone noindex ni nada que afecte a los buscadores.
+/*
+  X-Robots-Tag: noai, noimageai
+
+# El CV, ademas, fuera del indice de Google. Esta regla va la ultima y
+# repite las senales de IA a proposito: si el solapamiento con /* se
+# resolviera quedandose con una sola, esta no puede perder el noindex.
 /posts/cvmescribar.pdf
-  X-Robots-Tag: noindex
+  X-Robots-Tag: noindex, noai, noimageai

@@ -2,7 +2,120 @@
 # comprobar que se ve bien en movil. Bloquearlos juega en contra.
 # Antes aqui habia: Disallow: /images/ , /js/ y /css/
 # /images/ ni siquiera existe en el sitio generado.
+#
+# --- Sobre la IA: se bloquea el ENTRENAMIENTO, no la CITA -------------
+#
+# Hay tres familias de rastreadores de IA y no hacen lo mismo:
+#
+#   1. Entrenamiento: se llevan los textos para entrenar un modelo y no
+#      devuelven nada. Bloqueados mas abajo, uno por uno.
+#   2. Busqueda con cita: leen la pagina para responder a alguien
+#      citandola y enlazandola. Permitidos: son una via de que te lean.
+#   3. Disparados por una persona: solo entran cuando alguien pega la
+#      URL y pide que la lean. Permitidos, por el mismo motivo.
+#
+# Conviene no enganarse con lo que esto es: robots.txt no impide nada,
+# es una peticion. OpenAI, Anthropic, Google, Apple y Perplexity dicen
+# respetarla en sus rastreadores de entrenamiento; CCBot, Bytespider y
+# Diffbot tienen un historial peor. Lo unico que corta de verdad es el
+# bloqueo por red del panel de Cloudflare.
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Allow: /
+
+# --- IA: entrenamiento, bloqueado ------------------------------------
+# La senal Content-Signal de arriba dice lo mismo en una linea, pero es
+# de 2025 y todavia la lee poca gente: estos bloques son los que hoy
+# hacen el trabajo.
+
+# OpenAI (entrenamiento)
+User-agent: GPTBot
+Disallow: /
+
+# Anthropic (entrenamiento). Claude-Web era el nombre antiguo.
+User-agent: ClaudeBot
+Disallow: /
+User-agent: anthropic-ai
+Disallow: /
+User-agent: Claude-Web
+Disallow: /
+
+# Google: SOLO el token de Gemini y Vertex. Googlebot NO se toca, o el
+# blog desaparece del buscador.
+User-agent: Google-Extended
+Disallow: /
+
+# Apple Intelligence. Applebot a secas es el buscador de Siri y Spotlight
+# y tampoco se toca.
+User-agent: Applebot-Extended
+Disallow: /
+
+# Meta
+User-agent: Meta-ExternalAgent
+Disallow: /
+User-agent: meta-externalagent
+Disallow: /
+User-agent: FacebookBot
+Disallow: /
+
+# Common Crawl: no entrena por si mismo, pero su archivo es la materia
+# prima de medio sector.
+User-agent: CCBot
+Disallow: /
+
+# ByteDance
+User-agent: Bytespider
+Disallow: /
+
+# Amazon
+User-agent: Amazonbot
+Disallow: /
+
+# Otros que declaran recoger para entrenamiento
+User-agent: cohere-ai
+Disallow: /
+User-agent: cohere-training-data-crawler
+Disallow: /
+User-agent: Diffbot
+Disallow: /
+User-agent: Omgilibot
+Disallow: /
+User-agent: Omgili
+Disallow: /
+User-agent: ImagesiftBot
+Disallow: /
+User-agent: AI2Bot
+Disallow: /
+User-agent: PanguBot
+Disallow: /
+User-agent: Timpibot
+Disallow: /
+
+# --- IA: cita y busqueda, permitidas ---------------------------------
+# Estos si entran. No entrenan: leen para responder a una persona y
+# devuelven un enlace. Se listan de forma explicita para que quede
+# escrito que la decision es deliberada y no un descuido.
+
+# OpenAI: buscador de ChatGPT y visitas a peticion del usuario
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic: lo mismo
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+
+# DuckDuckGo
+User-agent: DuckAssistBot
 Allow: /
 
 User-agent: MJ12bot
