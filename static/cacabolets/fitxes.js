@@ -210,4 +210,9 @@ export const FOTOS = {
   camagroc: { peu: 'Craterellus lutescens', autor: 'Lucian Clanet', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://commons.wikimedia.org/wiki/File:Craterellus_lutescens_01.jpg' },
   llenega: { peu: 'Hygrophorus latitabundus', autor: 'Paffka', llicencia: 'CC BY-SA 3.0', llicenciaUrl: 'https://creativecommons.org/licenses/by-sa/3.0/', font: 'https://commons.wikimedia.org/wiki/File:Hygrophorus_latitabundus1.JPG' },
   trompeta: { peu: 'Craterellus cornucopioides', autor: 'Holger Krisp', llicencia: 'CC BY 3.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/3.0/', font: 'https://commons.wikimedia.org/wiki/File:Black_trumpet_Craterellus_cornucopioides.jpg' },
+  fredolic: { peu: 'Tricholoma terreum', autor: 'Tim Johnson', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://www.inaturalist.org/observations/102074069', via: 'iNaturalist' },
+  moixerno: { peu: 'Calocybe gambosa', autor: 'Virn Stothers', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://www.inaturalist.org/observations/344723647', via: 'iNaturalist' },
+  murgula: { peu: 'Morchella esculenta', autor: 'Nico Hernandez', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://www.inaturalist.org/observations/113861785', via: 'iNaturalist' },
+  camasec: { peu: 'Marasmius oreades', autor: 'Noa', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://www.inaturalist.org/observations/296470547', via: 'iNaturalist' },
+  oudereig: { peu: 'Amanita caesarea', autor: 'Loïc Chalmandrier', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://www.inaturalist.org/observations/327362312', via: 'iNaturalist' },
 };
