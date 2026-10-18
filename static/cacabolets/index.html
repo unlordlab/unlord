@@ -169,6 +169,11 @@
   #dList li { font-size: 11.5px; }
   #dList .meta { color: var(--muted); }
   @media (max-width: 560px) { .dform { grid-template-columns: 1fr 1fr; } }
+  #cmpLine { position: fixed; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: rgba(255,255,255,.85); z-index: 4; cursor: ew-resize; box-shadow: 0 0 8px rgba(0,0,0,.6); }
+  #cmpKnob { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; border-radius: 50%; background: #fff; color: #222; display: grid; place-items: center; font-size: 14px; cursor: ew-resize; }
+  .cmpTag { position: fixed; top: 96px; z-index: 4; font-size: 12px; padding: 3px 9px; border-radius: 999px; background: rgba(10,12,10,.75); border: 1px solid rgba(255,255,255,.3); pointer-events: none; }
+  #cmpBar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 150px; z-index: 6; padding: 8px 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: calc(100vw - 32px); }
+  #cmpBar select { width: auto; }
   #toggleSide { display: none; }
   @media (max-width: 760px) {
     #side { width: auto; right: 14px; max-height: 48vh; top: auto; bottom: 120px; }
@@ -189,6 +194,16 @@
 <body>
 <canvas id="c"></canvas>
 <div id="labels"></div>
+<div id="cmp" hidden>
+  <div id="cmpLine"><span id="cmpKnob" title="Arrossega per moure la separació">⇔</span></div>
+  <div class="cmpTag" id="cmpA"></div><div class="cmpTag" id="cmpB"></div>
+  <div id="cmpBar" class="glass small">
+    <span>Comparar amb</span>
+    <select id="cmpMode"><option value="year">el mateix dia de l'any passat</option><option value="week">fa una setmana</option><option value="2weeks">fa dues setmanes</option><option value="month">fa un mes</option></select>
+    <span id="cmpResult" class="muted"></span>
+    <button type="button" id="cmpClose">Tancar</button>
+  </div>
+</div>
 <div id="places" style="position:fixed;inset:0;pointer-events:none;z-index:3"></div>
 <canvas id="compass"></canvas>
 
@@ -304,6 +319,7 @@
     <div class="row">
       <button type="button" id="play">▶ Reproduir</button>
       <button type="button" id="today">Avui</button>
+      <button type="button" id="compareBtn">Comparar</button>
     </div>
   </div>
   <canvas id="chart"></canvas>

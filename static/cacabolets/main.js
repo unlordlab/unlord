@@ -942,6 +942,10 @@ vegTex.wrapS = vegTex.wrapT = THREE.ClampToEdgeWrapping;
 vegTex.colorSpace = THREE.NoColorSpace;
 U.uVegTex.value = vegTex;
 const indexTex = new THREE.DataTexture(new Float32Array(GRID * GRID), GRID, GRID, THREE.RedFormat, THREE.FloatType);
+// Segona capa de probabilitat, per a la vista partida de "Comparar".
+const indexTexB = new THREE.DataTexture(new Float32Array(GRID * GRID), GRID, GRID, THREE.RedFormat, THREE.FloatType);
+indexTexB.magFilter = indexTexB.minFilter = floatLinear ? THREE.LinearFilter : THREE.NearestFilter;
+indexTexB.wrapS = indexTexB.wrapT = THREE.ClampToEdgeWrapping;
 indexTex.magFilter = indexTex.minFilter = floatLinear ? THREE.LinearFilter : THREE.NearestFilter;
 indexTex.wrapS = indexTex.wrapT = THREE.ClampToEdgeWrapping;
 U.uIndexTex.value = indexTex;
@@ -2000,6 +2004,7 @@ function refreshDay(force = false) {
   drawChart();
   renderWeek();
   if (route.pts.length) rebuildRoute();
+  if (cmp.on) { updateCompare().then(placeCompare); }
 }
 
 function renderSpots() {
@@ -3187,6 +3192,94 @@ function buildTrails() {
 }
 
 // ---------------------------------------------------------------------------
+// Comparar dues dates: vista partida amb la probabilitat de cada una
+// ---------------------------------------------------------------------------
+const cmp = { on: false, split: 0.5, key: '', idx: null, score: 0 };
+const ARCHIVE_VARS = { soil_temperature_6cm: 'soil_temperature_0_to_7cm', soil_moisture_3_to_9cm: 'soil_moisture_0_to_7cm' };
+// Probabilitat de tota la zona amb uns agregats qualssevol (d'una altra data o d'un altre any).
+function computeIndexWith(agg, date, sp) {
+  const season = seasonScore(sp, date), idx = new Float32Array(GRID * GRID);
+  for (let k = 0; k < GRID * GRID; k++) if (habitatAt(k, sp) >= 0.02) idx[k] = cellFactors(k, agg, sp, season).idx;
+  return idx;
+}
+function zoneScore(idx, sp) {
+  let hs = 0, sum = 0;
+  for (let k = 0; k < GRID * GRID; k++) { const h = habitatAt(k, sp); if (h >= 0.25) { hs += h; sum += Math.min(1, idx[k] / h) * h; } }
+  return hs ? sum / hs : 0;
+}
+// Temps de l'any passat (arxiu d'Open-Meteo): 60 dies abans de la data, als mateixos 9 punts.
+async function archiveAggregates(dateMs) {
+  const pts = gridPoints();
+  const end = new Date(dateMs), start = new Date(dateMs - 60 * 864e5);
+  const ymd = d => d.toISOString().slice(0, 10);
+  const vars = HOURLY.map(v => ARCHIVE_VARS[v] || v);
+  const r = await fetch('https://archive-api.open-meteo.com/v1/archive?' + new URLSearchParams({
+    latitude: pts.map(p => p.lat.toFixed(4)).join(','), longitude: pts.map(p => p.lon.toFixed(4)).join(','),
+    hourly: vars.join(','), start_date: ymd(start), end_date: ymd(end), timezone: 'Europe/Madrid' }));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  let json = await r.json();
+  if (!Array.isArray(json)) json = [json];
+  for (const loc of json) for (const [ours, theirs] of Object.entries(ARCHIVE_VARS)) loc.hourly[ours] = loc.hourly[theirs];
+  const nD = Math.floor(json[0].hourly.time.length / 24);
+  const P = json.map(loc => dailyFromLoc(loc, nD));
+  return aggregatesFor(P, nD - 1);
+}
+async function updateCompare() {
+  if (!cmp.on || !Z.weather) return;
+  const W = Z.weather, sp = BOLETS[state.species], day = Math.floor(state.t / 24), mode = $('cmpMode').value;
+  const key = `${Z.zone.id}|${Z.zone.lat}|${sp.id}|${day}|${mode}`;
+  if (key === cmp.key) return;
+  cmp.key = key;
+  const dateA = W.times[Math.min(day * 24 + 12, W.nH - 1)];
+  let idxB = null, dateB;
+  $('cmpResult').textContent = 'Calculant…';
+  try {
+    if (mode === 'year') {
+      dateB = dateA - 365 * 864e5;
+      idxB = computeIndexWith(await archiveAggregates(dateB), new Date(dateB), sp);
+    } else {
+      const back = { week: 7, '2weeks': 14, month: 30 }[mode], dB = day - back;
+      if (dB < 0) throw new Error('Fora de les dades carregades');
+      dateB = W.times[dB * 24 + 12];
+      idxB = computeIndex(dB, sp);
+    }
+  } catch (err) {
+    console.warn('Comparar:', err);
+    if (cmp.key === key) $('cmpResult').textContent = mode === 'year' ? 'No s\'ha pogut obtenir el temps de l\'any passat.' : 'Aquesta data queda fora de les dades carregades.';
+    return;
+  }
+  if (cmp.key !== key) return;
+  indexTexB.image.data.set(idxB);
+  indexTexB.needsUpdate = true;
+  const a = zoneScore(Z.index, sp), b = zoneScore(idxB, sp);
+  $('cmpA').textContent = `◀ ${fmtLongDay.format(new Date(dateA))}: ${Math.round(a * 100)}%`;
+  $('cmpB').textContent = `${fmtLongDay.format(new Date(dateB))}: ${Math.round(b * 100)}% ▶`;
+  const diff = Math.round((a - b) * 100);
+  $('cmpResult').textContent = Math.abs(diff) < 5 ? 'Condicions semblants.' : diff > 0 ? `Ara està ${diff} punts millor.` : `Ara està ${-diff} punts pitjor.`;
+}
+function placeCompare() {
+  const x = cmp.split * innerWidth;
+  $('cmpLine').style.left = x + 'px';
+  $('cmpA').style.left = Math.max(8, x - 12 - $('cmpA').offsetWidth) + 'px';
+  $('cmpB').style.left = Math.min(innerWidth - 8 - $('cmpB').offsetWidth, x + 12) + 'px';
+}
+$('compareBtn').addEventListener('click', () => {
+  cmp.on = !cmp.on;
+  $('cmp').hidden = !cmp.on;
+  $('compareBtn').classList.toggle('on', cmp.on);
+  cmp.key = '';
+  if (cmp.on) { updateCompare(); placeCompare(); }
+});
+$('cmpClose').addEventListener('click', () => $('compareBtn').click());
+$('cmpMode').addEventListener('change', updateCompare);
+(() => {
+  let drag = false;
+  $('cmpLine').addEventListener('pointerdown', e => { drag = true; $('cmpLine').setPointerCapture(e.pointerId); e.stopPropagation(); });
+  $('cmpLine').addEventListener('pointermove', e => { if (drag) { cmp.split = clamp(e.clientX / innerWidth, 0.1, 0.9); placeCompare(); } });
+  $('cmpLine').addEventListener('pointerup', () => { drag = false; });
+})();
+
+// ---------------------------------------------------------------------------
 // Mode sortida: ruta sobre el relleu amb perfil, temps, hores de llum i probabilitat
 // ---------------------------------------------------------------------------
 const route = { on: false, pts: [], samples: [], stats: null, flight: null };
@@ -3741,7 +3834,15 @@ function frame(now) {
   sun.position.set(sx + ld.x * 700, player.y + ld.y * 700, sz + ld.z * 700);
   // Ombres de prop només quan es camina (de lluny no es veuen).
   sun.castShadow = mode === 'walk';
-  renderer.render(scene, camera);
+  if (cmp.on) {
+    // Vista partida: a l'esquerra la data de la línia de temps, a la dreta la data de comparació.
+    const w = renderer.domElement.width / renderer.getPixelRatio(), h = renderer.domElement.height / renderer.getPixelRatio(), sx = Math.round(cmp.split * w);
+    renderer.setScissorTest(true);
+    renderer.setScissor(0, 0, sx, h); U.uIndexTex.value = indexTex; renderer.render(scene, camera);
+    renderer.setScissor(sx, 0, w - sx, h); U.uIndexTex.value = indexTexB; renderer.render(scene, camera);
+    renderer.setScissorTest(false);
+    U.uIndexTex.value = indexTex;
+  } else renderer.render(scene, camera);
   updateLabels();
   updatePlaceLabels(now);
   drawCompass();
