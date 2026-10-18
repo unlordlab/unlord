@@ -106,7 +106,7 @@ export const FITXES = {
   },
   llenega: {
     noms: 'Llenega negra',
-    llati: 'Hygrophorus latitatus',
+    llati: 'Hygrophorus latitabundus (sinònims: H. latitatus, H. limacinus)',
     comest: 'Comestible bo',
     descripcio: "Barret de 4 a 10 cm, gris bru fosc, viscós i brillant quan és humit. Làmines blanques, gruixudes i separades que baixen una mica pel peu. Peu blanc amb petites granulacions grises. Carn blanca, tova.",
     habitat: 'Pinedes de pi roig, pi negre i pinyer, sovint barrejades amb alzines; aguanta bé el fred.',
@@ -132,3 +132,13 @@ export const FITXES = {
 };
 
 export const ILUSTRACIONS = ILUS;
+
+// Fotos de Wikimedia Commons, desades a img/ (reduïdes, sense altres canvis).
+export const FOTOS = {
+  rovello: { peu: 'Pinetell (Lactarius deliciosus)', autor: 'Strobilomyces', llicencia: 'CC BY-SA 3.0', llicenciaUrl: 'https://creativecommons.org/licenses/by-sa/3.0/', font: 'https://commons.wikimedia.org/wiki/File:Lactarius_deliciosus_20100928w.JPG' },
+  cep: { peu: 'Boletus edulis', autor: 'Bernie', llicencia: 'domini públic', llicenciaUrl: null, font: 'https://commons.wikimedia.org/wiki/File:AD2009Sep13_Boletus_edulis_01.jpg' },
+  rossinyol: { peu: 'Cantharellus cibarius', autor: 'Andreas Kunze', llicencia: 'CC BY-SA 3.0', llicenciaUrl: 'https://creativecommons.org/licenses/by-sa/3.0/', font: 'https://commons.wikimedia.org/wiki/File:2007-07-14_Cantharellus_cibarius.jpg' },
+  camagroc: { peu: 'Craterellus lutescens', autor: 'Lucian Clanet', llicencia: 'CC BY 4.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/4.0/', font: 'https://commons.wikimedia.org/wiki/File:Craterellus_lutescens_01.jpg' },
+  llenega: { peu: 'Hygrophorus latitabundus', autor: 'Paffka', llicencia: 'CC BY-SA 3.0', llicenciaUrl: 'https://creativecommons.org/licenses/by-sa/3.0/', font: 'https://commons.wikimedia.org/wiki/File:Hygrophorus_latitabundus1.JPG' },
+  trompeta: { peu: 'Craterellus cornucopioides', autor: 'Holger Krisp', llicencia: 'CC BY 3.0', llicenciaUrl: 'https://creativecommons.org/licenses/by/3.0/', font: 'https://commons.wikimedia.org/wiki/File:Black_trumpet_Craterellus_cornucopioides.jpg' },
+};

@@ -9,7 +9,7 @@
 //
 // Coordenades del món: metres, x cap a l'est, z cap al sud, origen al centre de la zona.
 import * as THREE from 'three';
-import { FITXES, ILUSTRACIONS } from './fitxes.js';
+import { FITXES, ILUSTRACIONS, FOTOS } from './fitxes.js';
 
 // ---------------------------------------------------------------------------
 // Configuració
@@ -1597,7 +1597,12 @@ function openFitxa() {
   $('fComest').textContent = f.comest;
   const altres = f.noms.split(',').map(n => n.trim()).filter(n => n.toLowerCase() !== b.nom.toLowerCase());
   $('fNoms').textContent = altres.length ? 'També: ' + altres.join(', ') : '';
-  $('fIlus').innerHTML = ILUSTRACIONS[b.id];
+  const ft = FOTOS[b.id];
+  const lic = ft.llicenciaUrl ? `<a href="${ft.llicenciaUrl}" target="_blank" rel="noopener">${ft.llicencia}</a>` : ft.llicencia;
+  $('fIlus').innerHTML = `<img src="img/${b.id}.jpg" alt="${ft.peu}" loading="lazy">
+    <div class="credit"><i>${ft.peu}</i> · <a href="${ft.font}" target="_blank" rel="noopener">${ft.autor}</a>, ${lic}, via Wikimedia Commons</div>`;
+  // Si la foto no carrega, la il·lustració.
+  $('fIlus').querySelector('img').onerror = () => { $('fIlus').innerHTML = ILUSTRACIONS[b.id]; };
   $('fDesc').textContent = f.descripcio;
   $('fHab').textContent = f.habitat;
   $('fTemp').textContent = f.temporada;
@@ -1613,8 +1618,203 @@ $('openFitxa').addEventListener('click', openFitxa);
 $('closeFitxa').addEventListener('click', () => $('fitxa').close());
 $('fitxa').addEventListener('click', e => { if (e.target === $('fitxa')) $('fitxa').close(); });
 
-$('species').addEventListener('change', e => { state.species = +e.target.value; showSpeciesInfo(); refreshDay(true); });
+$('species').addEventListener('change', e => { state.species = +e.target.value; showSpeciesInfo(); refreshDay(true); scheduleWeek(); });
 $('zone').addEventListener('change', e => { state.zone = +e.target.value; loadZone(ZONES[state.zone]); });
+
+// ---------------------------------------------------------------------------
+// Millor dia de la setmana: per a cada dia de previsió, la mitjana de l'1% de millors cel·les
+// ---------------------------------------------------------------------------
+let weekTimer = 0, week = [];
+const fmtWeekday = new Intl.DateTimeFormat('ca-ES', { weekday: 'short', timeZone: 'Europe/Madrid' });
+const fmtLongDay = new Intl.DateTimeFormat('ca-ES', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Madrid' });
+function scheduleWeek() {
+  clearTimeout(weekTimer);
+  week = [];
+  $('week').innerHTML = '';
+  $('weekText').textContent = 'Calculant…';
+  weekTimer = setTimeout(computeWeek, 60);
+}
+function computeWeek() {
+  const W = Z.weather, sp = BOLETS[state.species];
+  const d0 = Math.floor(W.nowIdx / 24);
+  // Puntuació del dia: quina part del bosc adequat per a l'espècie té bones condicions
+  // (probabilitat respecte a l'hàbitat de cada cel·la), no només els millors racons.
+  const hab = new Float32Array(GRID * GRID);
+  let habSum = 0;
+  for (let k = 0; k < GRID * GRID; k++) { hab[k] = (sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k]; if (hab[k] >= 0.25) habSum += hab[k]; }
+  week = [];
+  for (let d = d0; d < W.nD && week.length < 7; d++) {
+    const idx = computeIndex(d, sp);
+    let sum = 0;
+    for (let k = 0; k < GRID * GRID; k++) if (hab[k] >= 0.25) sum += Math.min(1, idx[k] / hab[k]) * hab[k];
+    week.push({ d, score: habSum > 0 ? sum / habSum : 0, date: new Date(W.times[d * 24 + 12]) });
+  }
+  renderWeek();
+}
+function renderWeek() {
+  if (!week.length) return;
+  const best = week.reduce((a, b) => (b.score > a.score ? b : a));
+  const cur = Math.floor(state.t / 24);
+  $('week').innerHTML = week.map(w => `<button type="button" data-d="${w.d}" class="${w === best && best.score > 0.1 ? 'best' : ''} ${w.d === cur ? 'sel' : ''}"
+      title="${fmtLongDay.format(w.date)}: ${Math.round(w.score * 100)}%">
+      <span class="lbl">${Math.round(w.score * 100)}%</span>
+      <span class="bar" style="height:${Math.max(2, w.score * 44)}px"></span>
+      <span class="lbl">${fmtWeekday.format(w.date).replace('.', '')}</span></button>`).join('');
+  $('week').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    state.t = clamp(+b.dataset.d * 24 + 10, +timeInput.min, +timeInput.max);
+    timeInput.value = state.t;
+  }));
+  $('weekText').textContent = best.score > 0.1
+    ? `El millor dia per al ${BOLETS[state.species].nom.toLowerCase()} és ${fmtLongDay.format(best.date)}: el ${Math.round(best.score * 100)}% del seu bosc té bones condicions.`
+    : `Aquesta setmana no s'esperen bones condicions per al ${BOLETS[state.species].nom.toLowerCase()}.`;
+}
+
+// ---------------------------------------------------------------------------
+// Triar qualsevol punt de Catalunya en un mapa de l'ICGC
+// ---------------------------------------------------------------------------
+const pk = { lat: 41.75, lon: 1.65, z: 8, sel: null };
+let pkDirty = false, pkDrag = null;
+const pkCanvas = $('pkMap');
+const inCatalonia = (lat, lon) => lat > 40.5 && lat < 42.9 && lon > 0.15 && lon < 3.35;
+function pkDraw() {
+  pkDirty = false;
+  const dpr = window.devicePixelRatio || 1, W = pkCanvas.clientWidth, H = pkCanvas.clientHeight;
+  if (!W) return;
+  if (pkCanvas.width !== Math.round(W * dpr) || pkCanvas.height !== Math.round(H * dpr)) { pkCanvas.width = Math.round(W * dpr); pkCanvas.height = Math.round(H * dpr); }
+  const g = pkCanvas.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.fillStyle = '#e8e6df'; g.fillRect(0, 0, W, H);
+  const cx = lonToPx(pk.lon, pk.z), cy = latToPx(pk.lat, pk.z);
+  for (let ty = Math.floor((cy - H / 2) / 256); ty <= Math.floor((cy + H / 2) / 256); ty++)
+    for (let tx = Math.floor((cx - W / 2) / 256); tx <= Math.floor((cx + W / 2) / 256); tx++) {
+      const t = topoTile(pk.z, tx, ty);
+      if (t.ok) g.drawImage(t.img, tx * 256 - cx + W / 2, ty * 256 - cy + H / 2, 256, 256);
+    }
+  const toPx = (lat, lon) => [lonToPx(lon, pk.z) - cx + W / 2, latToPx(lat, pk.z) - cy + H / 2];
+  g.font = 'bold 11px ui-monospace, monospace'; g.textAlign = 'left';
+  for (const zn of ZONES) {
+    if (zn.id === 'punt') continue;
+    const [x, y] = toPx(zn.lat, zn.lon);
+    g.fillStyle = '#d9661f'; g.strokeStyle = '#fff'; g.lineWidth = 2;
+    g.beginPath(); g.arc(x, y, 5, 0, 7); g.fill(); g.stroke();
+    g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.9)'; g.strokeText(zn.nom, x + 8, y + 4);
+    g.fillStyle = '#4a2a10'; g.fillText(zn.nom, x + 8, y + 4);
+  }
+  if (pk.sel) {
+    const [x, y] = toPx(pk.sel.lat, pk.sel.lon);
+    const half = TEX * 2 ** (pk.z - Z_DET) / 2;
+    g.strokeStyle = '#1f6fd1'; g.lineWidth = 2; g.setLineDash([6, 4]);
+    g.strokeRect(x - half, y - half, half * 2, half * 2);
+    g.setLineDash([]);
+    g.fillStyle = '#1f6fd1'; g.beginPath(); g.arc(x, y, 6, 0, 7); g.fill();
+    g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke();
+  }
+}
+function pkSetSel(lat, lon) {
+  pk.sel = { lat, lon };
+  $('pkGo').disabled = false;
+  $('pkSel').textContent = `${lat.toFixed(4).replace('.', ',')}° N, ${lon.toFixed(4).replace('.', ',')}° E` +
+    (inCatalonia(lat, lon) ? '' : ' · fora de Catalunya: sense mapa de cobertes del sòl');
+  pkDirty = true;
+}
+pkCanvas.addEventListener('pointerdown', e => {
+  pkDrag = { x: e.clientX, y: e.clientY, cx: lonToPx(pk.lon, pk.z), cy: latToPx(pk.lat, pk.z), moved: false };
+  pkCanvas.setPointerCapture(e.pointerId);
+});
+pkCanvas.addEventListener('pointermove', e => {
+  if (!pkDrag) return;
+  const dx = e.clientX - pkDrag.x, dy = e.clientY - pkDrag.y;
+  if (Math.hypot(dx, dy) > 4) pkDrag.moved = true;
+  if (!pkDrag.moved) return;
+  pk.lon = pxToLon(pkDrag.cx - dx, pk.z);
+  pk.lat = pxToLat(pkDrag.cy - dy, pk.z);
+  pkDirty = true;
+});
+pkCanvas.addEventListener('pointerup', e => {
+  if (pkDrag && !pkDrag.moved) {
+    const r = pkCanvas.getBoundingClientRect();
+    const px = lonToPx(pk.lon, pk.z) - r.width / 2 + (e.clientX - r.left), py = latToPx(pk.lat, pk.z) - r.height / 2 + (e.clientY - r.top);
+    pkSetSel(pxToLat(py, pk.z), pxToLon(px, pk.z));
+  }
+  pkDrag = null;
+});
+const pkZoom = d => { pk.z = clamp(pk.z + d, 7, 14); pkDirty = true; };
+pkCanvas.addEventListener('wheel', e => { e.preventDefault(); pkZoom(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+$('pkIn').addEventListener('click', () => pkZoom(1));
+$('pkOut').addEventListener('click', () => pkZoom(-1));
+$('openPicker').addEventListener('click', () => {
+  const zn = ZONES[state.zone];
+  if (zn) { pk.lat = zn.lat; pk.lon = zn.lon; pk.z = 9; }
+  $('picker').showModal();
+  pkDirty = true;
+});
+$('closePicker').addEventListener('click', () => $('picker').close());
+$('pkGo').addEventListener('click', () => {
+  $('picker').close();
+  goToPoint(pk.sel.lat, pk.sel.lon);
+});
+function goToPoint(lat, lon) {
+  const zone = { id: 'punt', nom: `Punt triat (${lat.toFixed(3).replace('.', ',')}, ${lon.toFixed(3).replace('.', ',')})`, lat, lon };
+  let i = ZONES.findIndex(z => z.id === 'punt');
+  if (i < 0) { ZONES.push(zone); i = ZONES.length - 1; } else ZONES[i] = zone;
+  $('zone').innerHTML = ZONES.map((z, k) => `<option value="${k}">${z.id === 'punt' ? '📍 ' : ''}${z.nom}</option>`).join('');
+  state.zone = i;
+  $('zone').value = i;
+  return loadZone(zone);
+}
+(function pkLoop() { if ($('picker').open && pkDirty) pkDraw(); requestAnimationFrame(pkLoop); })();
+
+// ---------------------------------------------------------------------------
+// Enllaç per compartir: zona, bolet, data i vista a la URL
+// ---------------------------------------------------------------------------
+const fmtIsoParts = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Madrid' });
+function isoLocal(ms) {
+  const p = Object.fromEntries(fmtIsoParts.formatToParts(new Date(ms)).map(x => [x.type, x.value]));
+  return `${p.year}-${p.month}-${p.day}T${p.hour}`;
+}
+function stateParams() {
+  const p = new URLSearchParams();
+  for (const k of ['q', 'offline']) if (qs.has(k)) p.set(k, qs.get(k));
+  const zn = ZONES[state.zone];
+  if (zn.id === 'punt') { p.set('lat', zn.lat.toFixed(4)); p.set('lon', zn.lon.toFixed(4)); } else p.set('zona', zn.id);
+  p.set('bolet', BOLETS[state.species].id);
+  p.set('data', isoLocal(Z.weather.times[0] + Math.round(state.t) * 36e5));
+  p.set('vista', [player.x, player.y, player.z].map(v => Math.round(v)).join(',') + ',' + player.yaw.toFixed(2) + ',' + player.pitch.toFixed(2) + ',' + mode);
+  return p;
+}
+let lastUrl = '';
+function updateUrl() {
+  if (!Z.weather) return;
+  const url = '?' + stateParams().toString();
+  if (url !== lastUrl) { lastUrl = url; history.replaceState(null, '', url); }
+}
+$('share').addEventListener('click', async () => {
+  updateUrl();
+  const btn = $('share');
+  try { await navigator.clipboard.writeText(location.href); btn.textContent = 'Enllaç copiat ✓'; }
+  catch (e) { window.prompt('Copia aquest enllaç:', location.href); }
+  setTimeout(() => { btn.textContent = 'Copiar enllaç'; }, 1800);
+});
+// Es fa servir una sola vegada, en la primera càrrega.
+let pendingView = qs.get('vista'), pendingDate = qs.get('data');
+function applyPendingState() {
+  const W = Z.weather;
+  if (pendingDate) {
+    for (let i = W.firstShown; i < W.nH; i++) if (isoLocal(W.times[i]) === pendingDate) { state.t = i; timeInput.value = i; break; }
+    pendingDate = null;
+  }
+  if (pendingView) {
+    const v = pendingView.split(',');
+    const [x, y, z, yaw, pitch] = v.slice(0, 5).map(Number);
+    if ([x, y, z, yaw, pitch].every(Number.isFinite)) {
+      setMode(v[5] === 'walk' ? 'walk' : 'fly');
+      player.x = x; player.z = z; player.yaw = yaw; player.pitch = pitch;
+      player.y = v[5] === 'walk' ? heightAt(x, z) : Math.max(y, heightAt(x, z) + 3);
+      propsDirty = true;
+    }
+    pendingView = null;
+  }
+}
 let terrainStyle = 'orto';
 function setTerrainStyle(st) {
   if (st === 'orto' && !Z.hasOrtho) st = 'est';
@@ -1659,6 +1859,7 @@ function refreshDay(force = false) {
   buildMinimapBase();
   propsDirty = true;
   drawChart();
+  renderWeek();
 }
 
 function renderSpots() {
@@ -1946,7 +2147,7 @@ function topoTile(z, x, y) {
   if (!t) {
     t = { img: new Image(), ok: false };
     t.img.crossOrigin = 'anonymous';
-    t.img.onload = () => { t.ok = true; };
+    t.img.onload = () => { t.ok = true; if ($('picker').open) pkDirty = true; };
     t.img.src = TOPO_URL(z, x, y);
     topoCache.set(key, t);
     if (topoCache.size > 300) topoCache.delete(topoCache.keys().next().value);
@@ -2118,7 +2319,7 @@ function drawCompass() {
 const player = { x: 0, z: 0, y: 1500, yaw: 0, pitch: -0.3, vy: 0, step: 0 };
 const keys = new Set();
 addEventListener('keydown', e => {
-  if ($('fitxa').open) return;
+  if ($('fitxa').open || $('picker').open) return;
   if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
   keys.add(e.code);
   if (e.code === 'KeyF') setMode(mode === 'fly' ? 'walk' : 'fly');
@@ -2312,14 +2513,16 @@ async function loadZone(zone) {
   const target = state.spots[0] || { x: 0, z: 0 };
   const ang = 0.6;
   player.x = target.x + Math.sin(ang) * 3500; player.z = target.z + Math.cos(ang) * 3500;
-  player.x = clamp(player.x, Z.detOrigin[0], Z.detOrigin[0] + Z.detSize);
-  player.z = clamp(player.z, Z.detOrigin[1], Z.detOrigin[1] + Z.detSize);
+  player.x = clamp(player.x, Z.detOrigin[0] + 300, Z.detOrigin[0] + Z.detSize - 300);
+  player.z = clamp(player.z, Z.detOrigin[1] + 300, Z.detOrigin[1] + Z.detSize - 300);
   const th = heightAt(target.x, target.z);
   player.y = Math.max(heightAt(player.x, player.z) + 700, th + 900);
   player.yaw = Math.atan2(player.x - target.x, player.z - target.z);
   player.pitch = -Math.atan2(player.y - th, Math.hypot(player.x - target.x, player.z - target.z));
   setMode('fly');
   player.y = Math.max(heightAt(player.x, player.z) + 700, th + 900);
+  applyPendingState();
+  scheduleWeek();
   setLoading(1, 'Llest');
   setTimeout(() => $('loading').classList.add('off'), Z.sampleWeather ? 2500 : 300);
 }
@@ -2327,7 +2530,7 @@ async function loadZone(zone) {
 // ---------------------------------------------------------------------------
 // Bucle
 // ---------------------------------------------------------------------------
-let last = performance.now(), simTime = 0, frames = 0, fpsT = last, infoT = 0, minimapT = 0;
+let last = performance.now(), simTime = 0, frames = 0, fpsT = last, infoT = 0, minimapT = 0, urlT = 0;
 function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min(0.05, (now - last) / 1000);
@@ -2359,6 +2562,7 @@ function frame(now) {
   if (now - minimapT > 120) { minimapT = now; drawMinimap(); }
   infoT += dt;
   if (infoT > 0.25) { infoT = 0; updateInfo(); if (state.playing) drawChart(); }
+  if (now - urlT > 1500) { urlT = now; updateUrl(); }
 
   frames++;
   if (now - fpsT > 1000) {
@@ -2375,12 +2579,18 @@ function frame(now) {
 }
 
 showSpeciesInfo();
-const startZone = Math.max(0, ZONES.findIndex(z => z.id === qs.get('zona')));
-state.zone = startZone;
-$('zone').value = startZone;
 const startSp = BOLETS.findIndex(b => b.id === qs.get('bolet'));
 if (startSp >= 0) { state.species = startSp; $('species').value = startSp; showSpeciesInfo(); }
-loadZone(ZONES[startZone]).then(() => requestAnimationFrame(frame)).catch(e => console.error(e));
+const qLat = parseFloat(qs.get('lat')), qLon = parseFloat(qs.get('lon'));
+let firstLoad;
+if (Number.isFinite(qLat) && Number.isFinite(qLon)) firstLoad = goToPoint(qLat, qLon);
+else {
+  const startZone = Math.max(0, ZONES.findIndex(z => z.id === qs.get('zona')));
+  state.zone = startZone;
+  $('zone').value = startZone;
+  firstLoad = loadZone(ZONES[startZone]);
+}
+firstLoad.then(() => requestAnimationFrame(frame)).catch(e => console.error(e));
 
 // Ganxos per a proves automàtiques.
 window.__mico = { Z, state, player, setMode, goToSpot, teleport, heightAt };
