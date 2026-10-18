@@ -115,6 +115,7 @@ const U = {
   uCtxTex: { value: null }, uCtxOrigin: { value: new THREE.Vector2() }, uCtxSize: { value: 1 },
   uNoiseTex: { value: null },
   uDetN: { value: null }, uCtxN: { value: null },
+  uOrthoDet: { value: null }, uOrthoCtx: { value: null }, uUseOrtho: { value: 0 },
   uVegTex: { value: null },
   uIndexTex: { value: null },
   uShadowTex: { value: null },
@@ -277,6 +278,8 @@ const Z = {
   weather: null,                  // dades processades d'Open-Meteo
   index: null,                    // Float32Array GRID*GRID per al dia i bolet actuals
   sampleWeather: false,
+  geo: null,                      // { cx, cy, res }: conversió entre metres i lat/lon (zoom de detall)
+  places: [],                     // cims, pobles i refugis
 };
 
 function detWeightCPU(x, z) {
@@ -308,6 +311,13 @@ const latToPx = (lat, z) => { const s = Math.sin(lat * Math.PI / 180); return (0
 const pxToLon = (px, z) => px / (256 * 2 ** z) * 360 - 180;
 const pxToLat = (py, z) => { const n = Math.PI - 2 * Math.PI * py / (256 * 2 ** z); return 180 / Math.PI * Math.atan(Math.sinh(n)); };
 
+function worldToLatLon(x, z) {
+  return [pxToLat(Z.geo.cy + z / Z.geo.res, Z_DET), pxToLon(Z.geo.cx + x / Z.geo.res, Z_DET)];
+}
+function latLonToWorld(lat, lon) {
+  return [(lonToPx(lon, Z_DET) - Z.geo.cx) * Z.geo.res, (latToPx(lat, Z_DET) - Z.geo.cy) * Z.geo.res];
+}
+
 function loadImage(url) {
   return new Promise((res, rej) => {
     const img = new Image();
@@ -335,7 +345,55 @@ async function loadLayer(zone, z, onTile) {
   // Metres per píxel a la latitud de la zona (Mercator).
   const res = 40075016.686 * Math.cos(zone.lat * Math.PI / 180) / (256 * 2 ** z);
   const origin = [(tx0 * 256 - cx) * res, (ty0 * 256 - cy) * res];
-  return { H, origin, size: TEX * res, res };
+  return { H, origin, size: TEX * res, res, cx, cy };
+}
+
+// Ortofoto de l'ICGC: les mateixes teselles que el relleu, al zoom 14 (detall, ~7 m/píxel) i 11 (context).
+const ORTO_URL = (z, x, y) => `https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/orto/MON3857NW/${z}/${x}/${y}.png`;
+async function loadOrthoLayer(zone, zHeights, zOrtho, onTile) {
+  const k = 2 ** (zOrtho - zHeights), n = TILES * k;
+  const cx = lonToPx(zone.lon, zHeights), cy = latToPx(zone.lat, zHeights);
+  const tx0 = Math.round(cx / 256 - TILES / 2) * k, ty0 = Math.round(cy / 256 - TILES / 2) * k;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = n * 256;
+  const g = cv.getContext('2d', { willReadFrequently: true });
+  g.fillStyle = '#3a4030'; g.fillRect(0, 0, cv.width, cv.height);
+  let ok = 0;
+  const jobs = [];
+  for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+    jobs.push(loadImage(ORTO_URL(zOrtho, tx0 + i, ty0 + j)).then(img => { g.drawImage(img, i * 256, j * 256, 256, 256); ok++; }).catch(() => {}).finally(onTile));
+  }
+  await Promise.all(jobs);
+  if (ok < jobs.length * 0.5) throw new Error('Ortofoto incompleta');
+  return cv;
+}
+function canvasTexture(cv) {
+  const t = new THREE.CanvasTexture(cv);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  t.minFilter = THREE.LinearMipmapLinearFilter;
+  return t;
+}
+// Bosc segons l'ortofoto: píxels foscos i verdosos. El tipus de bosc continua sent estimat.
+function applyOrthoForest(cv) {
+  const small = document.createElement('canvas');
+  small.width = small.height = GRID;
+  const g = small.getContext('2d', { willReadFrequently: true });
+  g.drawImage(cv, 0, 0, GRID, GRID);
+  const d = g.getImageData(0, 0, GRID, GRID).data;
+  for (let k = 0; k < GRID * GRID; k++) {
+    const r = d[k * 4] / 255, gg = d[k * 4 + 1] / 255, b = d[k * 4 + 2] / 255;
+    const lum = 0.3 * r + 0.55 * gg + 0.15 * b;
+    const forest = smooth(0.42, 0.24, lum) * smooth(-0.04, 0.03, gg - r) * smooth(-0.06, 0.02, gg - b);
+    if (forest > 0.25 && Z.slope[k] < 1.2) {
+      Z.veg[k] = Z.vegTree[k];
+      Z.cover[k] = clamp(forest * 1.3);
+    } else {
+      if (VEG[Z.veg[k]].tree) Z.veg[k] = Z.gh[k] > 1700 ? VI.prat : Z.slope[k] > 0.9 ? VI.roca : VI.conreu;
+      Z.cover[k] = 0;
+    }
+  }
 }
 
 // Pendents (dh/dx, dh/dz) precalculades: així el fragment shader no ha de mostrejar el relleu 4 vegades.
@@ -527,6 +585,7 @@ function buildVegetation() {
   Z.gh = new Float32Array(GRID * GRID);
   Z.north = new Float32Array(GRID * GRID);
   Z.slope = new Float32Array(GRID * GRID);
+  Z.vegTree = new Uint8Array(GRID * GRID);
   const cell = Z.detSize / GRID;
   // Humitat de la zona: més fagedes cap al nord-est (Montseny, Garrotxa, Ripollès).
   const humidZone = clamp((z.lon - 1.0) / 1.5) * 0.7 + clamp((z.lat - 41.5) / 1.2) * 0.3;
@@ -557,9 +616,13 @@ function buildVegetation() {
     scores[VI.pinegre] = g(h, 2000, 280) * (0.15 + 0.95 * pyrenees) * (0.8 + 0.4 * n(8));
     scores[VI.prat] = g(h, 2450, 330) + (h > 2100 ? 0.35 : 0) + (h > 1500 && slope < 0.2 ? 0.25 * smooth(0.55, 0.75, n(10)) : 0);
     scores[VI.roca] = smooth(0.85, 1.25, slope) * 1.5 + smooth(2550, 2800, h);
-    let best = 0;
-    for (let t = 1; t < VEG.length; t++) if (scores[t] > scores[best]) best = t;
+    let best = 0, bestTree = VI.alzinar;
+    for (let t = 1; t < VEG.length; t++) {
+      if (scores[t] > scores[best]) best = t;
+      if (VEG[t].tree && scores[t] > scores[bestTree]) bestTree = t;
+    }
     Z.veg[k] = best;
+    Z.vegTree[k] = bestTree;
     const isForest = VEG[best].tree != null;
     // Clarianes i densitat del bosc.
     Z.cover[k] = isForest ? clamp(scores[best] * 1.4) * smooth(0.2, 0.42, n(11)) * (1 - smooth(0.9, 1.3, slope)) : 0;
@@ -844,6 +907,7 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
         uniform sampler2D uVegTex; uniform sampler2D uIndexTex; uniform float uOverlay; uniform vec3 uIdxColor;
         uniform vec3 uLightDir; uniform vec3 uLightCol; uniform float uNight;
         uniform sampler2D uDetN; uniform sampler2D uCtxN;
+        uniform sampler2D uOrthoDet; uniform sampler2D uOrthoCtx; uniform float uUseOrtho;
         ${GLSL_TERRAIN.replace('uniform sampler2D uNoiseTex;', '').replace('uniform vec2 uDetOrigin;', '').replace('uniform float uDetSize;', '')}
         vec3 heatRamp(float x) {
           vec3 c = mix(vec3(1.0, 0.95, 0.63), vec3(1.0, 0.7, 0.23), smoothstep(0.15, 0.45, x));
@@ -874,6 +938,12 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
         outCol = mix(outCol, vec3(0.2, 0.19, 0.17), smoothstep(2500.0, 2800.0, hh));
         alb = mix(outCol, alb, inDet);
         forest = mix(smoothstep(2100.0, 1700.0, hh) * 0.7, forest, inDet);
+        if (uUseOrtho > 0.5) {
+          vec3 oc = texture(uOrthoCtx, clamp((p - uCtxOrigin) / uCtxSize, 0.0, 1.0)).rgb;
+          vec3 od = texture(uOrthoDet, clamp(guv, 0.0, 1.0)).rgb;
+          // La foto ja porta ombres i llum; s'aclareix una mica perquè la il·luminació no la torni a enfosquir.
+          alb = mix(oc, od, inDet) * 1.15;
+        }
         // Textura de copes d'arbre i de terra.
         alb *= mix(0.85 + 0.3 * n2, 0.8 + 0.6 * n2 * n1, forest);
         float steep = 1.0 - smoothstep(0.55, 0.8, N.y);
@@ -1297,7 +1367,7 @@ function updateWeatherAndLight(dt) {
   U.uFogDensity.value = fogK * 0.012;
   U.uFogBase.value = gElev - 150;
   U.uFogFalloff.value = 1 / 160;
-  U.uHaze.value = 1 / 70000 + smooth(0, 4, wx.pr) / 2500 + fogK / 12000;
+  U.uHaze.value = 1 / 70000 + smooth(0, 4, wx.pr) / 5000 + fogK / 15000;
   U.uWet.value = clamp(precipOvercast + smooth(0.28, 0.4, wx.soilM) * 0.5);
 
   // Vent.
@@ -1388,7 +1458,16 @@ function showSpeciesInfo() {
 }
 $('species').addEventListener('change', e => { state.species = +e.target.value; showSpeciesInfo(); refreshDay(true); });
 $('zone').addEventListener('change', e => { state.zone = +e.target.value; loadZone(ZONES[state.zone]); });
-$('overlay').addEventListener('change', e => { U.uOverlay.value = e.target.checked ? 1 : 0; });
+let terrainStyle = 'orto';
+function setTerrainStyle(st) {
+  if (st === 'orto' && !Z.hasOrtho) st = 'est';
+  U.uUseOrtho.value = st === 'orto' ? 1 : 0;
+  $('styleOrto').classList.toggle('on', st === 'orto');
+  $('styleEst').classList.toggle('on', st !== 'orto');
+}
+$('styleOrto').addEventListener('click', () => { terrainStyle = 'orto'; setTerrainStyle('orto'); });
+$('styleEst').addEventListener('click', () => { terrainStyle = 'est'; setTerrainStyle('est'); });
+$('overlay').addEventListener('change', e => { U.uOverlay.value = e.target.checked ? 1 : 0; buildMinimapBase(); });
 $('toggleSide').addEventListener('click', e => { $('side').classList.toggle('collapsed'); e.target.textContent = $('side').classList.contains('collapsed') ? '+' : '−'; });
 
 const timeInput = $('time');
@@ -1420,6 +1499,7 @@ function refreshDay(force = false) {
   U.uSnowLine.value = agg.elev + (agg.tmean3 - 0.5) / -LAPSE;
   state.spots = bestSpots(Z.index);
   renderSpots();
+  buildMinimapBase();
   propsDirty = true;
   drawChart();
 }
@@ -1497,6 +1577,10 @@ function updateInfo() {
   $('wSoilM').textContent = `${fmtNum(soilM * 100)} %`;
   $('wFrost').textContent = String(frosts);
   $('wAlt').textContent = `${fmtNum(h)} m`;
+  const [lat, lon] = worldToLatLon(x, z);
+  $('wPos').textContent = `${lat.toFixed(4).replace('.', ',')}° N, ${Math.abs(lon).toFixed(4).replace('.', ',')}° ${lon >= 0 ? 'E' : 'O'}`;
+  $('gmaps').href = `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(5)},${lon.toFixed(5)}`;
+  $('wNear').textContent = nearestPlaceText(x, z);
 }
 
 // Gràfic: pluja diària (barres) i temperatura del sòl (línia), amb el dia actual marcat.
@@ -1542,6 +1626,332 @@ chart.addEventListener('click', e => {
   state.t = clamp(Math.round(((e.clientX - r.left) / r.width * n + d0) * 24 - 12), +timeInput.min, +timeInput.max);
   timeInput.value = state.t;
 });
+
+// ---------------------------------------------------------------------------
+// Orientació: noms de llocs (OpenStreetMap), minimapa i brúixola
+// ---------------------------------------------------------------------------
+const PLACE_KINDS = {
+  peak:    { maxDist: 26000, prio: 3 },
+  town:    { maxDist: 26000, prio: 4 },
+  village: { maxDist: 12000, prio: 2 },
+  hamlet:  { maxDist: 3500,  prio: 1 },
+  hut:     { maxDist: 5000,  prio: 1 },
+  saddle:  { maxDist: 4000,  prio: 0 },
+};
+
+// Cims, pobles i refugis de la zona amb l'API d'Overpass. Es desa al navegador per no repetir la consulta.
+async function loadPlaces(zone, token) {
+  const pad = 0.3 * Z.detSize;
+  const [n, w] = worldToLatLon(Z.detOrigin[0] - pad, Z.detOrigin[1] - pad);
+  const [sLat, e] = worldToLatLon(Z.detOrigin[0] + Z.detSize + pad, Z.detOrigin[1] + Z.detSize + pad);
+  const bbox = `${sLat.toFixed(4)},${w.toFixed(4)},${n.toFixed(4)},${e.toFixed(4)}`;
+  const key = 'micoclima-llocs-v1-' + zone.id;
+  let elements = null;
+  try { const c = JSON.parse(localStorage.getItem(key) || 'null'); if (c && Date.now() - c.t < 30 * 864e5) elements = c.el; } catch (e) { /* sense emmagatzematge */ }
+  if (!elements && !qs.has('offline')) {
+    const q = `[out:json][timeout:25];(
+      node["natural"="peak"]["name"](${bbox});
+      node["place"~"^(town|village|hamlet)$"]["name"](${bbox});
+      node["tourism"="alpine_hut"]["name"](${bbox});
+      node["natural"="saddle"]["name"](${bbox});
+    );out body;`;
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 25000);
+      const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ctrl.signal,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      clearTimeout(timer);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      elements = (await r.json()).elements || [];
+      try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), el: elements })); } catch (e) { /* ple o bloquejat */ }
+    } catch (e) {
+      console.warn('Overpass no disponible:', e);
+      elements = null;
+    }
+  }
+  if (token !== loadToken) return;
+  const places = [];
+  for (const el of elements || []) {
+    const t = el.tags || {};
+    const kind = t.natural === 'peak' ? 'peak' : t.natural === 'saddle' ? 'saddle' : t.tourism === 'alpine_hut' ? 'hut' : t.place;
+    if (!PLACE_KINDS[kind]) continue;
+    const [x, z] = latLonToWorld(el.lat, el.lon);
+    const ele = parseFloat(String(t.ele || '').replace(',', '.'));
+    places.push({ name: t['name:ca'] || t.name, kind, x, z, ele: isFinite(ele) ? ele : null });
+  }
+  // Sense noms (sense connexió): els cims més destacats que es veuen al relleu.
+  if (!places.some(p => p.kind === 'peak')) places.push(...autoPeaks());
+  // Els cims amb nom primer, de més alt a més baix; així en tenim pocs i importants.
+  places.sort((a, b) => PLACE_KINDS[b.kind].prio - PLACE_KINDS[a.kind].prio || (b.ele || 0) - (a.ele || 0));
+  Z.places = places.slice(0, 160);
+  renderPlaceLabels();
+}
+
+function autoPeaks() {
+  const out = [], cell = Z.detSize / GRID, R = 14;
+  for (let j = R; j < GRID - R; j += 2) for (let i = R; i < GRID - R; i += 2) {
+    const h = Z.gh[j * GRID + i];
+    let top = true, low = h;
+    for (let dj = -R; dj <= R && top; dj += 2) for (let di = -R; di <= R; di += 2) {
+      const v = Z.gh[(j + dj) * GRID + i + di];
+      if (v > h) { top = false; break; }
+      low = Math.min(low, v);
+    }
+    if (top && h - low > 150) out.push({ name: null, kind: 'peak', x: Z.detOrigin[0] + (i + 0.5) * cell, z: Z.detOrigin[1] + (j + 0.5) * cell, ele: Math.round(h) });
+  }
+  return out.sort((a, b) => b.ele - a.ele).slice(0, 12);
+}
+
+function renderPlaceLabels() {
+  const box = $('places');
+  box.innerHTML = '';
+  for (const p of Z.places) {
+    const el = document.createElement('div');
+    el.className = 'place ' + p.kind;
+    const icon = p.kind === 'peak' ? '▲ ' : p.kind === 'hut' ? '⌂ ' : p.kind === 'saddle' ? '◇ ' : '';
+    const ele = p.ele != null ? `${fmtNum(p.ele)} m` : '';
+    el.innerHTML = p.name ? `${icon}${p.name}${ele && p.kind !== 'town' && p.kind !== 'village' && p.kind !== 'hamlet' ? `<small>${ele}</small>` : ''}` : `${icon}${ele}`;
+    el.style.display = 'none';
+    box.appendChild(el);
+    p.el = el;
+    p.y = heightAt(p.x, p.z);
+    p.visible = false;
+  }
+  occlT = 0;
+}
+
+// Cada pocs fotogrames es comprova quins noms tapa el relleu; la posició a la pantalla s'actualitza sempre.
+let occlT = 0;
+const placeProj = new THREE.Vector3();
+function updatePlaceLabels(now) {
+  if (!Z.places.length) return;
+  const cam = camera.position;
+  if (now - occlT > 300) {
+    occlT = now;
+    for (const p of Z.places) {
+      const d = Math.hypot(p.x - cam.x, p.z - cam.z);
+      p.visible = d < PLACE_KINDS[p.kind].maxDist && d > 30;
+      if (!p.visible) continue;
+      // Línia de visió: si el terreny talla el raig, no es mostra.
+      const ty = p.y + 12, steps = 28;
+      for (let k = 1; k < steps; k++) {
+        const t = k / steps, x = cam.x + (p.x - cam.x) * t, z = cam.z + (p.z - cam.z) * t, y = cam.y + (ty - cam.y) * t;
+        if (heightAt(x, z) > y + 3) { p.visible = false; break; }
+      }
+    }
+  }
+  const boxes = [];
+  for (const p of Z.places) {
+    let show = p.visible;
+    if (show) {
+      placeProj.set(p.x, p.y + 12, p.z).project(camera);
+      show = placeProj.z < 1 && Math.abs(placeProj.x) < 1.05 && Math.abs(placeProj.y) < 1.05;
+    }
+    if (show) {
+      const sx = (placeProj.x + 1) / 2 * innerWidth, sy = (1 - placeProj.y) / 2 * innerHeight;
+      // Sense solapaments: els de més prioritat (que van primer) guanyen.
+      const w = ((p.name || '').length + 4) * 6.6, r = { l: sx - w / 2, r: sx + w / 2, t: sy - 30, b: sy };
+      if (boxes.some(o => r.l < o.r && r.r > o.l && r.t < o.b && r.b > o.t)) show = false;
+      else { boxes.push(r); p.el.style.left = sx + 'px'; p.el.style.top = sy + 'px'; }
+    }
+    p.el.style.display = show ? '' : 'none';
+  }
+}
+
+const DIRS = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'];
+function dirName(dx, dz) { return DIRS[Math.round(wrap(Math.atan2(dx, -dz), Math.PI * 2) / (Math.PI / 4)) % 8]; }
+function nearestPlaceText(x, z) {
+  let best = null, bd = Infinity;
+  for (const p of Z.places) {
+    if (!p.name || !['town', 'village', 'hamlet', 'hut'].includes(p.kind)) continue;
+    const d = Math.hypot(p.x - x, p.z - z);
+    if (d < bd) { bd = d; best = p; }
+  }
+  if (!best) return '—';
+  if (bd < 250) return best.name;
+  return `${best.name} (${bd < 1000 ? fmtNum(Math.round(bd / 10) * 10) + ' m' : fmtNum(bd / 1000, 1) + ' km'} al ${dirName(best.x - x, best.z - z)})`;
+}
+
+// Minimapa: relleu ombrejat, bosc i probabilitat; s'actualitza quan canvia el dia o el bolet.
+const minimap = $('minimap');
+const mmBase = document.createElement('canvas');
+mmBase.width = mmBase.height = GRID;
+const mmHeat = document.createElement('canvas');
+mmHeat.width = mmHeat.height = GRID;
+let mmMode = 'topo', mmZoom = 14;
+const topoCache = new Map();
+const TOPO_URL = (z, x, y) => `https://geoserveis.icgc.cat/servei/catalunya/mapa-base/wmts/topografic/MON3857NW/${z}/${x}/${y}.png`;
+function topoTile(z, x, y) {
+  const key = `${z}/${x}/${y}`;
+  let t = topoCache.get(key);
+  if (!t) {
+    t = { img: new Image(), ok: false };
+    t.img.crossOrigin = 'anonymous';
+    t.img.onload = () => { t.ok = true; };
+    t.img.src = TOPO_URL(z, x, y);
+    topoCache.set(key, t);
+    if (topoCache.size > 300) topoCache.delete(topoCache.keys().next().value);
+  }
+  return t;
+}
+function setMinimapMode(m) {
+  mmMode = m;
+  $('mmTopo').classList.toggle('on', m === 'topo');
+  $('mmZone').classList.toggle('on', m === 'zone');
+  $('mmIn').disabled = $('mmOut').disabled = m !== 'topo';
+  lastScale = '';
+}
+$('mmTopo').addEventListener('click', () => setMinimapMode('topo'));
+$('mmZone').addEventListener('click', () => setMinimapMode('zone'));
+$('mmIn').addEventListener('click', () => { mmZoom = Math.min(16, mmZoom + 1); lastScale = ''; });
+$('mmOut').addEventListener('click', () => { mmZoom = Math.max(11, mmZoom - 1); lastScale = ''; });
+let lastScale = '';
+function setScale(metersPerPx) {
+  const km = [0.25, 0.5, 1, 2, 5, 10].find(k => k * 1000 / metersPerPx > 40) || 10;
+  const txt = `${Math.round(km * 1000 / metersPerPx)}|${km}`;
+  if (txt === lastScale) return;
+  lastScale = txt;
+  $('scale').innerHTML = `<span style="display:inline-block;width:${Math.round(km * 1000 / metersPerPx)}px;border-bottom:2px solid #ccc;margin-right:4px;vertical-align:middle"></span>${km < 1 ? km * 1000 + ' m' : km + ' km'}`;
+}
+function buildMinimapBase() {
+  const g = mmBase.getContext('2d'), img = g.createImageData(GRID, GRID), d = img.data;
+  const cell = Z.detSize / GRID, vd = vegTex.image.data;
+  const ramp = x => {
+    const m = (a, b, t) => a.map((v, i) => v + (b[i] - v) * clamp(t));
+    let c = m([255, 242, 160], [255, 179, 58], smooth(0.15, 0.45, x));
+    c = m(c, [240, 90, 28], smooth(0.45, 0.7, x));
+    return m(c, [176, 16, 63], smooth(0.7, 0.95, x));
+  };
+  for (let j = 0; j < GRID; j++) for (let i = 0; i < GRID; i++) {
+    const k = j * GRID + i;
+    const hL = Z.gh[j * GRID + Math.max(i - 1, 0)], hR = Z.gh[j * GRID + Math.min(i + 1, GRID - 1)];
+    const hU = Z.gh[Math.max(j - 1, 0) * GRID + i], hD = Z.gh[Math.min(j + 1, GRID - 1) * GRID + i];
+    // Llum des del nord-oest, com als mapes topogràfics.
+    const shade = clamp(0.78 + ((hL - hR) + (hU - hD)) / (2 * cell) * 0.9, 0.25, 1.35);
+    let c = [vd[k * 4] * 1.5, vd[k * 4 + 1] * 1.5, vd[k * 4 + 2] * 1.5].map(v => v * shade);
+    if (Z.gh[k] <= 0.5) c = [40, 70, 100];
+    const idx = Z.index ? Z.index[k] : 0;
+    if (idx > 0.08 && U.uOverlay.value) { const r = ramp(idx), a = smooth(0.08, 0.3, idx) * 0.75; c = c.map((v, n) => v + (r[n] * shade - v) * a); }
+    d[k * 4] = c[0]; d[k * 4 + 1] = c[1]; d[k * 4 + 2] = c[2]; d[k * 4 + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  // Només la probabilitat, transparent on és baixa: va a sobre del mapa topogràfic.
+  const gh = mmHeat.getContext('2d'), hi = gh.createImageData(GRID, GRID), hd = hi.data;
+  for (let k = 0; k < GRID * GRID; k++) {
+    const idx = Z.index ? Z.index[k] : 0;
+    if (idx <= 0.08) continue;
+    const r = ramp(idx);
+    hd[k * 4] = r[0]; hd[k * 4 + 1] = r[1]; hd[k * 4 + 2] = r[2]; hd[k * 4 + 3] = Math.round(smooth(0.08, 0.3, idx) * 170);
+  }
+  gh.putImageData(hi, 0, 0);
+  lastScale = '';
+}
+function drawMinimap() {
+  if (!Z.gh || minimap.clientWidth === 0) return;
+  const dpr = window.devicePixelRatio || 1, W = minimap.clientWidth;
+  if (minimap.width !== Math.round(W * dpr)) { minimap.width = minimap.height = Math.round(W * dpr); }
+  const g = minimap.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.imageSmoothingEnabled = true;
+  let toPx;
+  if (mmMode === 'topo') {
+    // Mapa topogràfic de l'ICGC centrat en tu (1 píxel lògic de tesela = 1 píxel CSS).
+    const k = 2 ** (mmZoom - Z_DET), resZ = Z.geo.res / k;
+    const gx = (Z.geo.cx + player.x / Z.geo.res) * k, gy = (Z.geo.cy + player.z / Z.geo.res) * k;
+    g.fillStyle = '#e8e6df'; g.fillRect(0, 0, W, W);
+    for (let ty = Math.floor((gy - W / 2) / 256); ty <= Math.floor((gy + W / 2) / 256); ty++)
+      for (let tx = Math.floor((gx - W / 2) / 256); tx <= Math.floor((gx + W / 2) / 256); tx++) {
+        const t = topoTile(mmZoom, tx, ty);
+        if (t.ok) g.drawImage(t.img, tx * 256 - gx + W / 2, ty * 256 - gy + W / 2, 256, 256);
+      }
+    toPx = (x, z) => [W / 2 + (x - player.x) / resZ, W / 2 + (z - player.z) / resZ];
+    if (U.uOverlay.value) {
+      const [ox, oy] = toPx(Z.detOrigin[0], Z.detOrigin[1]);
+      g.globalAlpha = 0.75;
+      g.drawImage(mmHeat, ox, oy, Z.detSize / resZ, Z.detSize / resZ);
+      g.globalAlpha = 1;
+    }
+    setScale(resZ);
+  } else {
+    g.drawImage(mmBase, 0, 0, W, W);
+    toPx = (x, z) => [(x - Z.detOrigin[0]) / Z.detSize * W, (z - Z.detOrigin[1]) / Z.detSize * W];
+    setScale(Z.detSize / W);
+  }
+  g.font = '9px ui-monospace, monospace';
+  g.textAlign = 'center';
+  for (const p of mmMode === 'zone' ? Z.places : []) {
+    if (!['peak', 'town', 'village'].includes(p.kind)) continue;
+    const [px, py] = toPx(p.x, p.z);
+    if (px < 0 || py < 0 || px > W || py > W) continue;
+    g.fillStyle = '#fff'; g.strokeStyle = 'rgba(0,0,0,.7)'; g.lineWidth = 2.5;
+    if (p.kind === 'peak') { g.beginPath(); g.moveTo(px, py - 3); g.lineTo(px + 3, py + 2); g.lineTo(px - 3, py + 2); g.closePath(); g.stroke(); g.fill(); }
+    else { g.beginPath(); g.arc(px, py, p.kind === 'town' ? 3 : 2, 0, 7); g.stroke(); g.fill(); }
+    if (p.name && (p.kind !== 'peak' || p.ele > 0)) { g.strokeText(p.name, px, py - 5); g.fillText(p.name, px, py - 5); }
+  }
+  const sp = BOLETS[state.species];
+  state.spots.forEach((s, i) => {
+    const [px, py] = toPx(s.x, s.z);
+    g.fillStyle = sp.color; g.strokeStyle = '#fff'; g.lineWidth = 1.5;
+    g.beginPath(); g.arc(px, py, 6, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = '#fff'; g.font = 'bold 8px ui-monospace, monospace'; g.fillText(String(i + 1), px, py + 3);
+  });
+  // Tu: punt amb el con de visió.
+  let [px, py] = toPx(player.x, player.z);
+  const outside = px < 0 || py < 0 || px > W || py > W;
+  px = clamp(px, 6, W - 6); py = clamp(py, 6, W - 6);
+  const a = Math.atan2(-Math.sin(player.yaw), -Math.cos(player.yaw)), half = THREE.MathUtils.degToRad(camera.fov * camera.aspect / 2);
+  g.fillStyle = 'rgba(255,255,255,.22)';
+  g.beginPath(); g.moveTo(px, py); g.arc(px, py, 34, a - Math.min(half, 1.2), a + Math.min(half, 1.2)); g.closePath(); g.fill();
+  g.fillStyle = outside ? '#999' : '#3fa9ff'; g.strokeStyle = '#fff'; g.lineWidth = 2;
+  g.beginPath(); g.arc(px, py, 5, 0, 7); g.fill(); g.stroke();
+  g.fillStyle = '#fff'; g.font = 'bold 10px ui-monospace, monospace';
+  g.strokeStyle = 'rgba(0,0,0,.7)'; g.lineWidth = 2.5; g.strokeText('N', W - 10, 13); g.fillText('N', W - 10, 13);
+}
+minimap.addEventListener('click', e => {
+  const r = minimap.getBoundingClientRect();
+  const u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height;
+  let x, z;
+  if (mmMode === 'topo') {
+    const resZ = Z.geo.res / 2 ** (mmZoom - Z_DET);
+    x = player.x + (u - 0.5) * r.width * resZ; z = player.z + (v - 0.5) * r.height * resZ;
+  } else { x = Z.detOrigin[0] + u * Z.detSize; z = Z.detOrigin[1] + v * Z.detSize; }
+  if (mode === 'fly') teleport(x, z, Math.max(150, player.y - heightAt(player.x, player.z)));
+  else teleport(x, z, 0);
+});
+
+// Brúixola: cap on mires, amb els punts cardinals i la direcció dels millors llocs.
+const compass = $('compass');
+function drawCompass() {
+  const dpr = window.devicePixelRatio || 1, W = compass.clientWidth, H = compass.clientHeight;
+  if (!W) return;
+  if (compass.width !== Math.round(W * dpr)) { compass.width = Math.round(W * dpr); compass.height = Math.round(H * dpr); }
+  const g = compass.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, W, H);
+  const heading = THREE.MathUtils.radToDeg(wrap(-player.yaw, Math.PI * 2)), span = 120;
+  const X = deg => W / 2 + ((((deg - heading) % 360) + 540) % 360 - 180) / span * W;
+  const grad = g.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, 'rgba(0,0,0,0)'); grad.addColorStop(0.15, 'rgba(0,0,0,.35)'); grad.addColorStop(0.85, 'rgba(0,0,0,.35)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = grad; g.fillRect(0, 0, W, H);
+  g.textAlign = 'center';
+  for (let d = 0; d < 360; d += 15) {
+    const x = X(d);
+    if (x < 0 || x > W) continue;
+    const card = d % 45 === 0;
+    g.fillStyle = `rgba(255,255,255,${card ? 0.95 : 0.45})`;
+    g.fillRect(x - 0.5, H - (card ? 9 : 5), 1, card ? 9 : 5);
+    if (card) { g.font = (d % 90 === 0 ? 'bold 12px' : '10px') + ' ui-monospace, monospace'; g.fillText(DIRS[d / 45], x, 13); }
+  }
+  const sp = BOLETS[state.species];
+  state.spots.forEach((s, i) => {
+    const deg = THREE.MathUtils.radToDeg(wrap(Math.atan2(s.x - player.x, -(s.z - player.z)), Math.PI * 2));
+    const x = X(deg);
+    if (x < 6 || x > W - 6) return;
+    g.fillStyle = sp.color; g.beginPath(); g.arc(x, H - 13, 5, 0, 7); g.fill();
+    g.fillStyle = '#fff'; g.font = 'bold 8px ui-monospace, monospace'; g.fillText(String(i + 1), x, H - 10);
+  });
+  g.fillStyle = '#fff'; g.beginPath(); g.moveTo(W / 2 - 5, H); g.lineTo(W / 2 + 5, H); g.lineTo(W / 2, H - 6); g.fill();
+}
 
 // ---------------------------------------------------------------------------
 // Càmera: volar i caminar
@@ -1683,6 +2093,9 @@ async function loadZone(zone) {
   Z.det = det.H; Z.ctx = ctx.H;
   Z.detOrigin = det.origin; Z.detSize = det.size;
   Z.ctxOrigin = ctx.origin; Z.ctxSize = ctx.size;
+  Z.geo = { cx: det.cx, cy: det.cy, res: det.res };
+  Z.places = [];
+  renderPlaceLabels();
   if (U.uDetTex.value) U.uDetTex.value.dispose();
   if (U.uCtxTex.value) U.uCtxTex.value.dispose();
   for (const k of ['uDetN', 'uCtxN']) if (U[k].value) U[k].value.dispose();
@@ -1697,6 +2110,23 @@ async function loadZone(zone) {
   setLoading(0.66, 'Estimant el bosc…');
   await new Promise(r => setTimeout(r, 20));
   buildVegetation();
+  setLoading(0.7, 'Descarregant l\'ortofoto de l\'ICGC…');
+  try {
+    let n = 0;
+    const tick2 = () => { n++; setLoading(0.7 + n / 80 * 0.05); };
+    const [od, oc] = await Promise.all([loadOrthoLayer(zone, Z_DET, 14, tick2), loadOrthoLayer(zone, Z_CTX, Z_CTX, tick2)]);
+    if (token !== loadToken) return;
+    for (const k of ['uOrthoDet', 'uOrthoCtx']) if (U[k].value) U[k].value.dispose();
+    U.uOrthoDet.value = canvasTexture(od);
+    U.uOrthoCtx.value = canvasTexture(oc);
+    applyOrthoForest(od);
+    Z.hasOrtho = true;
+  } catch (e) {
+    console.warn('Sense ortofoto:', e);
+    Z.hasOrtho = false;
+  }
+  setTerrainStyle(Z.hasOrtho && terrainStyle === 'orto' ? 'orto' : 'est');
+  loadPlaces(zone, token);
   setLoading(0.75, 'Descarregant el temps d\'Open-Meteo…');
   await loadWeather();
   if (token !== loadToken) return;
@@ -1729,7 +2159,7 @@ async function loadZone(zone) {
 // ---------------------------------------------------------------------------
 // Bucle
 // ---------------------------------------------------------------------------
-let last = performance.now(), simTime = 0, frames = 0, fpsT = last, infoT = 0;
+let last = performance.now(), simTime = 0, frames = 0, fpsT = last, infoT = 0, minimapT = 0;
 function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min(0.05, (now - last) / 1000);
@@ -1756,6 +2186,9 @@ function frame(now) {
   sun.castShadow = mode === 'walk';
   renderer.render(scene, camera);
   updateLabels();
+  updatePlaceLabels(now);
+  drawCompass();
+  if (now - minimapT > 120) { minimapT = now; drawMinimap(); }
   infoT += dt;
   if (infoT > 0.25) { infoT = 0; updateInfo(); if (state.playing) drawChart(); }
 
