@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nieve</title>
+<meta name="description" content="Simulación de nieve en tiempo real en un entorno de alta montaña, renderizada con WebGL.">
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root {
+    --panel-bg: rgba(14, 20, 30, 0.62);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --text: #e8eef6;
+    --muted: #9aa8ba;
+    --accent: #bfe3ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1018; color: var(--text);
+    font: 13px/1.4 "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none; cursor: grab; }
+  canvas:active { cursor: grabbing; }
+
+  .title { position: fixed; left: 20px; top: 18px; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,.6), 0 0 18px rgba(0,0,0,.45); }
+  .title h1 { margin: 0; font-size: 15px; letter-spacing: .32em; font-weight: 400; text-transform: uppercase; }
+  .title p { margin: 4px 0 0; color: #d3dceb; font-size: 11px; letter-spacing: .08em; }
+
+  .panel { position: fixed; right: 16px; top: 16px; width: 270px; max-height: calc(100vh - 32px); overflow: auto;
+    background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 10px;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 12px 14px 6px; }
+  .panel.hidden .body { display: none; }
+  .panel header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .panel header span { letter-spacing: .2em; text-transform: uppercase; font-size: 11px; color: var(--muted); }
+  .panel button { background: none; border: 1px solid var(--panel-border); color: var(--text); border-radius: 6px;
+    font: inherit; font-size: 11px; padding: 3px 8px; cursor: pointer; }
+  .panel button:hover { border-color: var(--accent); }
+  .group { border-top: 1px solid var(--panel-border); padding: 8px 0 4px; }
+  .group h2 { margin: 0 0 6px; font-size: 10px; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+  .row { display: grid; grid-template-columns: 1fr 44px; gap: 4px 8px; align-items: center; margin-bottom: 6px; }
+  .row label { grid-column: 1 / -1; display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+  .row label output { color: var(--text); }
+  .row input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 0; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 8px; }
+  .hint { position: fixed; left: 20px; bottom: 16px; color: #d3dceb; text-shadow: 0 1px 3px rgba(0,0,0,.7); font-size: 11px; pointer-events: none; }
+  .fps { position: fixed; left: 20px; bottom: 34px; color: #d3dceb; text-shadow: 0 1px 3px rgba(0,0,0,.7); font-size: 11px; pointer-events: none; }
+  .error { position: fixed; inset: 0; display: none; place-items: center; text-align: center; padding: 16px; }
+
+  @media (max-width: 600px) {
+    .panel { left: 16px; right: 16px; width: auto; top: auto; bottom: 16px; max-height: 45vh; }
+    .hint, .fps { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div class="title">
+  <h1>Nieve</h1>
+  <p>alta montaña · tiempo real</p>
+</div>
+
+<div class="panel" id="panel">
+  <header><span>Parámetros</span><button id="toggle" type="button">ocultar</button></header>
+  <div class="body">
+    <div class="presets">
+      <button type="button" data-preset="calma">Calma</button>
+      <button type="button" data-preset="nevada">Nevada</button>
+      <button type="button" data-preset="ventisca">Ventisca</button>
+      <button type="button" data-preset="atardecer">Atardecer</button>
+      <button type="button" data-preset="noche">Noche</button>
+    </div>
+    <div class="group" id="g-snow"><h2>Nevada</h2></div>
+    <div class="group" id="g-wind"><h2>Viento</h2></div>
+    <div class="group" id="g-terrain"><h2>Terreno</h2></div>
+    <div class="group" id="g-light"><h2>Luz y atmósfera</h2></div>
+  </div>
+</div>
+
+<div class="fps" id="fps"></div>
+<div class="hint">arrastra para girar · rueda para acercar</div>
+<div class="error" id="error"><p>Este navegador no soporta WebGL2.</p></div>
+
+<script>
+(() => {
+'use strict';
+
+// ---------------------------------------------------------------------------
+// Parámetros
+// ---------------------------------------------------------------------------
+const params = {
+  intensity:   { g: 'g-snow',    label: 'Intensidad',        min: 0,    max: 1,    step: 0.01, v: 0.55 },
+  flakeSize:   { g: 'g-snow',    label: 'Tamaño de copo',    min: 0.3,  max: 2.5,  step: 0.01, v: 1.0 },
+  fallSpeed:   { g: 'g-snow',    label: 'Velocidad de caída', min: 0.1, max: 3,    step: 0.01, v: 1.0 },
+  accumulation:{ g: 'g-snow',    label: 'Acumulación',       min: 0,    max: 1,    step: 0.01, v: 0.7 },
+  windSpeed:   { g: 'g-wind',    label: 'Velocidad',         min: 0,    max: 1,    step: 0.01, v: 0.25 },
+  windDir:     { g: 'g-wind',    label: 'Dirección (°)',     min: 0,    max: 360,  step: 1,    v: 60 },
+  turbulence:  { g: 'g-wind',    label: 'Turbulencia',       min: 0,    max: 1,    step: 0.01, v: 0.35 },
+  drift:       { g: 'g-wind',    label: 'Ventisca en suelo', min: 0,    max: 1,    step: 0.01, v: 0.3 },
+  height:      { g: 'g-terrain', label: 'Altura de picos',   min: 0.4,  max: 1.8,  step: 0.01, v: 1.0 },
+  roughness:   { g: 'g-terrain', label: 'Rugosidad',         min: 0.3,  max: 0.65, step: 0.005, v: 0.5 },
+  seed:        { g: 'g-terrain', label: 'Semilla',           min: 0,    max: 50,   step: 1,    v: 7 },
+  sunTime:     { g: 'g-light',   label: 'Hora del sol',      min: 0,    max: 1,    step: 0.001, v: 0.38 },
+  sunAzimuth:  { g: 'g-light',   label: 'Azimut del sol (°)', min: 0,   max: 360,  step: 1,    v: 210 },
+  fog:         { g: 'g-light',   label: 'Niebla',            min: 0,    max: 1,    step: 0.01, v: 0.35 },
+  exposure:    { g: 'g-light',   label: 'Exposición',        min: 0.3,  max: 2,    step: 0.01, v: 1.0 },
+};
+
+const presets = {
+  calma:     { intensity: 0.15, flakeSize: 1.3, fallSpeed: 0.6, windSpeed: 0.05, turbulence: 0.2, drift: 0.05, fog: 0.15, sunTime: 0.42, exposure: 1.0 },
+  nevada:    { intensity: 0.6,  flakeSize: 1.0, fallSpeed: 1.0, windSpeed: 0.25, turbulence: 0.35, drift: 0.3, fog: 0.4, sunTime: 0.38, exposure: 1.0 },
+  ventisca:  { intensity: 1.0,  flakeSize: 0.7, fallSpeed: 1.8, windSpeed: 0.95, turbulence: 0.8, drift: 0.9, fog: 0.85, sunTime: 0.35, exposure: 1.1 },
+  atardecer: { intensity: 0.2,  flakeSize: 1.2, fallSpeed: 0.7, windSpeed: 0.15, turbulence: 0.3, drift: 0.15, fog: 0.25, sunTime: 0.08, exposure: 1.15 },
+  noche:     { intensity: 0.4,  flakeSize: 1.1, fallSpeed: 0.8, windSpeed: 0.2,  turbulence: 0.3, drift: 0.2, fog: 0.3, sunTime: 0.0, exposure: 1.3 },
+};
+
+const outputs = {};
+const inputs = {};
+for (const [key, p] of Object.entries(params)) {
+  const row = document.createElement('div');
+  row.className = 'row';
+  const id = 'p-' + key;
+  row.innerHTML = `<label for="${id}">${p.label}<output></output></label>
+    <input id="${id}" type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.v}">`;
+  document.getElementById(p.g).appendChild(row);
+  const input = row.querySelector('input');
+  const out = row.querySelector('output');
+  const fmt = () => { out.textContent = p.step >= 1 ? String(Math.round(p.v)) : p.v.toFixed(2); };
+  input.addEventListener('input', () => { p.v = parseFloat(input.value); fmt(); });
+  fmt();
+  inputs[key] = input; outputs[key] = fmt;
+}
+
+function setParam(key, v) { params[key].v = v; inputs[key].value = v; outputs[key](); }
+
+// Las transiciones entre ajustes se interpolan para que el cambio se vea fluido.
+let tween = null;
+document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => {
+  const target = presets[b.dataset.preset];
+  const from = {};
+  for (const k in target) from[k] = params[k].v;
+  tween = { from, target, t0: performance.now(), dur: 1500 };
+}));
+function updateTween(now) {
+  if (!tween) return;
+  let t = Math.min(1, (now - tween.t0) / tween.dur);
+  const e = t * t * (3 - 2 * t);
+  for (const k in tween.target) setParam(k, tween.from[k] + (tween.target[k] - tween.from[k]) * e);
+  if (t >= 1) tween = null;
+}
+
+const panel = document.getElementById('panel');
+document.getElementById('toggle').addEventListener('click', e => {
+  panel.classList.toggle('hidden');
+  e.target.textContent = panel.classList.contains('hidden') ? 'mostrar' : 'ocultar';
+});
+
+// ---------------------------------------------------------------------------
+// WebGL
+// ---------------------------------------------------------------------------
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl2', { antialias: false, alpha: false, powerPreference: 'high-performance' });
+if (!gl) { document.getElementById('error').style.display = 'grid'; return; }
+
+function compile(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) + '\n' + src);
+  return s;
+}
+function program(vs, fs) {
+  const p = gl.createProgram();
+  gl.attachShader(p, compile(gl.VERTEX_SHADER, vs));
+  gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  const u = {};
+  const n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < n; i++) { const name = gl.getActiveUniform(p, i).name; u[name] = gl.getUniformLocation(p, name); }
+  return { p, u };
+}
+
+// Ruido y FBM compartidos entre el paso de altura y el de render.
+const NOISE = `
+float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
+// Ruido de valor con derivadas analíticas (al estilo de Íñigo Quílez).
+vec3 noised(vec2 x) {
+  vec2 i = floor(x), f = fract(x);
+  vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+  vec2 du = 30.0 * f * f * (f * (f - 2.0) + 1.0);
+  float a = hash12(i), b = hash12(i + vec2(1, 0)), c = hash12(i + vec2(0, 1)), d = hash12(i + vec2(1, 1));
+  float k1 = b - a, k2 = c - a, k4 = a - b - c + d;
+  return vec3(a + k1 * u.x + k2 * u.y + k4 * u.x * u.y, du * vec2(k1 + k4 * u.y, k2 + k4 * u.x));
+}
+float vnoise(vec2 x) { return noised(x).x; }
+`;
+
+const QUAD_VS = `#version 300 es
+in vec2 aPos; out vec2 vUv;
+void main() { vUv = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }`;
+
+// Paso 1: mapa de alturas del terreno (erosión aproximada con FBM ponderado por derivadas).
+const HEIGHT_FS = `#version 300 es
+precision highp float;
+in vec2 vUv; out vec4 o;
+uniform float uSeed, uRough, uHeight;
+${NOISE}
+void main() {
+  vec2 p = (vUv - 0.5) * 5.0 + uSeed * 13.17;
+  float a = 0.0, b = 1.0; vec2 d = vec2(0);
+  mat2 m = mat2(0.8, -0.6, 0.6, 0.8);
+  for (int i = 0; i < 9; i++) {
+    vec3 n = noised(p);
+    d += n.yz;
+    a += b * n.x / (1.0 + dot(d, d));
+    b *= uRough; p = m * p * 2.0;
+  }
+  // Cordillera central y caída hacia los bordes del mapa.
+  vec2 c = vUv - 0.5;
+  float ridge = 1.0 - smoothstep(0.0, 0.62, length(c * vec2(1.0, 1.35)));
+  float h = a * (0.35 + 0.9 * ridge) * uHeight;
+  h += 0.25 * ridge * uHeight;
+  o = vec4(h, 0, 0, 1);
+}`;
+
+// Paso 2: escena con raymarching del terreno, cielo, sol y niebla.
+const SCENE_FS = `#version 300 es
+precision highp float;
+in vec2 vUv; out vec4 o;
+uniform sampler2D uHeightMap;
+uniform vec2 uRes;
+uniform vec3 uCamPos, uCamFwd, uCamRight, uCamUp;
+uniform vec3 uSunDir, uSunCol, uSkyZen, uSkyHor;
+uniform float uTime, uAccum, uFog, uExposure, uIntensity, uDrift, uFlake, uFall, uTurb, uNight;
+uniform vec2 uWind;
+${NOISE}
+const float WORLD = 40.0;   // el mapa de alturas cubre [-WORLD/2, WORLD/2]
+const float HSCALE = 7.5;
+
+float terrain(vec2 xz) {
+  vec2 uv = xz / WORLD + 0.5;
+  float h = texture(uHeightMap, uv).r * HSCALE;
+  // Detalle fino procedural para que de cerca no se vea la textura.
+  h += (vnoise(xz * 2.3) - 0.5) * 0.12 + (vnoise(xz * 7.1) - 0.5) * 0.03;
+  float edge = smoothstep(0.5, 0.42, max(abs(uv.x - 0.5), abs(uv.y - 0.5)));
+  return mix(-0.5, h, edge);
+}
+vec3 normalAt(vec2 xz, float t) {
+  float e = max(0.01, 0.0015 * t);
+  return normalize(vec3(terrain(xz - vec2(e, 0)) - terrain(xz + vec2(e, 0)), 2.0 * e,
+                        terrain(xz - vec2(0, e)) - terrain(xz + vec2(0, e))));
+}
+float march(vec3 ro, vec3 rd, out float steps) {
+  float t = 0.05; steps = 0.0;
+  for (int i = 0; i < 220; i++) {
+    vec3 p = ro + rd * t;
+    float d = p.y - terrain(p.xz);
+    if (d < 0.002 * t) return t;
+    t += max(0.02, d * 0.45);
+    steps += 1.0;
+    if (t > 90.0) break;
+  }
+  return -1.0;
+}
+float softShadow(vec3 ro, vec3 rd) {
+  float res = 1.0, t = 0.1;
+  for (int i = 0; i < 48; i++) {
+    vec3 p = ro + rd * t;
+    float h = p.y - terrain(p.xz);
+    res = min(res, 10.0 * h / t);
+    if (res < 0.001 || t > 30.0) break;
+    t += clamp(h, 0.08, 1.2);
+  }
+  return clamp(res, 0.0, 1.0);
+}
+
+vec3 sky(vec3 rd) {
+  float y = max(rd.y, 0.0);
+  vec3 col = mix(uSkyHor, uSkyZen, pow(y, 0.5));
+  float s = max(dot(rd, uSunDir), 0.0);
+  col += uSunCol * (pow(s, 600.0) * 18.0 + pow(s, 8.0) * 0.25);
+  // Estrellas de noche.
+  if (uNight > 0.0 && rd.y > 0.0) {
+    vec2 g = rd.xz / (rd.y + 0.3) * 120.0;
+    float st = smoothstep(0.995, 1.0, hash12(floor(g)));
+    col += st * uNight * vec3(0.9, 0.95, 1.0) * 0.8;
+  }
+  // Nubes altas que se mueven con el viento.
+  vec2 cp = rd.xz / (rd.y + 0.08) * 1.6 + uWind * uTime * 0.04;
+  float cl = vnoise(cp) * 0.6 + vnoise(cp * 2.1) * 0.3 + vnoise(cp * 4.3) * 0.1;
+  cl = smoothstep(0.45, 0.85, cl) * smoothstep(0.0, 0.2, rd.y);
+  vec3 cloudCol = mix(uSkyHor * 1.1, uSunCol * 0.6 + uSkyHor * 0.6, 0.5);
+  col = mix(col, cloudCol, cl * (0.4 + 0.5 * uFog));
+  return col;
+}
+
+vec3 shade(vec3 p, vec3 rd, float t) {
+  vec3 n = normalAt(p.xz, t);
+  float slope = n.y;
+  float alt = p.y / HSCALE;
+
+  // Cobertura de nieve: depende de la pendiente, la altura y el ajuste de acumulación.
+  float noiseN = vnoise(p.xz * 1.7) * 0.6 + vnoise(p.xz * 6.0) * 0.4;
+  float thr = mix(0.92, 0.45, uAccum) - alt * 0.25 * uAccum;
+  float snow = smoothstep(thr - 0.05, thr + 0.08, slope + (noiseN - 0.5) * 0.18);
+  snow *= smoothstep(-0.05, 0.05 + 0.25 * (1.0 - uAccum), alt + noiseN * 0.1);
+
+  // Roca con estratos.
+  float strata = vnoise(vec2(p.y * 6.0, p.x * 0.3));
+  vec3 rock = mix(vec3(0.16, 0.15, 0.15), vec3(0.32, 0.30, 0.28), strata);
+  rock *= 0.7 + 0.5 * vnoise(p.xz * 3.0);
+  // Bosque de coníferas en las zonas bajas sin nieve.
+  float forest = smoothstep(0.25, 0.12, alt) * smoothstep(0.7, 0.85, slope);
+  rock = mix(rock, vec3(0.05, 0.08, 0.06), forest * (1.0 - snow));
+  vec3 snowAlb = vec3(0.92, 0.95, 1.0);
+  vec3 alb = mix(rock, snowAlb, snow);
+
+  float dif = max(dot(n, uSunDir), 0.0);
+  float sh = dif > 0.0 ? softShadow(p + n * 0.02, uSunDir) : 0.0;
+  float skyAmb = 0.5 + 0.5 * n.y;
+  vec3 h = normalize(uSunDir - rd);
+  // Destellos de cristales de nieve al sol.
+  float glint = step(0.985, hash12(floor(p.xz * 140.0))) * pow(max(dot(n, h), 0.0), 40.0) * snow;
+  float spec = pow(max(dot(n, h), 0.0), 24.0) * 0.15 * snow;
+
+  vec3 col = alb * uSunCol * dif * sh * 1.6;
+  col += alb * uSkyZen * skyAmb * 0.8;
+  // Dispersión subsuperficial barata: la nieve en sombra se tiñe de azul.
+  col += snow * vec3(0.10, 0.16, 0.28) * (1.0 - sh) * (0.4 + 0.6 * uSkyZen.b);
+  col += uSunCol * (spec + glint * 3.0) * sh;
+  return col;
+}
+
+// Ventisca rasante: velo de nieve levantada por el viento cerca del suelo.
+float groundDrift(vec3 ro, vec3 rd, float tEnd) {
+  if (uDrift <= 0.0) return 0.0;
+  float acc = 0.0;
+  float tMax = min(tEnd < 0.0 ? 40.0 : tEnd, 40.0);
+  float dt = tMax / 16.0;
+  float t = dt * hash12(gl_FragCoord.xy + uTime);
+  for (int i = 0; i < 16; i++) {
+    vec3 p = ro + rd * t;
+    float hAbove = p.y - terrain(p.xz);
+    vec2 q = p.xz * 0.6 - uWind * uTime * 1.2;
+    float n = vnoise(q + vnoise(q * 2.0 + uTime * 0.3) * 1.5);
+    acc += smoothstep(0.4, 0.9, n) * exp(-max(hAbove, 0.0) * 2.2) * dt;
+    t += dt;
+  }
+  return clamp(acc * 0.18 * uDrift * (0.3 + length(uWind)), 0.0, 1.0);
+}
+
+// Copos en espacio de pantalla: varias capas de rejillas con un copo por celda,
+// cada capa a una profundidad distinta (parallax con el movimiento de cámara).
+vec3 snowfall(vec2 fragUv, float sceneT) {
+  vec3 acc = vec3(0);
+  float aspect = uRes.x / uRes.y;
+  for (int l = 0; l < 7; l++) {
+    float fl = float(l);
+    float depth = 1.0 + fl * 1.6;                      // distancia aproximada de la capa
+    if (sceneT > 0.0 && depth > sceneT * 1.2) continue;  // las montañas tapan los copos lejanos
+    float dens = smoothstep(fl / 7.0 - 0.15, fl / 7.0 + 0.1, uIntensity);
+    if (dens <= 0.0) continue;
+    float scale = 6.0 + fl * 5.0;
+    vec2 uv = fragUv * vec2(aspect, 1.0);
+    // Parallax con la orientación de cámara.
+    uv += vec2(atan(uCamFwd.x, uCamFwd.z), uCamFwd.y) * vec2(2.5, 2.5) / depth * 3.0;
+    vec2 wind = uWind * vec2(1.0, 0.0) * 2.0;
+    vec2 vel = vec2(wind.x, -1.0) * uFall * (0.35 + 0.25 / depth);
+    uv -= vel * uTime;
+    uv *= scale;
+    vec2 cell = floor(uv);
+    vec2 f = fract(uv);
+    float rnd = hash12(cell + fl * 31.7);
+    if (rnd > 0.25 + 0.75 * dens) continue;
+    vec2 pos = vec2(hash12(cell + 1.3 + fl), hash12(cell + 7.7 + fl));
+    // Bamboleo del copo.
+    float wob = uTime * (1.0 + rnd * 2.0) + rnd * 6.28;
+    pos.x += sin(wob) * 0.18 * (0.3 + uTurb);
+    pos.y += cos(wob * 0.7) * 0.08 * uTurb;
+    pos = 0.15 + pos * 0.7;
+    float size = (0.035 + 0.035 * rnd) * uFlake * (1.3 / sqrt(depth));
+    // Estela con el viento fuerte (motion blur barato).
+    vec2 dir = normalize(vec2(-vel.x, -vel.y) + 1e-4);
+    vec2 d = f - pos;
+    float along = dot(d, dir);
+    float stretch = 1.0 + length(uWind) * 2.0 * uFall;
+    vec2 dd = vec2(along / stretch, dot(d, vec2(-dir.y, dir.x)));
+    float a = smoothstep(size, size * 0.2, length(dd));
+    float fade = 1.0 / (1.0 + fl * 0.25);
+    acc += a * fade * dens;
+  }
+  return vec3(min(acc, 1.0));
+}
+
+vec3 aces(vec3 x) { return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
+
+void main() {
+  vec2 ndc = vUv * 2.0 - 1.0;
+  float aspect = uRes.x / uRes.y;
+  vec3 rd = normalize(uCamFwd * 1.6 + uCamRight * ndc.x * aspect + uCamUp * ndc.y);
+  vec3 ro = uCamPos;
+
+  float steps;
+  float t = march(ro, rd, steps);
+  vec3 col;
+  vec3 skyCol = sky(rd);
+  if (t > 0.0) {
+    vec3 p = ro + rd * t;
+    col = shade(p, rd, t);
+    // Niebla de altura: más densa en los valles.
+    float fogDen = mix(0.008, 0.07, uFog);
+    float fogAmt = 1.0 - exp(-t * fogDen * exp(-max(p.y, 0.0) * 0.18));
+    vec3 fogCol = mix(uSkyHor, uSunCol * 0.5 + uSkyHor * 0.5, pow(max(dot(rd, uSunDir), 0.0), 6.0));
+    col = mix(col, fogCol, fogAmt);
+  } else {
+    col = skyCol;
+  }
+  // Velo general de la nevada.
+  col = mix(col, uSkyHor * 1.05, uIntensity * uFog * 0.25);
+
+  vec3 veil = mix(uSkyHor, vec3(1.0), 0.5) * (0.8 + 0.4 * uSunCol);
+  col = mix(col, veil, groundDrift(ro, rd, t));
+
+  vec3 flake = snowfall(vUv, t);
+  vec3 flakeCol = mix(uSkyHor * 1.2 + 0.25, vec3(1.0), 0.6) * (0.55 + 0.45 * (1.0 - uNight));
+  col = mix(col, flakeCol, flake * 0.9);
+
+  col = aces(col * uExposure);
+  col = pow(col, vec3(1.0 / 2.2));
+  // Viñeta y grano.
+  col *= 1.0 - 0.25 * dot(ndc * 0.7, ndc * 0.7);
+  col += (hash12(gl_FragCoord.xy + fract(uTime) * 100.0) - 0.5) / 255.0;
+  o = vec4(col, 1.0);
+}`;
+
+const quad = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+const vao = gl.createVertexArray();
+gl.bindVertexArray(vao);
+gl.enableVertexAttribArray(0);
+gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+const bindAttrib = (vs, fs) => { const pr = program(vs, fs); return pr; };
+let heightProg, sceneProg;
+try {
+  heightProg = bindAttrib(QUAD_VS, HEIGHT_FS);
+  sceneProg = bindAttrib(QUAD_VS, SCENE_FS);
+} catch (e) {
+  console.error(e);
+  const err = document.getElementById('error');
+  err.querySelector('p').textContent = 'No se pudieron compilar los shaders: ' + e.message.split('\n')[0];
+  err.style.display = 'grid';
+  return;
+}
+
+// Mapa de alturas en textura de punto flotante (con alternativa a 8 bits si no hay extensión).
+const HM = 512;
+const floatOK = !!gl.getExtension('EXT_color_buffer_float');
+gl.getExtension('OES_texture_float_linear');
+const hmTex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, hmTex);
+if (floatOK) gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, HM, HM, 0, gl.RED, gl.HALF_FLOAT, null);
+else gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, HM, HM, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+const hmFbo = gl.createFramebuffer();
+gl.bindFramebuffer(gl.FRAMEBUFFER, hmFbo);
+gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, hmTex, 0);
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+let hmKey = '';
+function updateHeightMap() {
+  const key = [params.seed.v, params.roughness.v, params.height.v].join('|');
+  if (key === hmKey) return;
+  hmKey = key;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, hmFbo);
+  gl.viewport(0, 0, HM, HM);
+  gl.useProgram(heightProg.p);
+  gl.uniform1f(heightProg.u.uSeed, params.seed.v);
+  gl.uniform1f(heightProg.u.uRough, params.roughness.v);
+  gl.uniform1f(heightProg.u.uHeight, params.height.v);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+}
+
+// ---------------------------------------------------------------------------
+// Cámara orbital
+// ---------------------------------------------------------------------------
+const cam = { yaw: 0.6, pitch: 0.12, dist: 22, tYaw: 0.6, tPitch: 0.12, tDist: 22 };
+let dragging = false, lastX = 0, lastY = 0, idle = 0;
+canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointerup', () => { dragging = false; });
+canvas.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  cam.tYaw -= (e.clientX - lastX) * 0.005;
+  cam.tPitch = Math.max(-0.05, Math.min(0.9, cam.tPitch + (e.clientY - lastY) * 0.003));
+  lastX = e.clientX; lastY = e.clientY; idle = 0;
+});
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  cam.tDist = Math.max(8, Math.min(34, cam.tDist * Math.exp(e.deltaY * 0.001)));
+  idle = 0;
+}, { passive: false });
+
+// ---------------------------------------------------------------------------
+// Bucle
+// ---------------------------------------------------------------------------
+// Resolución interna adaptativa: el raymarching es caro, se baja la escala si va lento.
+// ?q=0.5 fija la escala y desactiva el ajuste automático.
+const fixedScale = parseFloat(new URLSearchParams(location.search).get('q'));
+let renderScale = fixedScale > 0 ? fixedScale : Math.min(window.devicePixelRatio || 1, 1) * 0.75;
+function resize() {
+  const w = Math.max(1, Math.floor(innerWidth * renderScale));
+  const h = Math.max(1, Math.floor(innerHeight * renderScale));
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+}
+addEventListener('resize', resize);
+
+const lerp = (a, b, t) => a + (b - a) * t;
+const mix3 = (a, b, t) => a.map((v, i) => lerp(v, b[i], t));
+const norm = v => { const l = Math.hypot(...v); return v.map(x => x / l); };
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+
+function lighting() {
+  // sunTime: 0 = noche, 0.1 = amanecer/atardecer, 0.5 = mediodía.
+  const s = params.sunTime.v;
+  const elev = lerp(-0.25, 1.15, Math.min(1, s * 2));
+  const az = params.sunAzimuth.v * Math.PI / 180;
+  const sunDir = norm([Math.cos(elev) * Math.sin(az), Math.sin(elev), Math.cos(elev) * Math.cos(az)]);
+  const day = Math.max(0, Math.min(1, (sunDir[1] + 0.05) / 0.4));
+  const golden = Math.max(0, 1 - Math.abs(sunDir[1] - 0.06) / 0.18);
+  let sunCol = mix3([1.0, 0.95, 0.88], [1.0, 0.55, 0.3], golden);
+  sunCol = sunCol.map(c => c * day * 1.4);
+  const night = 1 - Math.min(1, (sunDir[1] + 0.12) / 0.2);
+  // Luz de luna fría cuando el sol se pone.
+  const moon = [0.18, 0.24, 0.38].map(c => c * night);
+  sunCol = sunCol.map((c, i) => c + moon[i] * 0.6);
+  let zen = mix3([0.02, 0.03, 0.07], [0.22, 0.40, 0.72], day);
+  let hor = mix3([0.05, 0.07, 0.12], [0.62, 0.72, 0.85], day);
+  hor = mix3(hor, [0.95, 0.6, 0.45], golden * 0.6);
+  // Con la nevada el cielo se vuelve gris.
+  const overcast = params.intensity.v * 0.6 + params.fog.v * 0.3;
+  const grey = (hor[0] + hor[1] + hor[2]) / 3;
+  zen = mix3(zen, [grey * 0.9, grey * 0.95, grey * 1.05], overcast * 0.7);
+  hor = mix3(hor, [grey, grey * 1.02, grey * 1.06], overcast * 0.6);
+  sunCol = sunCol.map(c => c * (1 - overcast * 0.45));
+  // Cuando el sol esté bajo el horizonte la luz principal viene de la luna (desde arriba).
+  const lightDir = sunDir[1] > -0.02 ? sunDir : norm([0.3, 0.7, -0.4]);
+  return { sunDir: lightDir, sunCol, zen, hor, night };
+}
+
+const fpsEl = document.getElementById('fps');
+let frames = 0, fpsT = performance.now(), simTime = 0, last = performance.now();
+let windX = 0, windZ = 0;
+
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  updateTween(now);
+  resize();
+  updateHeightMap();
+
+  idle += dt;
+  if (!dragging && idle > 4) cam.tYaw += dt * 0.03;   // giro lento si nadie toca
+  cam.yaw = lerp(cam.yaw, cam.tYaw, 1 - Math.exp(-dt * 6));
+  cam.pitch = lerp(cam.pitch, cam.tPitch, 1 - Math.exp(-dt * 6));
+  cam.dist = lerp(cam.dist, cam.tDist, 1 - Math.exp(-dt * 6));
+
+  simTime += dt;
+  // Viento con rachas: la turbulencia modula la intensidad con el tiempo.
+  const gust = 1 + params.turbulence.v * 0.6 * Math.sin(simTime * 0.7) * Math.sin(simTime * 0.23 + 1.3);
+  const wd = params.windDir.v * Math.PI / 180;
+  const ws = params.windSpeed.v * gust * 1.6;
+  windX = lerp(windX, Math.cos(wd) * ws, 1 - Math.exp(-dt * 2));
+  windZ = lerp(windZ, Math.sin(wd) * ws, 1 - Math.exp(-dt * 2));
+
+  const target = [0, 3.2, 0];
+  const camPos = [
+    target[0] + Math.sin(cam.yaw) * Math.cos(cam.pitch) * cam.dist,
+    target[1] + Math.sin(cam.pitch) * cam.dist + 1.5,
+    target[2] + Math.cos(cam.yaw) * Math.cos(cam.pitch) * cam.dist,
+  ];
+  const fwd = norm(target.map((v, i) => v - camPos[i]));
+  const right = norm(cross(fwd, [0, 1, 0]));
+  const up = cross(right, fwd);
+  // El viento en pantalla se proyecta sobre el eje derecho de la cámara.
+  const screenWind = [windX * right[0] + windZ * right[2], windX * fwd[0] + windZ * fwd[2]];
+
+  const L = lighting();
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.useProgram(sceneProg.p);
+  const u = sceneProg.u;
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, hmTex);
+  gl.uniform1i(u.uHeightMap, 0);
+  gl.uniform2f(u.uRes, canvas.width, canvas.height);
+  gl.uniform3fv(u.uCamPos, camPos);
+  gl.uniform3fv(u.uCamFwd, fwd);
+  gl.uniform3fv(u.uCamRight, right);
+  gl.uniform3fv(u.uCamUp, up);
+  gl.uniform3fv(u.uSunDir, L.sunDir);
+  gl.uniform3fv(u.uSunCol, L.sunCol);
+  gl.uniform3fv(u.uSkyZen, L.zen);
+  gl.uniform3fv(u.uSkyHor, L.hor);
+  gl.uniform1f(u.uNight, L.night);
+  gl.uniform1f(u.uTime, simTime);
+  gl.uniform1f(u.uAccum, params.accumulation.v);
+  gl.uniform1f(u.uFog, params.fog.v);
+  gl.uniform1f(u.uExposure, params.exposure.v);
+  gl.uniform1f(u.uIntensity, params.intensity.v);
+  gl.uniform1f(u.uDrift, params.drift.v);
+  gl.uniform1f(u.uFlake, params.flakeSize.v);
+  gl.uniform1f(u.uFall, params.fallSpeed.v);
+  gl.uniform1f(u.uTurb, params.turbulence.v);
+  gl.uniform2f(u.uWind, screenWind[0], screenWind[1]);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  frames++;
+  if (now - fpsT > 1000) {
+    const fps = frames * 1000 / (now - fpsT);
+    fpsEl.textContent = `${fps.toFixed(0)} fps · ${canvas.width}×${canvas.height}`;
+    // Ajuste automático de resolución.
+    if (fixedScale > 0) { /* escala fija */ }
+    else if (fps < 28 && renderScale > 0.35) renderScale *= 0.85;
+    else if (fps > 55 && renderScale < Math.min(1, window.devicePixelRatio || 1)) renderScale = Math.min(1, renderScale * 1.08);
+    frames = 0; fpsT = now;
+  }
+  requestAnimationFrame(frame);
+}
+resize();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
