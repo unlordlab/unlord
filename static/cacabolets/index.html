@@ -127,6 +127,10 @@
   #pkMap:active { cursor: grabbing; }
   .pkz { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 4px; }
   .pkz button { background: rgba(20,24,20,.8); width: 30px; }
+  #routeProfile { width: 100%; height: 0; display: block; margin-top: 6px; }
+  #routeProfile.on { height: 70px; }
+  #routeInfo b { color: var(--text); font-weight: 600; }
+  button.rec { background: rgba(63,169,255,.25); border-color: #3fa9ff; }
   #gbifMonths { width: 100%; height: 44px; display: block; margin-top: 4px; }
   #week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; align-items: end; height: 74px; margin-bottom: 4px; }
   #week button { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 2px; height: 100%; padding: 2px; font-size: 9.5px; background: none; border-color: transparent; }
@@ -194,6 +198,24 @@
       <button type="button" id="styleOrto" class="on">Ortofoto</button>
       <button type="button" id="styleEst">Bosc estimat</button>
     </div>
+    <h2>Sortida</h2>
+    <div class="row">
+      <button type="button" id="routeMode">Planificar sortida</button>
+      <button type="button" id="routeUndo" disabled>Desfer</button>
+      <button type="button" id="routeClear" disabled>Esborrar</button>
+    </div>
+    <div id="routeInfo" class="small muted" style="margin-top:6px">Activa-ho i fes clic al minimapa o al terreny per marcar el recorregut.</div>
+    <canvas id="routeProfile"></canvas>
+    <div class="row" style="margin-top:4px">
+      <button type="button" id="routeFly" disabled>Recórrer en 3D</button>
+      <button type="button" id="routeGpx" disabled>Exportar GPX</button>
+    </div>
+    <h2>Al bosc, amb el mòbil</h2>
+    <div class="row">
+      <button type="button" id="gpsBtn">On sóc</button>
+      <button type="button" id="compassBtn">Mirar amb el mòbil</button>
+    </div>
+    <div id="gpsInfo" class="small muted" style="margin-top:4px"></div>
     <p class="small muted" style="margin:10px 0 0">Model orientatiu fet amb pluja, temperatura i humitat del sòl, altitud, orientació i el Mapa de cobertes del sòl de l'ICGC (on no n'hi ha, el bosc es dedueix de l'ortofoto). No és una previsió oficial: respecta la regulació de cada espai natural.</p>
   </div>
 </aside>
