@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Micoclima 3D</title>
+<title>CaçaBolets</title>
 <meta name="description" content="Relleu real de Catalunya en 3D amb el temps dels últims dies i una estimació d'on poden sortir bolets.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="/favicon.ico">
@@ -53,10 +53,17 @@
   #right { position: fixed; right: 14px; top: 14px; bottom: 142px; width: 290px; z-index: 5; display: flex; flex-direction: column; gap: 10px; overflow: auto; pointer-events: none; }
   #right > * { pointer-events: auto; flex: none; }
   #info { padding: 12px 14px; font-size: 12px; }
-  #info .big { font-size: 26px; line-height: 1.1; }
-  #info dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 8px 0 0; font-size: 11px; }
+  #info .big { font-size: 26px; line-height: 1.1; width: 72px; flex: none; font-variant-numeric: tabular-nums; }
+  #info .ell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #info .hrow { display: flex; gap: 8px; align-items: center; height: 54px; }
+  #info .hcol { flex: 1; min-width: 0; }
+  #trend { width: 100%; height: 34px; display: block; }
+  #diag { list-style: none; margin: 6px 0 0; padding: 6px 0 0; border-top: 1px solid var(--border); font-size: 11px; height: 116px; }
+  #diag li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 16.5px; }
+  #diag .ok { color: #9fd47a; } #diag .ko { color: #ff8a6a; } #diag .mid { color: #e6d27a; }
+  #info dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; margin: 8px 0 0; font-size: 11px; }
   #info dt { color: var(--muted); white-space: nowrap; }
-  #info dd { margin: 0; text-align: right; }
+  #info dd { margin: 0; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
   .verdict { font-size: 11px; margin-top: 2px; }
 
   #timeline { position: fixed; left: 14px; right: 14px; bottom: 14px; padding: 8px 12px 10px; z-index: 5; }
@@ -65,7 +72,7 @@
   #chart { width: 100%; height: 58px; display: block; cursor: pointer; }
   #credits { font-size: 10px; color: rgba(255,255,255,.5); text-align: right; margin-top: 4px; }
   #mapbox { padding: 8px; }
-  #minimap { width: 272px; height: 272px; display: block; border-radius: 6px; cursor: crosshair; }
+  #minimap { width: 272px; height: 236px; display: block; border-radius: 6px; cursor: crosshair; }
   #mapbox .cap { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--muted); margin-top: 6px; }
   #mapbox .cap button { padding: 2px 6px; font-size: 10px; }
   #compass { position: fixed; left: 50%; top: 12px; transform: translateX(-50%); width: 420px; height: 30px; z-index: 4; pointer-events: none; }
@@ -120,6 +127,7 @@
   #pkMap:active { cursor: grabbing; }
   .pkz { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 4px; }
   .pkz button { background: rgba(20,24,20,.8); width: 30px; }
+  #gbifMonths { width: 100%; height: 44px; display: block; margin-top: 4px; }
   #week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; align-items: end; height: 74px; margin-bottom: 4px; }
   #week button { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 2px; height: 100%; padding: 2px; font-size: 9.5px; background: none; border-color: transparent; }
   #week button:hover { border-color: var(--border); }
@@ -153,7 +161,7 @@
 
 <aside id="side" class="glass">
   <button id="toggleSide" type="button">−</button>
-  <h1>Micoclima 3D</h1>
+  <h1>CaçaBolets</h1>
   <div class="sub">Relleu real, temps real i on poden sortir bolets</div>
   <div class="body">
     <h2>Zona</h2>
@@ -172,6 +180,9 @@
     <h2>Millor dia aquesta setmana</h2>
     <div id="week"></div>
     <div id="weekText" class="small muted"></div>
+    <h2>Trobades registrades</h2>
+    <div id="gbifText" class="small muted">—</div>
+    <canvas id="gbifMonths" title="Trobades per mes"></canvas>
     <h2>Vista</h2>
     <div class="row">
       <button type="button" id="modeFly" class="on">Volar</button>
@@ -190,16 +201,18 @@
 
 <div id="right">
 <section id="info" class="glass">
-  <div class="small muted" id="here">—</div>
-  <div class="big" id="hereIdx">—</div>
-  <div class="verdict" id="hereVerdict"></div>
+  <div class="small muted ell" id="here">—</div>
+  <div class="hrow">
+    <div class="big" id="hereIdx">—</div>
+    <div class="hcol">
+      <div class="verdict ell" id="hereVerdict"></div>
+      <canvas id="trend" title="Probabilitat en aquest punt els propers 15 dies"></canvas>
+    </div>
+  </div>
+  <ul id="diag"></ul>
   <dl>
     <dt>Ara</dt><dd id="wNow">—</dd>
-    <dt>Pluja (últims 20 dies)</dt><dd id="wRain">—</dd>
-    <dt>Temperatura del sòl</dt><dd id="wSoilT">—</dd>
-    <dt>Humitat del sòl</dt><dd id="wSoilM">—</dd>
-    <dt>Nits de glaçada (7 dies)</dt><dd id="wFrost">—</dd>
-    <dt>Coberta del sòl</dt><dd id="wCover">—</dd>
+    <dt>Coberta</dt><dd id="wCover">—</dd>
     <dt>Altitud</dt><dd id="wAlt">—</dd>
     <dt>Posició</dt><dd id="wPos">—</dd>
     <dt>A prop de</dt><dd id="wNear">—</dd>
@@ -231,7 +244,9 @@
   Temps: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) ·
   Relleu: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, SRTM, EU-DEM, ICGC…) ·
   Ortofoto, mapa i cobertes del sòl: <a href="https://www.icgc.cat/" target="_blank" rel="noopener">ICGC</a> (CC BY 4.0) ·
-  Noms: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>
+  Municipis: ICGC ·
+  Noms: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a> ·
+  Trobades: <a href="https://www.gbif.org/" target="_blank" rel="noopener">GBIF.org</a>
 </div>
 </section>
 
@@ -273,7 +288,7 @@
 
 <div id="loading">
   <div class="card">
-    <h1>Micoclima 3D</h1>
+    <h1>CaçaBolets</h1>
     <div class="bar"><i id="progress"></i></div>
     <div id="loadText" class="small muted">Preparant…</div>
     <div id="notice"></div>

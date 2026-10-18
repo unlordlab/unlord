@@ -1,4 +1,4 @@
-// Micoclima 3D: relleu real de Catalunya, el temps dels últims dies (Open-Meteo)
+// CaçaBolets: relleu real de Catalunya, el temps dels últims dies (Open-Meteo)
 // i una estimació d'on poden sortir bolets, tot en una escena 3D on es pot volar o caminar.
 //
 // Dades:
@@ -96,7 +96,7 @@ const BOLETS = [
 const Z_DET = 13, Z_CTX = 11, TILES = 4, TEX = TILES * 256;   // 1024 × 1024
 const GRID = 256;                                             // resolució del mapa de bosc i de probabilitat
 const LAPSE = -0.0058;                                        // °C per metre
-const PAST_DAYS = 60, SHOW_PAST = 30, FORECAST_DAYS = 7;
+const PAST_DAYS = 60, SHOW_PAST = 30, FORECAST_DAYS = 16;
 
 const $ = id => document.getElementById(id);
 const qs = new URLSearchParams(location.search);
@@ -316,6 +316,8 @@ const Z = {
   sampleWeather: false,
   geo: null,                      // { cx, cy, res }: conversió entre metres i lat/lon (zoom de detall)
   places: [],                     // cims, pobles i refugis
+  gbif: [],                       // trobades registrades de l'espècie triada
+  gbifState: 'none',
 };
 
 function detWeightCPU(x, z) {
@@ -654,6 +656,8 @@ function processWeather(json, pts) {
   for (let i = 0; i < nH; i++) if (times[i] <= now) nowIdx = i;
   const firstShown = Math.max(0, Math.floor(nowIdx / 24) - SHOW_PAST) * 24;
   Z.weather = { P, times, nH, nD, nowIdx, firstShown, off };
+  aggCache.clear();
+  trendKey = '';
 }
 
 // Variables d'un dia per a cada punt de la graella, per al model de bolets.
@@ -760,34 +764,47 @@ function seasonScore(sp, date) {
   return Math.exp(-((dist / 0.7) ** 2));
 }
 
+// Agregats de cada dia, guardats perquè el diagnòstic i la corba en demanen molts.
+const aggCache = new Map();
+function dayAgg(d) {
+  let a = aggCache.get(d);
+  if (!a) { a = dayAggregates(d); aggCache.set(d, a); }
+  return a;
+}
+// Tots els factors del model en una cel·la i un dia: el mapa en fa servir només l'índex,
+// el diagnòstic els fa servir tots per explicar què falta o què sobra.
+function cellFactors(k, agg, sp, season) {
+  const i = k % GRID, j = Math.floor(k / GRID);
+  const hab = (sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k];
+  const ws = gridWeights((i + 0.5) / GRID, (j + 0.5) / GRID);
+  let rainEff = 0, rain20 = 0, soilT = 0, soilM = 0, elev = 0;
+  for (const [p, w] of ws) { const a = agg[p]; rainEff += a.rainEff * w; rain20 += a.rain20 * w; soilT += a.soilT * w; soilM += a.soilM * w; elev += a.elev * w; }
+  const dh = Z.gh[k] - elev;
+  const ts = soilT + LAPSE * dh;
+  const [t0, t1] = sp.t;
+  const tScore = smooth(t0 - 4, t0, ts) * (1 - smooth(t1, t1 + 4, ts));
+  // Els obacs guarden més la humitat.
+  const rainScore = smooth(sp.pluja * 0.35, sp.pluja, rainEff * (1 + 0.25 * Z.north[k]));
+  const moistScore = smooth(0.1, 0.3, soilM);
+  const water = clamp(0.7 * rainScore + 0.3 * moistScore);
+  let frosts = 0;
+  for (let d = 0; d < agg[0].tmins.length; d++) {
+    let tm = 0; for (const [p, w] of ws) tm += agg[p].tmins[d] * w;
+    if (tm + LAPSE * dh < -1.5) frosts++;
+  }
+  const frostF = Math.exp(-(sp.frost ? 0.15 : 0.6) * frosts);
+  const slopeF = 1 - smooth(0.6, 1.0, Z.slope[k]);
+  const idx = hab < 0.02 ? 0 : clamp(hab * water * tScore * frostF * season * slopeF * 1.15);
+  return { idx, hab, season, rainEff, rain20, rainScore, soilM, moistScore, ts, tScore, frosts, frostF, slopeF, ws };
+}
 function computeIndex(day, sp) {
   const W = Z.weather;
-  const agg = dayAggregates(day);
-  const date = new Date(W.times[Math.min(day * 24 + 12, W.nH - 1)]);
-  const season = seasonScore(sp, date);
+  const agg = dayAgg(day);
+  const season = seasonScore(sp, new Date(W.times[Math.min(day * 24 + 12, W.nH - 1)]));
   const idx = new Float32Array(GRID * GRID);
-  for (let j = 0; j < GRID; j++) for (let i = 0; i < GRID; i++) {
-    const k = j * GRID + i;
-    const hab = (sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k];
-    if (hab < 0.02) continue;
-    const ws = gridWeights((i + 0.5) / GRID, (j + 0.5) / GRID);
-    let rainEff = 0, soilT = 0, soilM = 0, elev = 0;
-    for (const [p, w] of ws) { const a = agg[p]; rainEff += a.rainEff * w; soilT += a.soilT * w; soilM += a.soilM * w; elev += a.elev * w; }
-    const dh = Z.gh[k] - elev;
-    const ts = soilT + LAPSE * dh;
-    const [t0, t1] = sp.t;
-    const tScore = smooth(t0 - 4, t0, ts) * (1 - smooth(t1, t1 + 4, ts));
-    const north = Z.north[k];
-    // Els obacs guarden més la humitat.
-    const water = clamp(0.7 * smooth(sp.pluja * 0.35, sp.pluja, rainEff * (1 + 0.25 * north)) + 0.3 * smooth(0.1, 0.3, soilM));
-    let frosts = 0;
-    for (let d = 0; d < agg[0].tmins.length; d++) {
-      let tm = 0; for (const [p, w] of ws) tm += agg[p].tmins[d] * w;
-      if (tm + LAPSE * dh < -1.5) frosts++;
-    }
-    const frostF = Math.exp(-(sp.frost ? 0.15 : 0.6) * frosts);
-    const slopeF = 1 - smooth(0.6, 1.0, Z.slope[k]);
-    idx[k] = clamp(hab * water * tScore * frostF * season * slopeF * 1.15);
+  for (let k = 0; k < GRID * GRID; k++) {
+    if ((sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k] < 0.02) continue;
+    idx[k] = cellFactors(k, agg, sp, season).idx;
   }
   return idx;
 }
@@ -1313,6 +1330,7 @@ function updateProps(cx, cz, date) {
     if (m.instanceColor) m.instanceColor.needsUpdate = true;
   }
   updateShrooms(cx, cz);
+  updateTowns(cx, cz);
 }
 
 function updateShrooms(cx, cz) {
@@ -1618,7 +1636,7 @@ $('openFitxa').addEventListener('click', openFitxa);
 $('closeFitxa').addEventListener('click', () => $('fitxa').close());
 $('fitxa').addEventListener('click', e => { if (e.target === $('fitxa')) $('fitxa').close(); });
 
-$('species').addEventListener('change', e => { state.species = +e.target.value; showSpeciesInfo(); refreshDay(true); scheduleWeek(); });
+$('species').addEventListener('change', e => { state.species = +e.target.value; showSpeciesInfo(); refreshDay(true); scheduleWeek(); loadGbif(); });
 $('zone').addEventListener('change', e => { state.zone = +e.target.value; loadZone(ZONES[state.zone]); });
 
 // ---------------------------------------------------------------------------
@@ -1902,45 +1920,114 @@ function verdict(v) {
 function updateInfo() {
   const W = Z.weather, x = player.x, z = player.z;
   const k = gridCell(x, z);
+  const day = Math.floor(state.t / 24);
   const ms = W.times[0] + Math.round(state.t) * 36e5;
   $('date').textContent = fmtDate.format(new Date(ms));
-  const dd = Math.floor(state.t / 24) - Math.floor(W.nowIdx / 24);
+  const dd = day - Math.floor(W.nowIdx / 24);
   $('rel').textContent = (dd === 0 ? 'avui' : dd < 0 ? `fa ${-dd} ${dd === -1 ? 'dia' : 'dies'}` : `previsió, d'aquí a ${dd} ${dd === 1 ? 'dia' : 'dies'}`)
     + (Z.sampleWeather ? ' · DADES D\'EXEMPLE' : '');
   const sp = BOLETS[state.species];
+  const setT = (id, t) => { const el = $(id); if (el.textContent !== t) { el.textContent = t; el.title = t; } };
   if (k < 0) {
-    $('here').textContent = 'Fora de la zona d\'anàlisi';
-    $('hereIdx').textContent = '—'; $('hereVerdict').textContent = '';
+    setT('here', 'Fora de la zona d\'anàlisi');
+    setT('hereIdx', '—'); setT('hereVerdict', '');
+    $('diag').innerHTML = '';
   } else {
     const [u, v] = gridUV(x, z);
     const idx = sampleClamp(Z.index, GRID, u, v);
     const [txt, col] = verdict(idx);
-    $('here').textContent = `${sp.nom} · ${VEG[Z.veg[k]].nom}`;
-    $('hereIdx').textContent = `${Math.round(idx * 100)}%`;
+    setT('here', `${sp.nom} · ${VEG[Z.veg[k]].nom}`);
+    setT('hereIdx', `${Math.round(idx * 100)}%`);
     $('hereIdx').style.color = col;
-    $('hereVerdict').textContent = txt + (mode === 'walk' && state.shroomsNear ? ` · ${state.shroomsNear} bolets a prop` : '');
+    setT('hereVerdict', txt + (mode === 'walk' && state.shroomsNear ? ` · ${state.shroomsNear} bolets a prop` : ''));
+    const html = diagnosis(k, day, sp).map(([c, t]) => `<li class="${c}" title="${t}">${c === 'ok' ? '✓' : c === 'ko' ? '✗' : '–'} ${t}</li>`).join('');
+    if ($('diag').innerHTML !== html) $('diag').innerHTML = html;
   }
-  const [u, v] = gridUV(x, z);
-  const agg = dayAggregates(Math.floor(state.t / 24));
-  let rain20 = 0, soilT = 0, soilM = 0, elev = 0, frosts = 0;
-  const ws = gridWeights(clamp(u), clamp(v));
-  for (const [p, w] of ws) { rain20 += agg[p].rain20 * w; soilT += agg[p].soilT * w; soilM += agg[p].soilM * w; elev += agg[p].elev * w; }
+  drawTrend(k, sp);
   const h = heightAt(x, z);
-  for (let d = 0; d < agg[0].tmins.length; d++) { let tm = 0; for (const [p, w] of ws) tm += agg[p].tmins[d] * w; if (tm + LAPSE * (h - elev) < -1.5) frosts++; }
   const tHere = wx.temp + LAPSE * (h - gridElevAt(x, z));
   const sky = wx.pr > 0.1 ? (tHere < 0.8 ? 'neva' : 'plou') : wx.rh > 96 ? 'boira' : wx.cloud > 75 ? 'ennuvolat' : wx.cloud > 35 ? 'núvols i clarianes' : 'serè';
-  $('wNow').textContent = `${fmtNum(tHere)} °C · ${sky}`;
-  $('wRain').textContent = `${fmtNum(rain20)} mm`;
-  $('wSoilT').textContent = `${fmtNum(soilT + LAPSE * (h - elev), 1)} °C`;
-  $('wSoilM').textContent = `${fmtNum(soilM * 100)} %`;
-  $('wFrost').textContent = String(frosts);
-  $('wAlt').textContent = `${fmtNum(h)} m`;
+  setT('wNow', `${fmtNum(tHere)} °C · ${sky}`);
+  setT('wAlt', `${fmtNum(h)} m`);
   const ci = coverClassAt(x, z);
-  $('wCover').textContent = ci !== NO_COVER ? `${COBERTES[ci].nom} (ICGC 2024)` : Z.hasOrtho && k >= 0 ? 'segons l\'ortofoto' : 'estimada';
+  setT('wCover', ci !== NO_COVER ? `${COBERTES[ci].nom} (ICGC)` : Z.hasOrtho && k >= 0 ? 'segons l\'ortofoto' : 'estimada');
   const [lat, lon] = worldToLatLon(x, z);
-  $('wPos').textContent = `${lat.toFixed(4).replace('.', ',')}° N, ${Math.abs(lon).toFixed(4).replace('.', ',')}° ${lon >= 0 ? 'E' : 'O'}`;
+  setT('wPos', `${lat.toFixed(4).replace('.', ',')}° N, ${Math.abs(lon).toFixed(4).replace('.', ',')}° ${lon >= 0 ? 'E' : 'O'}`);
   $('gmaps').href = `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(5)},${lon.toFixed(5)}`;
-  $('wNear').textContent = nearestPlaceText(x, z);
+  setT('wNear', nearestPlaceText(x, z));
+}
+
+// Diagnòstic en llenguatge planer: què té i què li falta a aquest punt per a l'espècie triada.
+const MESOS = ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'];
+const fmtShortDay = new Intl.DateTimeFormat('ca-ES', { day: 'numeric', month: 'long', timeZone: 'Europe/Madrid' });
+function diagnosis(k, day, sp) {
+  const W = Z.weather;
+  const date = new Date(W.times[Math.min(day * 24 + 12, W.nH - 1)]);
+  const f = cellFactors(k, dayAgg(day), sp, seasonScore(sp, date));
+  const out = [];
+  // Temporada.
+  const tmp = `de ${MESOS[sp.mesos[0] - 1]} a ${MESOS[(sp.mesos[1] + 11) % 12]}`;
+  out.push(f.season > 0.9 ? ['ok', 'En plena temporada'] : f.season > 0.3 ? ['mid', `A tocar de la temporada (${tmp})`] : ['ko', `Fora de temporada: surt ${tmp}`]);
+  // La pluja que compta: la més gran de fa 2–24 dies.
+  let best = 0, bestD = -1;
+  for (let d = day - 24; d <= day - 2; d++) {
+    if (d < 0) continue;
+    let r = 0; for (const [p, w] of f.ws) r += W.P[p].dRain[d] * w;
+    if (r > best) { best = r; bestD = d; }
+  }
+  const when = bestD >= 0 ? fmtShortDay.format(new Date(W.times[bestD * 24 + 12])) : '';
+  if (f.rainScore > 0.75) out.push(['ok', `Va ploure ${fmtNum(best)} mm el ${when}`]);
+  else if (f.rainScore > 0.3) out.push(['mid', `Pluja justa: ${fmtNum(f.rain20)} mm en 20 dies (en vol uns ${sp.pluja})`]);
+  else out.push(['ko', `Falta pluja: ${fmtNum(f.rain20)} mm en 20 dies (en vol uns ${sp.pluja})`]);
+  // Humitat de la terra.
+  const sm = Math.round(f.soilM * 100);
+  out.push(f.moistScore > 0.7 ? ['ok', `La terra guarda la humitat (${sm} %)`] : f.moistScore > 0.3 ? ['mid', `Terra una mica seca (${sm} %)`] : ['ko', `Terra seca (${sm} %)`]);
+  // Temperatura del sòl.
+  const ts = fmtNum(f.ts, 0), rng = `${sp.t[0]}–${sp.t[1]} °C`;
+  if (f.tScore > 0.8) out.push(['ok', `Sòl a bona temperatura (${ts} °C)`]);
+  else if (f.ts < sp.t[0]) out.push([f.tScore > 0.3 ? 'mid' : 'ko', `Sòl massa fred (${ts} °C; li agrada a ${rng})`]);
+  else out.push([f.tScore > 0.3 ? 'mid' : 'ko', `Sòl massa calent (${ts} °C; li agrada a ${rng})`]);
+  // Glaçades.
+  out.push(f.frosts === 0 ? ['ok', 'Sense glaçades aquesta setmana'] :
+    [sp.frost && f.frosts < 3 ? 'mid' : 'ko', `${f.frosts} ${f.frosts === 1 ? 'nit' : 'nits'} de glaçada aquesta setmana`]);
+  // Bosc.
+  const veg = VEG[Z.veg[k]].nom;
+  out.push(f.hab > 0.6 ? ['ok', `El seu bosc: ${veg.toLowerCase()}`] : f.hab > 0.2 ? ['mid', `Bosc regular per a aquest bolet (${veg.toLowerCase()})`] : ['ko', `No és el seu bosc (${veg.toLowerCase()})`]);
+  // Trobades registrades a prop.
+  let n = 0; const months = new Array(12).fill(0);
+  for (const o of Z.gbif) if (Math.hypot(o.x - player.x, o.z - player.z) < 2500) { n++; if (o.month) months[o.month - 1]++; }
+  const top = months.indexOf(Math.max(...months));
+  const alMes = m => (/^[aeiou]/.test(m) ? "a l'" : 'al ') + m;
+  out.push(n ? ['ok', `Trobat ${n} ${n === 1 ? 'cop' : 'cops'} a menys de 2,5 km${months[top] ? `, sobretot ${alMes(MESOS[top])}` : ''}`]
+    : ['mid', Z.gbifState === 'ok' ? 'Cap trobada registrada a menys de 2,5 km' : Z.gbifState === 'loading' ? 'Buscant trobades registrades…' : 'Trobades registrades: sense dades']);
+  return out;
+}
+
+// Corba dels propers 15 dies en aquest punt.
+let trendKey = '';
+function drawTrend(k, sp) {
+  const cv = $('trend'), W = Z.weather;
+  const d0 = Math.floor(W.nowIdx / 24), d1 = W.nD - 1, cur = Math.floor(state.t / 24);
+  const key = `${k}|${sp.id}|${cur}|${Z.zone.id}|${cv.clientWidth}`;
+  if (key === trendKey) return;
+  trendKey = key;
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const g = cv.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, w, h);
+  if (k < 0) return;
+  const vals = [];
+  for (let d = d0; d <= d1; d++) vals.push(cellFactors(k, dayAgg(d), sp, seasonScore(sp, new Date(W.times[d * 24 + 12]))).idx);
+  const X = i => 2 + i / (vals.length - 1) * (w - 4), Y = v => h - 9 - v * (h - 12);
+  g.fillStyle = 'rgba(240,176,74,.18)'; g.beginPath(); g.moveTo(X(0), Y(0));
+  vals.forEach((v, i) => g.lineTo(X(i), Y(v))); g.lineTo(X(vals.length - 1), Y(0)); g.closePath(); g.fill();
+  g.strokeStyle = '#f0b04a'; g.lineWidth = 1.5; g.beginPath();
+  vals.forEach((v, i) => (i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v)))); g.stroke();
+  if (cur >= d0 && cur <= d1) { g.fillStyle = '#fff'; g.beginPath(); g.arc(X(cur - d0), Y(vals[cur - d0]), 2.5, 0, 7); g.fill(); }
+  g.fillStyle = 'rgba(255,255,255,.55)'; g.font = '9px ui-monospace, monospace';
+  g.textAlign = 'left'; g.fillText('avui', 2, h - 1);
+  g.textAlign = 'right'; g.fillText(`+${d1 - d0} dies`, w - 2, h - 1);
 }
 
 // Gràfic: pluja diària (barres) i temperatura del sòl (línia), amb el dia actual marcat.
@@ -2000,50 +2087,74 @@ const PLACE_KINDS = {
 };
 
 // Cims, pobles i refugis de la zona amb l'API d'Overpass. Es desa al navegador per no repetir la consulta.
+// Municipis de Catalunya (caps de municipi de l'ICGC), desats a la web: no depenen de cap servei extern.
+let municipisP = null;
+const loadMunicipis = () => (municipisP ||= fetch('./municipis.json').then(r => r.json()).catch(() => []));
+const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
+
+// Noms de la zona: municipis (sempre) i, si Overpass respon, cims, nuclis petits i refugis d'OpenStreetMap.
 async function loadPlaces(zone, token) {
   const pad = 0.3 * Z.detSize;
   const [n, w] = worldToLatLon(Z.detOrigin[0] - pad, Z.detOrigin[1] - pad);
   const [sLat, e] = worldToLatLon(Z.detOrigin[0] + Z.detSize + pad, Z.detOrigin[1] + Z.detSize + pad);
+  const places = [];
+  for (const [name, lat, lon, cap] of await loadMunicipis()) {
+    if (lat < sLat || lat > n || lon < w || lon > e) continue;
+    const [x, z] = latLonToWorld(lat, lon);
+    places.push({ name, kind: cap ? 'town' : 'village', x, z, ele: null });
+  }
+  if (token !== loadToken) return;
+  setPlaces(places);
+
   const bbox = `${sLat.toFixed(4)},${w.toFixed(4)},${n.toFixed(4)},${e.toFixed(4)}`;
-  const key = 'micoclima-llocs-v1-' + zone.id;
+  const key = 'cacabolets-llocs-v2-' + bbox;
   let elements = null;
-  try { const c = JSON.parse(localStorage.getItem(key) || 'null'); if (c && Date.now() - c.t < 30 * 864e5) elements = c.el; } catch (e) { /* sense emmagatzematge */ }
+  try { const c = JSON.parse(localStorage.getItem(key) || 'null'); if (c && Date.now() - c.t < 30 * 864e5) elements = c.el; } catch (err) { /* sense emmagatzematge */ }
   if (!elements && !qs.has('offline')) {
-    const q = `[out:json][timeout:25];(
+    const q = `[out:json][timeout:20];(
       node["natural"="peak"]["name"](${bbox});
-      node["place"~"^(town|village|hamlet)$"]["name"](${bbox});
+      node["place"~"^(village|hamlet)$"]["name"](${bbox});
       node["tourism"="alpine_hut"]["name"](${bbox});
       node["natural"="saddle"]["name"](${bbox});
     );out body;`;
-    try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 25000);
-      const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ctrl.signal,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-      clearTimeout(timer);
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      elements = (await r.json()).elements || [];
-      try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), el: elements })); } catch (e) { /* ple o bloquejat */ }
-    } catch (e) {
-      console.warn('Overpass no disponible:', e);
-      elements = null;
+    // El servidor principal sovint va saturat: es proven rèpliques.
+    for (const url of OVERPASS) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 15000);
+        const r = await fetch(url, { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ctrl.signal,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        clearTimeout(timer);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        elements = (await r.json()).elements || [];
+        try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), el: elements })); } catch (err) { /* ple o bloquejat */ }
+        break;
+      } catch (err) {
+        console.warn('Overpass no disponible a', url, err);
+      }
     }
   }
   if (token !== loadToken) return;
-  const places = [];
+  const seen = new Map(places.map(p => [p.name.toLowerCase(), p]));
   for (const el of elements || []) {
     const t = el.tags || {};
     const kind = t.natural === 'peak' ? 'peak' : t.natural === 'saddle' ? 'saddle' : t.tourism === 'alpine_hut' ? 'hut' : t.place;
     if (!PLACE_KINDS[kind]) continue;
+    const name = t['name:ca'] || t.name;
     const [x, z] = latLonToWorld(el.lat, el.lon);
+    const dup = seen.get(name.toLowerCase());
+    if (dup && Math.hypot(dup.x - x, dup.z - z) < 3000) continue;   // el municipi ja hi és
     const ele = parseFloat(String(t.ele || '').replace(',', '.'));
-    places.push({ name: t['name:ca'] || t.name, kind, x, z, ele: isFinite(ele) ? ele : null });
+    places.push({ name, kind, x, z, ele: isFinite(ele) ? ele : null });
   }
-  // Sense noms (sense connexió): els cims més destacats que es veuen al relleu.
+  setPlaces(places);
+}
+function setPlaces(list) {
+  const places = list.slice();
+  // Sense noms de cims: els més destacats del relleu, amb l'altitud.
   if (!places.some(p => p.kind === 'peak')) places.push(...autoPeaks());
-  // Els cims amb nom primer, de més alt a més baix; així en tenim pocs i importants.
   places.sort((a, b) => PLACE_KINDS[b.kind].prio - PLACE_KINDS[a.kind].prio || (b.ele || 0) - (a.ele || 0));
-  Z.places = places.slice(0, 160);
+  Z.places = places.slice(0, 200);
   renderPlaceLabels();
 }
 
@@ -2208,8 +2319,8 @@ function buildMinimapBase() {
 }
 function drawMinimap() {
   if (!Z.gh || minimap.clientWidth === 0) return;
-  const dpr = window.devicePixelRatio || 1, W = minimap.clientWidth;
-  if (minimap.width !== Math.round(W * dpr)) { minimap.width = minimap.height = Math.round(W * dpr); }
+  const dpr = window.devicePixelRatio || 1, W = minimap.clientWidth, H = minimap.clientHeight;
+  if (minimap.width !== Math.round(W * dpr) || minimap.height !== Math.round(H * dpr)) { minimap.width = Math.round(W * dpr); minimap.height = Math.round(H * dpr); }
   const g = minimap.getContext('2d');
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
   g.imageSmoothingEnabled = true;
@@ -2218,13 +2329,13 @@ function drawMinimap() {
     // Mapa topogràfic de l'ICGC centrat en tu (1 píxel lògic de tesela = 1 píxel CSS).
     const k = 2 ** (mmZoom - Z_DET), resZ = Z.geo.res / k;
     const gx = (Z.geo.cx + player.x / Z.geo.res) * k, gy = (Z.geo.cy + player.z / Z.geo.res) * k;
-    g.fillStyle = '#e8e6df'; g.fillRect(0, 0, W, W);
-    for (let ty = Math.floor((gy - W / 2) / 256); ty <= Math.floor((gy + W / 2) / 256); ty++)
+    g.fillStyle = '#e8e6df'; g.fillRect(0, 0, W, H);
+    for (let ty = Math.floor((gy - H / 2) / 256); ty <= Math.floor((gy + H / 2) / 256); ty++)
       for (let tx = Math.floor((gx - W / 2) / 256); tx <= Math.floor((gx + W / 2) / 256); tx++) {
         const t = topoTile(mmZoom, tx, ty);
-        if (t.ok) g.drawImage(t.img, tx * 256 - gx + W / 2, ty * 256 - gy + W / 2, 256, 256);
+        if (t.ok) g.drawImage(t.img, tx * 256 - gx + W / 2, ty * 256 - gy + H / 2, 256, 256);
       }
-    toPx = (x, z) => [W / 2 + (x - player.x) / resZ, W / 2 + (z - player.z) / resZ];
+    toPx = (x, z) => [W / 2 + (x - player.x) / resZ, H / 2 + (z - player.z) / resZ];
     if (U.uOverlay.value) {
       const [ox, oy] = toPx(Z.detOrigin[0], Z.detOrigin[1]);
       g.globalAlpha = 0.75;
@@ -2233,20 +2344,30 @@ function drawMinimap() {
     }
     setScale(resZ);
   } else {
-    g.drawImage(mmBase, 0, 0, W, W);
-    toPx = (x, z) => [(x - Z.detOrigin[0]) / Z.detSize * W, (z - Z.detOrigin[1]) / Z.detSize * W];
-    setScale(Z.detSize / W);
+    // La zona és quadrada: s'encaixa a l'alçada i es centra.
+    const S = Math.min(W, H), ox = (W - S) / 2, oy = (H - S) / 2;
+    g.fillStyle = '#20251e'; g.fillRect(0, 0, W, H);
+    g.drawImage(mmBase, ox, oy, S, S);
+    toPx = (x, z) => [ox + (x - Z.detOrigin[0]) / Z.detSize * S, oy + (z - Z.detOrigin[1]) / Z.detSize * S];
+    setScale(Z.detSize / S);
   }
   g.font = '9px ui-monospace, monospace';
   g.textAlign = 'center';
   for (const p of mmMode === 'zone' ? Z.places : []) {
     if (!['peak', 'town', 'village'].includes(p.kind)) continue;
     const [px, py] = toPx(p.x, p.z);
-    if (px < 0 || py < 0 || px > W || py > W) continue;
+    if (px < 0 || py < 0 || px > W || py > H) continue;
     g.fillStyle = '#fff'; g.strokeStyle = 'rgba(0,0,0,.7)'; g.lineWidth = 2.5;
     if (p.kind === 'peak') { g.beginPath(); g.moveTo(px, py - 3); g.lineTo(px + 3, py + 2); g.lineTo(px - 3, py + 2); g.closePath(); g.stroke(); g.fill(); }
     else { g.beginPath(); g.arc(px, py, p.kind === 'town' ? 3 : 2, 0, 7); g.stroke(); g.fill(); }
     if (p.name && (p.kind !== 'peak' || p.ele > 0)) { g.strokeText(p.name, px, py - 5); g.fillText(p.name, px, py - 5); }
+  }
+  // Trobades registrades (GBIF).
+  for (const o of Z.gbif) {
+    const [px, py] = toPx(o.x, o.z);
+    if (px < -4 || py < -4 || px > W + 4 || py > H + 4) continue;
+    g.fillStyle = '#ffffff'; g.strokeStyle = '#2a2a2a'; g.lineWidth = 1.2;
+    g.beginPath(); g.arc(px, py, 3, 0, 7); g.fill(); g.stroke();
   }
   const sp = BOLETS[state.species];
   state.spots.forEach((s, i) => {
@@ -2257,8 +2378,8 @@ function drawMinimap() {
   });
   // Tu: punt amb el con de visió.
   let [px, py] = toPx(player.x, player.z);
-  const outside = px < 0 || py < 0 || px > W || py > W;
-  px = clamp(px, 6, W - 6); py = clamp(py, 6, W - 6);
+  const outside = px < 0 || py < 0 || px > W || py > H;
+  px = clamp(px, 6, W - 6); py = clamp(py, 6, H - 6);
   const a = Math.atan2(-Math.sin(player.yaw), -Math.cos(player.yaw)), half = THREE.MathUtils.degToRad(camera.fov * camera.aspect / 2);
   g.fillStyle = 'rgba(255,255,255,.22)';
   g.beginPath(); g.moveTo(px, py); g.arc(px, py, 34, a - Math.min(half, 1.2), a + Math.min(half, 1.2)); g.closePath(); g.fill();
@@ -2274,7 +2395,10 @@ minimap.addEventListener('click', e => {
   if (mmMode === 'topo') {
     const resZ = Z.geo.res / 2 ** (mmZoom - Z_DET);
     x = player.x + (u - 0.5) * r.width * resZ; z = player.z + (v - 0.5) * r.height * resZ;
-  } else { x = Z.detOrigin[0] + u * Z.detSize; z = Z.detOrigin[1] + v * Z.detSize; }
+  } else {
+    const S = Math.min(r.width, r.height), ox = (r.width - S) / 2, oy = (r.height - S) / 2;
+    x = Z.detOrigin[0] + (e.clientX - r.left - ox) / S * Z.detSize; z = Z.detOrigin[1] + (e.clientY - r.top - oy) / S * Z.detSize;
+  }
   if (mode === 'fly') teleport(x, z, Math.max(150, player.y - heightAt(player.x, player.z)));
   else teleport(x, z, 0);
 });
@@ -2311,6 +2435,164 @@ function drawCompass() {
     g.fillStyle = '#fff'; g.font = 'bold 8px ui-monospace, monospace'; g.fillText(String(i + 1), x, H - 10);
   });
   g.fillStyle = '#fff'; g.beginPath(); g.moveTo(W / 2 - 5, H); g.lineTo(W / 2 + 5, H); g.lineTo(W / 2, H - 6); g.fill();
+}
+
+// ---------------------------------------------------------------------------
+// Trobades registrades: observacions georeferenciades de GBIF (iNaturalist, herbaris, atles…)
+// ---------------------------------------------------------------------------
+const GBIF_NOMS = {
+  rovello: ['Lactarius deliciosus', 'Lactarius sanguifluus'],
+  cep: ['Boletus edulis', 'Boletus pinophilus', 'Boletus aereus', 'Boletus aestivalis'],
+  rossinyol: ['Cantharellus cibarius'],
+  camagroc: ['Craterellus lutescens'],
+  llenega: ['Hygrophorus latitabundus', 'Hygrophorus limacinus', 'Hygrophorus latitatus'],
+  trompeta: ['Craterellus cornucopioides'],
+};
+let gbifToken = 0;
+async function loadGbif() {
+  const token = ++gbifToken, sp = BOLETS[state.species];
+  Z.gbif = []; Z.gbifState = 'loading'; Z.gbifTotal = 0;
+  renderGbif();
+  // Una mica més gran que la zona, perquè el recompte "a prop" funcioni també a les vores.
+  const pad = 0.25 * Z.detSize;
+  const [n, w] = worldToLatLon(Z.detOrigin[0] - pad, Z.detOrigin[1] - pad);
+  const [sLat, e] = worldToLatLon(Z.detOrigin[0] + Z.detSize + pad, Z.detOrigin[1] + Z.detSize + pad);
+  const key = `cacabolets-gbif-v1-${sp.id}-${sLat.toFixed(3)},${w.toFixed(3)}`;
+  let recs = null;
+  try { const c = JSON.parse(localStorage.getItem(key) || 'null'); if (c && Date.now() - c.t < 3 * 864e5) recs = c.r; } catch (err) { /* sense emmagatzematge */ }
+  if (!recs && !qs.has('offline')) {
+    recs = [];
+    try {
+      for (let offset = 0; offset < 1200; offset += 300) {
+        const p = new URLSearchParams({ decimalLatitude: `${sLat.toFixed(4)},${n.toFixed(4)}`, decimalLongitude: `${w.toFixed(4)},${e.toFixed(4)}`,
+          hasCoordinate: 'true', hasGeospatialIssue: 'false', occurrenceStatus: 'PRESENT', limit: 300, offset });
+        for (const nom of GBIF_NOMS[sp.id]) p.append('scientificName', nom);
+        let data = null;
+        for (let tries = 0; tries < 3 && !data; tries++) {
+          try { const r = await fetch('https://api.gbif.org/v1/occurrence/search?' + p); if (r.ok) data = await r.json(); } catch (err) { /* es torna a provar */ }
+          if (!data) await new Promise(r => setTimeout(r, 800 * (tries + 1)));
+        }
+        if (!data) throw new Error('GBIF no respon');
+        for (const o of data.results || []) {
+          if (o.coordinateUncertaintyInMeters > 3000) continue;
+          recs.push([+o.decimalLatitude.toFixed(5), +o.decimalLongitude.toFixed(5), o.month || 0, o.year || 0, o.key]);
+        }
+        if (data.endOfRecords) break;
+      }
+      try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), r: recs })); } catch (err) { /* ple o bloquejat */ }
+    } catch (err) {
+      console.warn('GBIF no disponible:', err);
+      recs = null;
+    }
+  }
+  if (token !== gbifToken) return;
+  Z.gbifState = recs ? 'ok' : 'error';
+  Z.gbif = (recs || []).map(([lat, lon, month, year, k]) => { const [x, z] = latLonToWorld(lat, lon); return { x, z, month, year, key: k }; });
+  renderGbif();
+}
+function renderGbif() {
+  const sp = BOLETS[state.species], cv = $('gbifMonths');
+  const inZone = Z.gbif.filter(o => { const [u, v] = gridUV(o.x, o.z); return u >= 0 && v >= 0 && u <= 1 && v <= 1; });
+  const months = new Array(12).fill(0);
+  for (const o of inZone) if (o.month) months[o.month - 1]++;
+  const years = inZone.map(o => o.year).filter(Boolean);
+  $('gbifText').innerHTML = Z.gbifState === 'loading' ? 'Buscant observacions a GBIF…'
+    : Z.gbifState === 'error' ? 'No s\'ha pogut connectar amb GBIF.'
+    : inZone.length ? `${inZone.length} ${inZone.length === 1 ? 'observació' : 'observacions'} de ${sp.nom.toLowerCase()} a la zona` +
+      (years.length ? ` (${Math.min(...years)}–${Math.max(...years)})` : '') + '. Són els punts blancs del minimapa.'
+    : `Cap observació de ${sp.nom.toLowerCase()} registrada a la zona.`;
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  if (!w) return;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const g = cv.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, w, h);
+  const max = Math.max(1, ...months), bw = w / 12, cur = new Date(Z.weather ? Z.weather.times[Math.round(state.t)] : Date.now()).getMonth();
+  g.font = '9px ui-monospace, monospace'; g.textAlign = 'center';
+  months.forEach((m, i) => {
+    const bh = m / max * (h - 14);
+    g.fillStyle = i === cur ? '#f0b04a' : 'rgba(255,255,255,.35)';
+    g.fillRect(i * bw + 2, h - 11 - bh, bw - 4, Math.max(bh, m ? 1 : 0));
+    g.fillStyle = 'rgba(255,255,255,.55)';
+    g.fillText('GFMAMJJASOND'[i], i * bw + bw / 2, h - 1);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Pobles i ciutats: edificis on el mapa de cobertes marca zona urbana
+// ---------------------------------------------------------------------------
+const roofGeo = (() => {
+  // Prisma de teulada a dues aigües: base 1×1 a y = 0, carener a y = 1 al llarg de z.
+  const v = [-0.5, 0, -0.5, 0.5, 0, -0.5, 0, 1, -0.5, -0.5, 0, 0.5, 0.5, 0, 0.5, 0, 1, 0.5];
+  const idx = [0, 2, 1, 3, 4, 5, 0, 3, 5, 0, 5, 2, 1, 2, 5, 1, 5, 4];
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+  g.setIndex(idx);
+  const ng = g.toNonIndexed();
+  ng.computeVertexNormals();
+  return ng;
+})();
+const wallGeo = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0);
+function buildingMaterial(snow) {
+  const m = new THREE.MeshStandardMaterial({ roughness: 0.9, metalness: 0, side: snow ? THREE.DoubleSide : THREE.FrontSide });
+  m.onBeforeCompile = sh => injectCommon(sh, { snow });
+  m.customProgramCacheKey = () => 'cb-building' + snow;
+  return m;
+}
+const walls = new THREE.InstancedMesh(wallGeo, buildingMaterial(false), 14000);
+const roofs = new THREE.InstancedMesh(roofGeo, buildingMaterial(true), 14000);
+for (const m of [walls, roofs]) { m.frustumCulled = false; m.count = 0; m.castShadow = true; m.receiveShadow = true; scene.add(m); }
+// Per classe de coberta: probabilitat per píxel (~14 m), mida en planta, alçada mínima i màxima, teulada plana o no.
+const URBA = {
+  341: { p: 1, size: [9, 13], h: [6, 12], flat: 0.15 },     // casc urbà
+  342: { p: 1, size: [12, 14], h: [12, 21], flat: 0.85 },   // eixample
+  343: { p: 0.55, size: [8, 11], h: [5, 8], flat: 0.2 },    // zona urbana laxa
+  344: { p: 0.3, size: [8, 11], h: [5, 7], flat: 0.1 },     // edificacions aïllades
+  345: { p: 0.5, size: [8, 11], h: [5, 8], flat: 0.15 },    // residencial aïllada
+  347: { p: 0.75, size: [13, 14], h: [7, 11], flat: 1, ind: true },   // indústria i comerç
+};
+function updateTowns(cx, cz) {
+  let n = 0;
+  if (Z.cls) {
+    const R = 1700, res = Z.detSize / TEX;
+    const pi0 = Math.floor((cx - R - Z.detOrigin[0]) / res), pi1 = Math.ceil((cx + R - Z.detOrigin[0]) / res);
+    const pj0 = Math.floor((cz - R - Z.detOrigin[1]) / res), pj1 = Math.ceil((cz + R - Z.detOrigin[1]) / res);
+    for (let j = Math.max(0, pj0); j < Math.min(TEX, pj1) && n < walls.instanceMatrix.count; j++) {
+      for (let i = Math.max(0, pi0); i < Math.min(TEX, pi1); i++) {
+        const c = Z.cls[j * TEX + i];
+        if (c === NO_COVER) continue;
+        const u = URBA[COBERTES[c].code];
+        if (!u || hash3(i, j, 41) > u.p) continue;
+        const x = Z.detOrigin[0] + (i + 0.3 + hash3(i, j, 42) * 0.4) * res, z = Z.detOrigin[1] + (j + 0.3 + hash3(i, j, 43) * 0.4) * res;
+        if (Math.hypot(x - cx, z - cz) > R) continue;
+        // Els carrers del mateix barri comparteixen orientació.
+        const yaw = hash3(i >> 3, j >> 3, 44) * Math.PI / 2 + (hash3(i, j, 45) - 0.5) * 0.12;
+        const sx = u.size[0] + hash3(i, j, 46) * (u.size[1] - u.size[0]), sz = sx * (0.7 + hash3(i, j, 47) * 0.4);
+        const h = u.h[0] + Math.round(hash3(i, j, 48) * (u.h[1] - u.h[0]) / 3) * 3;
+        const y = heightAt(x, z);
+        tmpQ.setFromAxisAngle(yAxis, yaw);
+        // Les parets baixen 3 m sota terra perquè no quedin penjades als pendents.
+        tmpP.set(x, y - 3, z); tmpS.set(sx, h + 3, sz); tmpM.compose(tmpP, tmpQ, tmpS);
+        walls.setMatrixAt(n, tmpM);
+        const t = 0.75 + hash3(i, j, 49) * 0.3;
+        if (u.ind) tmpC.setRGB(0.42 * t, 0.42 * t, 0.43 * t);
+        else tmpC.setRGB(0.62 * t, 0.52 * t, 0.4 * t);
+        walls.setColorAt(n, tmpC);
+        const flat = hash3(i, j, 50) < u.flat;
+        tmpP.set(x, y + h, z); tmpS.set(sx * 1.04, flat ? 0.4 : sx * 0.32, sz * 1.04); tmpM.compose(tmpP, tmpQ, tmpS);
+        roofs.setMatrixAt(n, tmpM);
+        if (flat) tmpC.setRGB(0.3 * t, 0.29 * t, 0.28 * t);
+        else tmpC.setRGB(0.45 * t, 0.17 * t, 0.09 * t);
+        roofs.setColorAt(n, tmpC);
+        n++;
+        if (n >= walls.instanceMatrix.count) break;
+      }
+    }
+  }
+  walls.count = roofs.count = n;
+  walls.instanceMatrix.needsUpdate = roofs.instanceMatrix.needsUpdate = true;
+  if (walls.instanceColor) walls.instanceColor.needsUpdate = true;
+  if (roofs.instanceColor) roofs.instanceColor.needsUpdate = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -2410,7 +2692,8 @@ function updatePlayer(dt) {
     player.x += (-sy * cp * f + cy * s) * sp * dt;
     player.z += (-cy * cp * f - sy * s) * sp * dt;
     player.y += (spp * f + u) * sp * dt;
-    player.y = Math.max(player.y, heightAt(player.x, player.z) + 3);
+    // Volant, sempre per sobre de les copes: si no, un arbre a tocar sembla un monticle gegant.
+    player.y = Math.max(player.y, heightAt(player.x, player.z) + 30);
   } else {
     const sp = fast ? 6 : 1.6;
     const len = Math.hypot(f, s) || 1;
@@ -2523,6 +2806,7 @@ async function loadZone(zone) {
   player.y = Math.max(heightAt(player.x, player.z) + 700, th + 900);
   applyPendingState();
   scheduleWeek();
+  loadGbif();
   setLoading(1, 'Llest');
   setTimeout(() => $('loading').classList.add('off'), Z.sampleWeather ? 2500 : 300);
 }

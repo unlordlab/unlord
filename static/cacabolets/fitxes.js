@@ -1,4 +1,4 @@
-// Fitxes tècniques dels bolets de Micoclima. Text divulgatiu, no substitueix una guia
+// Fitxes tècniques dels bolets de CaçaBolets. Text divulgatiu, no substitueix una guia
 // micològica ni l'opinió d'un expert. Les il·lustracions són esquemàtiques (SVG).
 
 // Peu i barret genèrics: cada espècie en canvia la forma i els colors.
