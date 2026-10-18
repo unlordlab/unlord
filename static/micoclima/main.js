@@ -9,6 +9,7 @@
 //
 // Coordenades del món: metres, x cap a l'est, z cap al sud, origen al centre de la zona.
 import * as THREE from 'three';
+import { FITXES, ILUSTRACIONS } from './fitxes.js';
 
 // ---------------------------------------------------------------------------
 // Configuració
@@ -1587,6 +1588,31 @@ function showSpeciesInfo() {
     ${habs.join(', ')} · sòl a ${b.t[0]}–${b.t[1]} °C · ${mesos[b.mesos[0] - 1]}–${mesos[(b.mesos[1] + 11) % 12]}`;
   U.uIdxColor.value.set(b.color);
 }
+// Fitxa tècnica del bolet seleccionat.
+function openFitxa() {
+  const b = BOLETS[state.species], f = FITXES[b.id];
+  const mesos = ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre'];
+  $('fTitle').textContent = b.nom;
+  $('fLlati').textContent = f.llati;
+  $('fComest').textContent = f.comest;
+  const altres = f.noms.split(',').map(n => n.trim()).filter(n => n.toLowerCase() !== b.nom.toLowerCase());
+  $('fNoms').textContent = altres.length ? 'També: ' + altres.join(', ') : '';
+  $('fIlus').innerHTML = ILUSTRACIONS[b.id];
+  $('fDesc').textContent = f.descripcio;
+  $('fHab').textContent = f.habitat;
+  $('fTemp').textContent = f.temporada;
+  const habs = Object.entries(b.hab).sort((a, c) => c[1] - a[1]).map(([k, v]) => `${VEG[VI[k]].nom.toLowerCase()}${v < 0.6 ? ' (menys)' : ''}`);
+  $('fModel').textContent = `Hàbitats: ${habs.join(', ')}. Temperatura del sòl ideal entre ${b.t[0]} i ${b.t[1]} °C. ` +
+    `Necessita uns ${b.pluja} mm de pluja en les dues o tres setmanes anteriors. Temporada: de ${mesos[b.mesos[0] - 1]} a ${mesos[(b.mesos[1] + 11) % 12]}. ` +
+    (b.frost ? 'Tolera algunes glaçades.' : 'Les glaçades li treuen opcions.');
+  $('fConf').innerHTML = f.confusio.map(([n, d]) => `<li><b>${n}</b>: ${d}</li>`).join('');
+  $('fClau').textContent = 'Clau: ' + f.clau;
+  $('fitxa').showModal();
+}
+$('openFitxa').addEventListener('click', openFitxa);
+$('closeFitxa').addEventListener('click', () => $('fitxa').close());
+$('fitxa').addEventListener('click', e => { if (e.target === $('fitxa')) $('fitxa').close(); });
+
 $('species').addEventListener('change', e => { state.species = +e.target.value; showSpeciesInfo(); refreshDay(true); });
 $('zone').addEventListener('change', e => { state.zone = +e.target.value; loadZone(ZONES[state.zone]); });
 let terrainStyle = 'orto';
@@ -2092,6 +2118,7 @@ function drawCompass() {
 const player = { x: 0, z: 0, y: 1500, yaw: 0, pitch: -0.3, vy: 0, step: 0 };
 const keys = new Set();
 addEventListener('keydown', e => {
+  if ($('fitxa').open) return;
   if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
   keys.add(e.code);
   if (e.code === 'KeyF') setMode(mode === 'fly' ? 'walk' : 'fly');
