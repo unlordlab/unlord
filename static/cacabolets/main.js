@@ -3974,4 +3974,10 @@ else {
 firstLoad.then(() => { requestAnimationFrame(frame); checkZones(); }).catch(e => console.error(e));
 
 // Ganxos per a proves automàtiques.
+// L'alçada de la barra del temps marca fins on poden baixar els panells.
+const syncTimelineH = () => document.documentElement.style.setProperty('--tl', $('timeline').offsetHeight + 'px');
+new ResizeObserver(syncTimelineH).observe($('timeline'));
+syncTimelineH();
+$('credits').addEventListener('click', e => { if (e.target.tagName !== 'A') $('credits').classList.toggle('open'); });
+
 window.__mico = { Z, state, player, setMode, goToSpot, teleport, heightAt, addRoutePoint, startRouteFlight, route };
