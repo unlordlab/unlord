@@ -97,14 +97,6 @@ copyright = "CC BY-SA 4.0 - Marc Escriba"
     url = "/posts/cvmescribar.pdf"
     title = ""
   [[menu.main]]
-    weight = 6
-    identifier = "nieve"
-    pre = ""
-    post = ""
-    name = "Nieve"
-    url = "/nieve/"
-    title = "Simulación de nieve en alta montaña"
-  [[menu.main]]
     weight = 1
     identifier = "posts"
     # you can add extra information before the name (HTML format is supported), such as icons
