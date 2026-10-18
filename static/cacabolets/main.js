@@ -152,6 +152,7 @@ const U = {
   uNoiseTex: { value: null },
   uDetN: { value: null }, uCtxN: { value: null },
   uOrthoDet: { value: null }, uOrthoCtx: { value: null }, uUseOrtho: { value: 0 },
+  uNatTex: { value: null }, uShowNat: { value: 1 },
   uVegTex: { value: null },
   uIndexTex: { value: null },
   uShadowTex: { value: null },
@@ -316,6 +317,7 @@ const Z = {
   sampleWeather: false,
   geo: null,                      // { cx, cy, res }: conversió entre metres i lat/lon (zoom de detall)
   places: [],                     // cims, pobles i refugis
+  natura: [],                     // espais Natura 2000: { code, name, polys: [[[x, z], …], …] }
   gbif: [],                       // trobades registrades de l'espècie triada
   gbifState: 'none',
 };
@@ -1125,6 +1127,7 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
         uniform vec3 uLightDir; uniform vec3 uLightCol; uniform float uNight;
         uniform sampler2D uDetN; uniform sampler2D uCtxN;
         uniform sampler2D uOrthoDet; uniform sampler2D uOrthoCtx; uniform float uUseOrtho;
+        uniform sampler2D uNatTex; uniform float uShowNat;
         ${GLSL_TERRAIN.replace('uniform sampler2D uNoiseTex;', '').replace('uniform vec2 uDetOrigin;', '').replace('uniform float uDetSize;', '')}
         vec3 heatRamp(float x) {
           vec3 c = mix(vec3(1.0, 0.95, 0.63), vec3(1.0, 0.7, 0.23), smoothstep(0.15, 0.45, x));
@@ -1170,6 +1173,11 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
         float snow = uSnowAmt * smoothstep(uSnowLine - 100.0, uSnowLine + 100.0, hh + (n1 - 0.5) * 160.0);
         snow *= smoothstep(0.45, 0.7, N.y) * mix(1.0, 0.55, forest);
         alb = mix(alb, vec3(0.86, 0.89, 0.93), snow);
+        // Espais naturals protegits (Natura 2000): tint i contorn, que s'amaguen de prop.
+        if (uShowNat > 0.5 && inDet > 0.0) {
+          vec4 nt = texture(uNatTex, guv);
+          alb = mix(alb, nt.rgb, nt.a * inDet * smoothstep(60.0, 260.0, camDist));
+        }
         // Capa de probabilitat de bolets.
         float idx = texture(uIndexTex, guv).r * inDet;
         // De prop s'amaga, perquè quan es camina el terra s'ha de veure natural.
@@ -2040,6 +2048,8 @@ function updateInfo() {
   setT('wPos', `${lat.toFixed(4).replace('.', ',')}° N, ${Math.abs(lon).toFixed(4).replace('.', ',')}° ${lon >= 0 ? 'E' : 'O'}`);
   $('gmaps').href = `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(5)},${lon.toFixed(5)}`;
   setT('wNear', nearestPlaceText(x, z));
+  const site = naturaAt(x, z);
+  setT('wNatura', site ? `${site.name} (Natura 2000)` : Z.naturaState === 'ok' ? 'cap' : Z.naturaState === 'loading' ? 'buscant…' : 'sense dades');
 }
 
 // Diagnòstic en llenguatge planer: què té i què li falta a aquest punt per a l'espècie triada.
@@ -2447,6 +2457,16 @@ function drawMinimap() {
     else { g.beginPath(); g.arc(px, py, p.kind === 'town' ? 3 : 2, 0, 7); g.stroke(); g.fill(); }
     if (p.name && (p.kind !== 'peak' || p.ele > 0)) { g.strokeText(p.name, px, py - 5); g.fillText(p.name, px, py - 5); }
   }
+  // Espais protegits.
+  if (U.uShowNat.value) {
+    g.strokeStyle = 'rgba(40,170,100,.95)'; g.lineWidth = 1.5; g.setLineDash([5, 3]);
+    for (const site of Z.natura) for (const ring of site.polys) {
+      g.beginPath();
+      ring.forEach(([x, z], i) => { const [qx, qy] = toPx(x, z); i ? g.lineTo(qx, qy) : g.moveTo(qx, qy); });
+      g.closePath(); g.stroke();
+    }
+    g.setLineDash([]);
+  }
   // Ruta de la sortida.
   if (route.pts.length) {
     g.strokeStyle = '#3fa9ff'; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath();
@@ -2685,6 +2705,88 @@ function updateTowns(cx, cz) {
   walls.instanceMatrix.needsUpdate = roofs.instanceMatrix.needsUpdate = true;
   if (walls.instanceColor) walls.instanceColor.needsUpdate = true;
   if (roofs.instanceColor) roofs.instanceColor.needsUpdate = true;
+}
+
+// ---------------------------------------------------------------------------
+// Espais naturals protegits: xarxa Natura 2000 (Agència Europea de Medi Ambient)
+// ---------------------------------------------------------------------------
+const N2K = 'https://bio.discomap.eea.europa.eu/arcgis/rest/services/ProtectedSites/Natura2000Sites/MapServer';
+const natCanvas = document.createElement('canvas');
+natCanvas.width = natCanvas.height = TEX;
+const natTex = new THREE.CanvasTexture(natCanvas);
+natTex.colorSpace = THREE.SRGBColorSpace;
+natTex.minFilter = THREE.LinearMipmapLinearFilter;
+U.uNatTex.value = natTex;
+$('naturaShow').addEventListener('change', e => { U.uShowNat.value = e.target.checked ? 1 : 0; });
+async function loadNatura(token) {
+  Z.natura = []; Z.naturaState = 'loading';
+  drawNatura();
+  const pad = 0.1 * Z.detSize;
+  const [n, w] = worldToLatLon(Z.detOrigin[0] - pad, Z.detOrigin[1] - pad);
+  const [sLat, e] = worldToLatLon(Z.detOrigin[0] + Z.detSize + pad, Z.detOrigin[1] + Z.detSize + pad);
+  const sites = new Map();
+  try {
+    // Capa 0: llocs de la directiva d'hàbitats (LIC/ZEC); capa 1: d'aus (ZEPA). Molts són tots dos.
+    for (const layer of [0, 1]) {
+      const p = new URLSearchParams({ where: '1=1', geometry: `${w},${sLat},${e},${n}`, geometryType: 'esriGeometryEnvelope', inSR: 4326,
+        spatialRel: 'esriSpatialRelIntersects', outFields: 'SITECODE,SITENAME,SITETYPE', returnGeometry: 'true', outSR: 4326,
+        maxAllowableOffset: 0.0003, f: 'geojson' });
+      let data = null;
+      for (let tries = 0; tries < 3 && !data; tries++) {
+        try { const r = await fetch(`${N2K}/${layer}/query?${p}`); if (r.ok) data = await r.json(); } catch (err) { /* es torna a provar */ }
+        if (!data) await new Promise(r => setTimeout(r, 800 * (tries + 1)));
+      }
+      if (!data) throw new Error('Natura 2000 no respon');
+      for (const f of data.features || []) {
+        const code = f.properties.SITECODE;
+        if (sites.has(code)) continue;
+        const geom = f.geometry, polys = [];
+        const rings = geom.type === 'Polygon' ? geom.coordinates : geom.type === 'MultiPolygon' ? geom.coordinates.flat() : [];
+        for (const ring of rings) polys.push(ring.map(([lon, lat]) => latLonToWorld(lat, lon)));
+        sites.set(code, { code, name: f.properties.SITENAME, type: f.properties.SITETYPE, polys });
+      }
+    }
+    if (token !== loadToken) return;
+    Z.natura = [...sites.values()];
+    Z.naturaState = 'ok';
+  } catch (err) {
+    console.warn('Natura 2000 no disponible:', err);
+    if (token !== loadToken) return;
+    Z.naturaState = 'error';
+  }
+  drawNatura();
+}
+// Textura per al terreny (tint i contorn) i llista del panell.
+function drawNatura() {
+  const g = natCanvas.getContext('2d');
+  g.clearRect(0, 0, TEX, TEX);
+  const toPx = (x, z) => [(x - Z.detOrigin[0]) / Z.detSize * TEX, (z - Z.detOrigin[1]) / Z.detSize * TEX];
+  for (const site of Z.natura) {
+    g.beginPath();
+    for (const ring of site.polys) ring.forEach(([x, z], i) => { const [px, py] = toPx(x, z); i ? g.lineTo(px, py) : g.moveTo(px, py); });
+    g.fillStyle = 'rgba(70,200,120,0.16)'; g.fill('evenodd');
+    g.strokeStyle = 'rgba(90,235,150,0.95)'; g.lineWidth = 3; g.stroke();
+  }
+  natTex.needsUpdate = true;
+  const list = $('naturaList');
+  if (Z.naturaState === 'loading') list.innerHTML = '<li class="muted">Buscant espais protegits…</li>';
+  else if (Z.naturaState === 'error') list.innerHTML = '<li class="muted">No s\'han pogut carregar els espais Natura 2000.</li>';
+  else if (!Z.natura.length) list.innerHTML = '<li class="muted">Cap espai Natura 2000 a la zona.</li>';
+  else list.innerHTML = Z.natura.map(st => `<li><span><span class="sw"></span>${st.name}</span>` +
+    `<a href="https://natura2000.eea.europa.eu/Natura2000/SDF.aspx?site=${st.code}" target="_blank" rel="noopener">fitxa ↗</a></li>`).join('');
+}
+function pointInRing(x, z, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, zi] = ring[i], [xj, zj] = ring[j];
+    if ((zi > z) !== (zj > z) && x < (xj - xi) * (z - zi) / (zj - zi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function naturaAt(x, z) {
+  // Parell-senar sobre tots els anells: així els forats (enclavaments) queden fora.
+  for (const site of Z.natura) { let c = 0; for (const ring of site.polys) if (pointInRing(x, z, ring)) c++; if (c % 2) return site; }
+  return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -3206,6 +3308,7 @@ async function loadZone(zone) {
   applyPendingState();
   scheduleWeek();
   loadGbif();
+  loadNatura(token);
   setLoading(1, 'Llest');
   setTimeout(() => $('loading').classList.add('off'), Z.sampleWeather ? 2500 : 300);
 }
