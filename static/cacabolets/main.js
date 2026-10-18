@@ -9,7 +9,7 @@
 //
 // Coordenades del món: metres, x cap a l'est, z cap al sud, origen al centre de la zona.
 import * as THREE from 'three';
-import { FITXES, ILUSTRACIONS, FOTOS } from './fitxes.js';
+import { FITXES, ILUSTRACIONS, FOTOS, ilustracioGenerica } from './fitxes.js';
 
 // ---------------------------------------------------------------------------
 // Configuració
@@ -91,7 +91,23 @@ const BOLETS = [
     hab: { piroig: 1, pinegre: 0.9, pinblanc: 0.4 }, t: [2, 10], pluja: 35, mesos: [11, 1], frost: true },
   { id: 'trompeta',  nom: 'Trompeta de la mort', llati: 'Craterellus cornucopioides', color: '#2a2422',
     hab: { fageda: 1, roureda: 0.7, alzinar: 0.4 }, t: [7, 16], pluja: 50, mesos: [9, 11] },
+  { id: 'fredolic',  nom: 'Fredolic',            llati: 'Tricholoma terreum', color: '#8a8580',
+    hab: { pinblanc: 1, piroig: 0.9, pinegre: 0.6, alzinar: 0.3 }, t: [4, 13], pluja: 35, mesos: [10, 1], frost: true },
+  { id: 'moixerno',  nom: 'Moixernó',            llati: 'Calocybe gambosa', color: '#e9e1cf', obert: true,
+    hab: { prat: 1, conreu: 0.6, matollar: 0.5, roureda: 0.4 }, t: [9, 17], pluja: 40, mesos: [4, 6] },
+  { id: 'murgula',   nom: 'Múrgola',             llati: 'Morchella esculenta / M. elata', color: '#9b7d55',
+    hab: { roureda: 0.8, pinblanc: 0.5, alzinar: 0.4, piroig: 0.5, fageda: 0.4 }, t: [7, 15], pluja: 30, mesos: [3, 5] },
+  { id: 'camasec',   nom: 'Cama-sec',            llati: 'Marasmius oreades', color: '#d9b98a', obert: true,
+    hab: { prat: 1, conreu: 0.8, matollar: 0.4 }, t: [10, 22], pluja: 25, mesos: [4, 11] },
+  { id: 'oudereig',  nom: 'Ou de reig',          llati: 'Amanita caesarea', color: '#f08a1c',
+    hab: { alzinar: 1, roureda: 1, pinblanc: 0.3, fageda: 0.3 }, t: [16, 24], pluja: 40, mesos: [7, 10] },
 ];
+// Hàbitat d'una cel·la per a una espècie: als bolets de bosc els cal el bosc (densitat de copes),
+// als de prat (obert), al contrari, els va millor on no hi ha arbres.
+function habitatAt(k, sp) {
+  const base = sp.hab[VEG[Z.veg[k]].id] || 0;
+  return sp.obert ? base * (1 - 0.7 * Z.cover[k]) : base * Z.cover[k];
+}
 
 const Z_DET = 13, Z_CTX = 11, TILES = 4, TEX = TILES * 256;   // 1024 × 1024
 const GRID = 256;                                             // resolució del mapa de bosc i de probabilitat
@@ -706,27 +722,7 @@ function processWeather(json, pts) {
   const off = (first.utc_offset_seconds || 0) * 1000;
   const times = first.hourly.time.map(s => Date.parse(s + 'Z') - off);   // UTC ms
   const nH = times.length, nD = Math.floor(nH / 24);
-  const P = json.map((loc, k) => {
-    const h = loc.hourly;
-    const get = v => Float32Array.from(h[v], x => (x == null ? NaN : x));
-    const o = { x: pts[k].x, z: pts[k].z, elev: loc.elevation };
-    for (const v of HOURLY) o[v] = get(v);
-    // Agregats diaris.
-    o.dRain = new Float32Array(nD); o.dSnow = new Float32Array(nD); o.dTmin = new Float32Array(nD);
-    o.dTmean = new Float32Array(nD); o.dSoilT = new Float32Array(nD); o.dSoilM = new Float32Array(nD);
-    for (let d = 0; d < nD; d++) {
-      let rain = 0, snow = 0, tmin = 99, tsum = 0, st = 0, sm = 0, ns = 0, nm = 0;
-      for (let i = d * 24; i < d * 24 + 24; i++) {
-        rain += o.precipitation[i] || 0; snow += o.snowfall[i] || 0;
-        const t = o.temperature_2m[i]; if (!isNaN(t)) { tmin = Math.min(tmin, t); tsum += t; }
-        if (!isNaN(o.soil_temperature_6cm[i])) { st += o.soil_temperature_6cm[i]; ns++; }
-        if (!isNaN(o.soil_moisture_3_to_9cm[i])) { sm += o.soil_moisture_3_to_9cm[i]; nm++; }
-      }
-      o.dRain[d] = rain; o.dSnow[d] = snow; o.dTmin[d] = tmin; o.dTmean[d] = tsum / 24;
-      o.dSoilT[d] = ns ? st / ns : o.dTmean[d]; o.dSoilM[d] = nm ? sm / nm : 0.2;
-    }
-    return o;
-  });
+  const P = json.map((loc, k) => Object.assign(dailyFromLoc(loc, nD), { x: pts[k].x, z: pts[k].z }));
   // Índex de "avui" a la sèrie (hora més propera a ara).
   const now = Date.now();
   let nowIdx = 0;
@@ -737,9 +733,40 @@ function processWeather(json, pts) {
   trendKey = '';
 }
 
+// Sèries horàries i agregats diaris d'un punt d'Open-Meteo.
+function dailyFromLoc(loc, nD) {
+  const h = loc.hourly;
+  const get = v => Float32Array.from(h[v], x => (x == null ? NaN : x));
+  const o = { elev: loc.elevation };
+  for (const v of HOURLY) o[v] = get(v);
+  o.dRain = new Float32Array(nD); o.dSnow = new Float32Array(nD); o.dTmin = new Float32Array(nD);
+  o.dTmean = new Float32Array(nD); o.dSoilT = new Float32Array(nD); o.dSoilM = new Float32Array(nD);
+  for (let d = 0; d < nD; d++) {
+    let rain = 0, snow = 0, tmin = 99, tsum = 0, st = 0, sm = 0, ns = 0, nm = 0;
+    for (let i = d * 24; i < d * 24 + 24; i++) {
+      rain += o.precipitation[i] || 0; snow += o.snowfall[i] || 0;
+      const t = o.temperature_2m[i]; if (!isNaN(t)) { tmin = Math.min(tmin, t); tsum += t; }
+      if (!isNaN(o.soil_temperature_6cm[i])) { st += o.soil_temperature_6cm[i]; ns++; }
+      if (!isNaN(o.soil_moisture_3_to_9cm[i])) { sm += o.soil_moisture_3_to_9cm[i]; nm++; }
+    }
+    o.dRain[d] = rain; o.dSnow[d] = snow; o.dTmin[d] = tmin; o.dTmean[d] = tsum / 24;
+    o.dSoilT[d] = ns ? st / ns : o.dTmean[d]; o.dSoilM[d] = nm ? sm / nm : 0.2;
+  }
+  return o;
+}
+
 // Variables d'un dia per a cada punt de la graella, per al model de bolets.
-function dayAggregates(d) {
-  return Z.weather.P.map(o => {
+function dayAggregates(d) { return aggregatesFor(Z.weather.P, d); }
+// Només el temps (sense bosc) en un punt: la part del model que es pot calcular sense el relleu.
+function weatherScore(a, sp, date, dh = 0) {
+  const ts = a.soilT + LAPSE * dh;
+  const tScore = smooth(sp.t[0] - 4, sp.t[0], ts) * (1 - smooth(sp.t[1], sp.t[1] + 4, ts));
+  const water = clamp(0.7 * smooth(sp.pluja * 0.35, sp.pluja, a.rainEff) + 0.3 * smooth(0.1, 0.3, a.soilM));
+  const frosts = a.tmins.filter(t => t + LAPSE * dh < -1.5).length;
+  return water * tScore * Math.exp(-(sp.frost ? 0.15 : 0.6) * frosts) * seasonScore(sp, date);
+}
+function aggregatesFor(PList, d) {
+  return PList.map(o => {
     // Pluja "efectiva": la de fa 2–24 dies, amb més pes cap als 8–12 dies.
     let r = 0, wsum = 0;
     for (let k = 2; k <= 24; k++) {
@@ -852,7 +879,7 @@ function dayAgg(d) {
 // el diagnòstic els fa servir tots per explicar què falta o què sobra.
 function cellFactors(k, agg, sp, season) {
   const i = k % GRID, j = Math.floor(k / GRID);
-  const hab = (sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k];
+  const hab = habitatAt(k, sp);
   const ws = gridWeights((i + 0.5) / GRID, (j + 0.5) / GRID);
   let rainEff = 0, rain20 = 0, soilT = 0, soilM = 0, elev = 0;
   for (const [p, w] of ws) { const a = agg[p]; rainEff += a.rainEff * w; rain20 += a.rain20 * w; soilT += a.soilT * w; soilM += a.soilM * w; elev += a.elev * w; }
@@ -880,7 +907,7 @@ function computeIndex(day, sp) {
   const season = seasonScore(sp, new Date(W.times[Math.min(day * 24 + 12, W.nH - 1)]));
   const idx = new Float32Array(GRID * GRID);
   for (let k = 0; k < GRID * GRID; k++) {
-    if ((sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k] < 0.02) continue;
+    if (habitatAt(k, sp) < 0.02) continue;
     idx[k] = cellFactors(k, agg, sp, season).idx;
   }
   return idx;
@@ -1698,12 +1725,14 @@ function openFitxa() {
   $('fComest').textContent = f.comest;
   const altres = f.noms.split(',').map(n => n.trim()).filter(n => n.toLowerCase() !== b.nom.toLowerCase());
   $('fNoms').textContent = altres.length ? 'També: ' + altres.join(', ') : '';
-  const ft = FOTOS[b.id];
-  const lic = ft.llicenciaUrl ? `<a href="${ft.llicenciaUrl}" target="_blank" rel="noopener">${ft.llicencia}</a>` : ft.llicencia;
-  $('fIlus').innerHTML = `<img src="img/${b.id}.jpg" alt="${ft.peu}" loading="lazy">
-    <div class="credit"><i>${ft.peu}</i> · <a href="${ft.font}" target="_blank" rel="noopener">${ft.autor}</a>, ${lic}, via Wikimedia Commons</div>`;
-  // Si la foto no carrega, la il·lustració.
-  $('fIlus').querySelector('img').onerror = () => { $('fIlus').innerHTML = ILUSTRACIONS[b.id]; };
+  const ft = FOTOS[b.id], ilus = ILUSTRACIONS[b.id] || ilustracioGenerica(b.color);
+  if (ft) {
+    const lic = ft.llicenciaUrl ? `<a href="${ft.llicenciaUrl}" target="_blank" rel="noopener">${ft.llicencia}</a>` : ft.llicencia;
+    $('fIlus').innerHTML = `<img src="img/${b.id}.jpg" alt="${ft.peu}" loading="lazy">
+      <div class="credit"><i>${ft.peu}</i> · <a href="${ft.font}" target="_blank" rel="noopener">${ft.autor}</a>, ${lic}, via Wikimedia Commons</div>`;
+    // Si la foto no carrega, la il·lustració.
+    $('fIlus').querySelector('img').onerror = () => { $('fIlus').innerHTML = ilus; };
+  } else $('fIlus').innerHTML = ilus;
   $('fDesc').textContent = f.descripcio;
   $('fHab').textContent = f.habitat;
   $('fTemp').textContent = f.temporada;
@@ -1742,7 +1771,7 @@ function computeWeek() {
   // (probabilitat respecte a l'hàbitat de cada cel·la), no només els millors racons.
   const hab = new Float32Array(GRID * GRID);
   let habSum = 0;
-  for (let k = 0; k < GRID * GRID; k++) { hab[k] = (sp.hab[VEG[Z.veg[k]].id] || 0) * Z.cover[k]; if (hab[k] >= 0.25) habSum += hab[k]; }
+  for (let k = 0; k < GRID * GRID; k++) { hab[k] = habitatAt(k, sp); if (hab[k] >= 0.25) habSum += hab[k]; }
   week = [];
   for (let d = d0; d < W.nD && week.length < 7; d++) {
     const idx = computeIndex(d, sp);
@@ -2457,6 +2486,16 @@ function drawMinimap() {
     else { g.beginPath(); g.arc(px, py, p.kind === 'town' ? 3 : 2, 0, 7); g.stroke(); g.fill(); }
     if (p.name && (p.kind !== 'peak' || p.ele > 0)) { g.strokeText(p.name, px, py - 5); g.fillText(p.name, px, py - 5); }
   }
+  // Camins (al mapa topogràfic ja hi surten).
+  if (mmMode === 'zone' && trailMesh.visible) {
+    g.lineWidth = 1;
+    for (const t of Z.trails || []) {
+      g.strokeStyle = t.kind === 'track' ? 'rgba(240,220,190,.7)' : 'rgba(255,140,110,.85)';
+      g.beginPath();
+      t.pts.forEach(([x, z], i) => { const [qx, qy] = toPx(x, z); i ? g.lineTo(qx, qy) : g.moveTo(qx, qy); });
+      g.stroke();
+    }
+  }
   // Espais protegits.
   if (U.uShowNat.value) {
     g.strokeStyle = 'rgba(40,170,100,.95)'; g.lineWidth = 1.5; g.setLineDash([5, 3]);
@@ -2472,6 +2511,14 @@ function drawMinimap() {
     g.strokeStyle = '#3fa9ff'; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath();
     route.pts.forEach((q, i) => { const [qx, qy] = toPx(q.x, q.z); i ? g.lineTo(qx, qy) : g.moveTo(qx, qy); }); g.stroke();
     route.pts.forEach((q, i) => { const [qx, qy] = toPx(q.x, q.z); g.fillStyle = i === 0 ? '#3fa9ff' : '#fff'; g.beginPath(); g.arc(qx, qy, 3.5, 0, 7); g.fill(); });
+  }
+  // Les teves sortides (diari).
+  for (const e of store.get(DIARI, [])) {
+    if (!Z.geo) break;
+    const [dx, dz] = latLonToWorld(e.lat, e.lon), [px, py] = toPx(dx, dz);
+    if (px < -4 || py < -4 || px > W + 4 || py > H + 4) continue;
+    g.fillStyle = e.qty > 0 ? '#c46bff' : '#7d6a8a'; g.strokeStyle = '#fff'; g.lineWidth = 1.2;
+    g.fillRect(px - 3.5, py - 3.5, 7, 7); g.strokeRect(px - 3.5, py - 3.5, 7, 7);
   }
   // Trobades registrades (GBIF).
   for (const o of Z.gbif) {
@@ -2559,6 +2606,11 @@ const GBIF_NOMS = {
   camagroc: ['Craterellus lutescens'],
   llenega: ['Hygrophorus latitabundus', 'Hygrophorus limacinus', 'Hygrophorus latitatus'],
   trompeta: ['Craterellus cornucopioides'],
+  fredolic: ['Tricholoma terreum'],
+  moixerno: ['Calocybe gambosa'],
+  murgula: ['Morchella esculenta', 'Morchella elata', 'Morchella conica'],
+  camasec: ['Marasmius oreades'],
+  oudereig: ['Amanita caesarea'],
 };
 let gbifToken = 0;
 async function loadGbif() {
@@ -2787,6 +2839,351 @@ function naturaAt(x, z) {
   // Parell-senar sobre tots els anells: així els forats (enclavaments) queden fora.
   for (const site of Z.natura) { let c = 0; for (const ring of site.polys) if (pointInRing(x, z, ring)) c++; if (c % 2) return site; }
   return null;
+}
+
+// ---------------------------------------------------------------------------
+// Emmagatzematge local (tot es queda al navegador)
+// ---------------------------------------------------------------------------
+const store = {
+  get(key, def) { try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch (e) { return def; } },
+  set(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); return true; } catch (e) { return false; } },
+};
+const isoDay = ms => isoLocal(ms).slice(0, 10);
+const spById = id => BOLETS.find(b => b.id === id) || BOLETS[0];
+function placeName(x, z) {
+  const t = nearestPlaceText(x, z);
+  return t && t !== '—' ? t : ZONES[state.zone].nom;
+}
+// Anar a un punt (lat/lon): si és a la zona carregada, s'hi va directament; si no, es carrega la zona.
+async function goToLatLon(lat, lon, walk = true) {
+  if (Z.geo) {
+    const [x, z] = latLonToWorld(lat, lon), [u, v] = gridUV(x, z);
+    if (u > 0.05 && v > 0.05 && u < 0.95 && v < 0.95) { setMode(walk ? 'walk' : 'fly'); teleport(x, z, walk ? 0 : 300); return; }
+  }
+  await goToPoint(lat, lon);
+  const [x, z] = latLonToWorld(lat, lon);
+  setMode(walk ? 'walk' : 'fly'); teleport(x, z, walk ? 0 : 300);
+}
+
+// ---------------------------------------------------------------------------
+// Diari de sortides
+// ---------------------------------------------------------------------------
+const DIARI = 'cacabolets-diari-v1';
+$('dSp').innerHTML = BOLETS.map(b => `<option value="${b.id}">${b.nom}</option>`).join('');
+$('openDiari').addEventListener('click', () => {
+  $('dDate').value = isoDay(Z.weather.times[0] + Math.round(state.t) * 36e5);
+  $('dSp').value = BOLETS[state.species].id;
+  $('dWhere').textContent = `Lloc: ${placeName(player.x, player.z)}`;
+  renderDiari();
+  $('diari').showModal();
+});
+$('closeDiari').addEventListener('click', () => $('diari').close());
+// Què deia el model aquell dia en aquell punt (si la data cau dins de les dades carregades).
+function predictionAt(lat, lon, day, sp) {
+  if (!Z.weather || !Z.geo) return null;
+  const [x, z] = latLonToWorld(lat, lon), k = gridCell(x, z);
+  if (k < 0) return null;
+  const W = Z.weather;
+  const d = W.times.findIndex(t => isoDay(t) === day);
+  if (d < 0) return null;
+  const dd = Math.floor(d / 24);
+  return cellFactors(k, dayAgg(dd), sp, seasonScore(sp, new Date(W.times[dd * 24 + 12]))).idx;
+}
+$('dSave').addEventListener('click', () => {
+  const [lat, lon] = worldToLatLon(player.x, player.z);
+  const sp = spById($('dSp').value), day = $('dDate').value;
+  const e = { id: Date.now(), day, lat: +lat.toFixed(5), lon: +lon.toFixed(5), place: placeName(player.x, player.z), sp: sp.id,
+    qty: +$('dQty').value, notes: $('dNotes').value.trim(), pred: predictionAt(lat, lon, day, sp) };
+  const list = store.get(DIARI, []);
+  list.unshift(e);
+  store.set(DIARI, list);
+  $('dNotes').value = '';
+  renderDiari();
+});
+const QTY = ['res', 'pocs', 'bastants', 'molts'];
+function renderDiari() {
+  const list = store.get(DIARI, []);
+  // Torna a calcular la previsió de les entrades que ara cauen dins les dades carregades.
+  for (const e of list) if (e.pred == null) e.pred = predictionAt(e.lat, e.lon, e.day, spById(e.sp));
+  const judged = list.filter(e => e.pred != null);
+  const hits = judged.filter(e => (e.pred >= 0.4) === (e.qty > 0)).length;
+  $('dStats').textContent = !list.length ? 'Encara no hi ha cap sortida.'
+    : judged.length ? `El model va encertar ${hits} de ${judged.length} sortides (deia «bones condicions» quan en vas trobar, o al revés).`
+    : 'Per comparar amb el model, la sortida ha de ser dels últims 60 dies i dins la zona carregada.';
+  $('dList').innerHTML = list.map(e => `<li data-id="${e.id}">
+      <span><b>${spById(e.sp).nom}</b>: ${QTY[e.qty]} · ${e.place}<br><span class="meta">${e.day}${e.pred != null ? ` · el model deia ${Math.round(e.pred * 100)}%` : ''}${e.notes ? ' · ' + e.notes.replace(/[<>&]/g, '') : ''}</span></span>
+      <span style="white-space:nowrap"><button type="button" class="go">Anar-hi</button><button type="button" class="x del" title="Esborrar">✕</button></span></li>`).join('');
+  $('dList').querySelectorAll('li').forEach(li => {
+    const e = list.find(q => q.id === +li.dataset.id);
+    li.querySelector('.go').addEventListener('click', async () => { $('diari').close(); await goToLatLon(e.lat, e.lon); });
+    li.querySelector('.del').addEventListener('click', () => { store.set(DIARI, store.get(DIARI, []).filter(q => q.id !== e.id)); renderDiari(); });
+  });
+  store.set(DIARI, list);
+}
+$('dExport').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(store.get(DIARI, []), null, 1)], { type: 'application/json' }));
+  a.download = 'cacabolets-diari.json'; a.click();
+});
+$('dImportBtn').addEventListener('click', () => $('dImport').click());
+$('dImport').addEventListener('change', async e => {
+  try {
+    const data = JSON.parse(await e.target.files[0].text());
+    if (!Array.isArray(data)) throw new Error('Format');
+    const list = store.get(DIARI, []), ids = new Set(list.map(q => q.id));
+    for (const q of data) if (q && q.day && Number.isFinite(q.lat) && !ids.has(q.id)) list.push(q);
+    list.sort((a, b) => (a.day < b.day ? 1 : -1));
+    store.set(DIARI, list);
+    renderDiari();
+  } catch (err) { $('dStats').textContent = 'No s\'ha pogut importar el fitxer.'; }
+});
+
+// ---------------------------------------------------------------------------
+// Els meus llocs: guardats al navegador, amb el temps dels propers dies i avisos
+// ---------------------------------------------------------------------------
+const LLOCS = 'cacabolets-llocs-desats-v1';
+$('saveZone').addEventListener('click', () => {
+  const [lat, lon] = worldToLatLon(player.x, player.z);
+  const list = store.get(LLOCS, []);
+  if (list.length >= 12) { $('zonesNote').textContent = 'Com a màxim 12 llocs.'; return; }
+  list.push({ id: Date.now(), nom: placeName(player.x, player.z), lat: +lat.toFixed(4), lon: +lon.toFixed(4), sp: BOLETS[state.species].id, elev: Math.round(heightAt(player.x, player.z)) });
+  store.set(LLOCS, list);
+  checkZones(true);
+});
+// Previsió de cada lloc desat: temps d'Open-Meteo en aquell punt i la part meteorològica del model.
+async function zoneForecast(zn) {
+  const key = `cacabolets-prev-${zn.lat},${zn.lon}`, cached = store.get(key, null);
+  let json = cached && Date.now() - cached.t < 3 * 36e5 ? cached.j : null;
+  if (!json) {
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?' + new URLSearchParams({ latitude: zn.lat, longitude: zn.lon, hourly: HOURLY.join(','), past_days: 30, forecast_days: 8, timezone: 'Europe/Madrid' }));
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    json = await r.json();
+    store.set(key, { t: Date.now(), j: json });
+  }
+  const off = (json.utc_offset_seconds || 0) * 1000, times = json.hourly.time.map(t => Date.parse(t + 'Z') - off);
+  const nD = Math.floor(times.length / 24), P = [dailyFromLoc(json, nD)];
+  let d0 = 0; for (let i = 0; i < times.length; i++) if (times[i] <= Date.now()) d0 = Math.floor(i / 24);
+  const sp = spById(zn.sp), days = [];
+  for (let d = d0; d < Math.min(nD, d0 + 8); d++) {
+    const a = aggregatesFor(P, d)[0];
+    days.push({ d, date: new Date(times[d * 24 + 12]), score: weatherScore(a, sp, new Date(times[d * 24 + 12]), (zn.elev || json.elevation) - json.elevation) });
+  }
+  return days;
+}
+async function checkZones(force = false) {
+  const list = store.get(LLOCS, []);
+  const ul = $('myZones');
+  if (!list.length) { ul.innerHTML = '<li class="muted">Desa llocs per veure com van els propers dies.</li>'; return; }
+  ul.innerHTML = list.map(zn => `<li data-id="${zn.id}"><span class="nm" title="${zn.nom}">${spById(zn.sp).nom} · ${zn.nom}</span><span class="badge2 st">…</span><button type="button" class="x" title="Esborrar">✕</button></li>`).join('');
+  ul.querySelectorAll('li').forEach(li => {
+    const zn = list.find(q => q.id === +li.dataset.id);
+    li.querySelector('.nm').addEventListener('click', async () => {
+      const i = BOLETS.findIndex(b => b.id === zn.sp);
+      if (i >= 0 && i !== state.species) { state.species = i; $('species').value = i; showSpeciesInfo(); }
+      await goToLatLon(zn.lat, zn.lon);
+      refreshDay(true); scheduleWeek(); loadGbif();
+    });
+    li.querySelector('.x').addEventListener('click', () => { store.set(LLOCS, store.get(LLOCS, []).filter(q => q.id !== zn.id)); checkZones(); });
+  });
+  for (const zn of list) {
+    const badge = ul.querySelector(`li[data-id="${zn.id}"] .st`);
+    try {
+      const days = await zoneForecast(zn);
+      const best = days.reduce((a, b) => (b.score > a.score ? b : a));
+      const [txt, col] = verdict(best.score);
+      badge.textContent = `${fmtWeekday.format(best.date).replace('.', '')} ${Math.round(best.score * 100)}%`;
+      badge.style.background = col + '33'; badge.style.border = `1px solid ${col}`;
+      badge.title = `${txt} ${fmtLongDay.format(best.date)} (només el temps, sense el bosc)`;
+      // Avís: bones condicions en els propers 3 dies, una sola vegada per lloc i dia.
+      const soon = days.slice(0, 4).find(x => x.score >= 0.6);
+      if (soon && 'Notification' in window && Notification.permission === 'granted') {
+        const tag = `${zn.id}-${isoDay(soon.date.getTime())}`;
+        const done = store.get('cacabolets-avisos', []);
+        if (!done.includes(tag)) {
+          new Notification('CaçaBolets', { body: `Bones condicions per al ${spById(zn.sp).nom.toLowerCase()} a ${zn.nom}: ${fmtLongDay.format(soon.date)} (${Math.round(soon.score * 100)}%).`, icon: '/favicon.ico', tag });
+          store.set('cacabolets-avisos', [...done, tag].slice(-100));
+        }
+      }
+    } catch (err) {
+      badge.textContent = 'sense dades';
+    }
+  }
+}
+$('notifyBtn').addEventListener('click', async () => {
+  if (!('Notification' in window)) { $('zonesNote').textContent = 'Aquest navegador no permet avisos.'; return; }
+  const p = await Notification.requestPermission();
+  $('zonesNote').textContent = p === 'granted'
+    ? 'Avisos activats. T\'avisarem quan un lloc desat tingui bones condicions en els propers dies, sempre que tinguis CaçaBolets obert en una pestanya.'
+    : 'Sense permís no es poden enviar avisos.';
+  checkZones(true);
+});
+setInterval(() => checkZones(), 3 * 36e5);
+
+// ---------------------------------------------------------------------------
+// Pregunta a CaçaBolets: interpreta preguntes senzilles (bolet, lloc, quan) i respon amb el model
+// ---------------------------------------------------------------------------
+const norm = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/·/g, '').replace(/[^a-z0-9' -]/g, ' ');
+const ALIES = {
+  rovello: ['rovello', 'rovellons', 'pinetell', 'pinetells', 'niscalo', 'niscalos', 'rebollon', 'robellon'],
+  cep: ['cep', 'ceps', 'siureny', 'siurenys', 'boleto', 'boletos', 'porcini'],
+  rossinyol: ['rossinyol', 'rossinyols', 'rebozuelo', 'rebozuelos'],
+  camagroc: ['camagroc', 'camagrocs', 'trompeta amarilla', 'trompetas amarillas'],
+  llenega: ['llenega', 'llenegues'],
+  trompeta: ['trompeta de la mort', 'trompetes de la mort', 'trompetes', 'trompeta de los muertos', 'trompeta negra'],
+  fredolic: ['fredolic', 'fredolics', 'capuchina', 'capuchinas'],
+  moixerno: ['moixerno', 'moixernons', 'perrechico', 'perrechicos', 'bolet de sant jordi'],
+  murgula: ['murgula', 'murgules', 'colmenilla', 'colmenillas', 'morchella'],
+  camasec: ['cama-sec', 'cama sec', 'camasec', 'cames-seques', 'senderuela', 'carrerola', 'carreroles'],
+  oudereig: ['ou de reig', 'ous de reig', 'oronja', 'oronjas'],
+};
+const DIES = { diumenge: 0, dilluns: 1, dimarts: 2, dimecres: 3, dijous: 4, divendres: 5, dissabte: 6 };
+async function answer(q) {
+  const out = $('askAnswer');
+  const t = ' ' + norm(q) + ' ';
+  // Bolet: l'àlies més llarg que aparegui.
+  let spIdx = state.species, best = 0;
+  for (const [id, al] of Object.entries(ALIES)) for (const a of al) if (t.includes(' ' + a) && a.length > best) { best = a.length; spIdx = BOLETS.findIndex(b => b.id === id); }
+  // Lloc: el municipi o la zona amb el nom més llarg que aparegui com a paraules senceres.
+  let place = null;
+  for (const [name, lat, lon] of await loadMunicipis()) {
+    const n = norm(name).trim();
+    if (n.length >= 3 && new RegExp(`[ ']${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[ ']`).test(t) && (!place || n.length > place.n.length)) place = { name, lat, lon, n };
+  }
+  for (const zn of ZONES) {
+    const n = norm(zn.nom.split('·')[0]).trim();
+    if (zn.id !== 'punt' && t.includes(' ' + n.split(' ').pop() + ' ') && !place) place = { name: zn.nom, lat: zn.lat, lon: zn.lon, n };
+  }
+  out.textContent = 'Pensant…';
+  if (spIdx !== state.species) { state.species = spIdx; $('species').value = spIdx; showSpeciesInfo(); }
+  if (place) { out.textContent = `Carregant ${place.name}…`; await goToLatLon(place.lat, place.lon, false); }
+  refreshDay(true);
+  // Quins dies: avui, demà, cap de setmana, un dia de la setmana o, si no, els propers 7.
+  const W = Z.weather, d0 = Math.floor(W.nowIdx / 24), dLast = W.nD - 1;
+  const wd = d => new Date(W.times[d * 24 + 12]).getDay();
+  let days = [];
+  if (t.includes(' dema passat ')) days = [d0 + 2];
+  else if (t.includes(' dema ') || t.includes(' manana ')) days = [d0 + 1];
+  else if (t.includes(' avui ') || t.includes(' hoy ')) days = [d0];
+  else if (t.includes('cap de setmana') || t.includes('finde') || t.includes('fin de semana')) {
+    for (let d = d0; d <= Math.min(dLast, d0 + 7) && days.length < 2; d++) if (wd(d) === 6 || wd(d) === 0) days.push(d);
+  } else {
+    for (const [nom, n] of Object.entries(DIES)) if (t.includes(' ' + nom + ' ')) { for (let d = d0; d <= Math.min(dLast, d0 + 7); d++) if (wd(d) === n) { days = [d]; break; } }
+    if (!days.length) for (let d = d0; d <= Math.min(dLast, d0 + 6); d++) days.push(d);
+  }
+  days = days.filter(d => d <= dLast);
+  const sp = BOLETS[state.species];
+  let bestDay = null;
+  for (const d of days) {
+    const idx = computeIndex(d, sp);
+    let hs = 0, sum = 0;
+    for (let k = 0; k < GRID * GRID; k++) { const h = habitatAt(k, sp); if (h >= 0.25) { hs += h; sum += Math.min(1, idx[k] / h) * h; } }
+    const score = hs ? sum / hs : 0;
+    if (!bestDay || score > bestDay.score) bestDay = { d, score, idx, hs };
+  }
+  if (!bestDay) { out.textContent = 'No tinc previsió per a aquests dies.'; return; }
+  const date = new Date(W.times[bestDay.d * 24 + 12]);
+  const spots = bestSpots(bestDay.idx, 1);
+  const where = place ? `a prop de ${place.name}` : `a ${ZONES[state.zone].nom}`;
+  const nom = sp.nom.toLowerCase();
+  let txt;
+  if (!bestDay.hs) txt = `${where[0].toUpperCase() + where.slice(1)} gairebé no hi ha el bosc o el prat on surt el ${nom}.`;
+  else if (bestDay.score < 0.15 || !spots.length) {
+    // El factor que més hi falta, dit en planer.
+    const k = gridCell(player.x, player.z);
+    const diag = k >= 0 ? diagnosis(k, bestDay.d, sp).filter(([c]) => c === 'ko').map(([, x]) => x.toLowerCase()) : [];
+    txt = `No s'esperen bones condicions per al ${nom} ${where} ${days.length > 1 ? 'aquests dies' : fmtLongDay.format(date)}${diag.length ? `: ${diag.slice(0, 2).join(' i ')}` : ''}.`;
+  } else {
+    const s0 = spots[0], k = gridCell(s0.x, s0.z);
+    const near = nearestPlaceText(s0.x, s0.z);
+    const ok = diagnosis(k, bestDay.d, sp).filter(([c]) => c === 'ok').map(([, x]) => x.toLowerCase()).slice(1, 3);
+    txt = `${days.length > 1 ? `El millor dia per al ${nom} ${where} és <b>${fmtLongDay.format(date)}</b>` : `<b>${fmtLongDay.format(date)}</b>, per al ${nom} ${where}`}: ` +
+      `el ${Math.round(bestDay.score * 100)}% del seu hàbitat té bones condicions. El millor racó és una ${VEG[s0.veg].nom.toLowerCase()} a ${fmtNum(s0.h)} m, ${near !== '—' ? `prop de ${near}` : ''} (${Math.round(s0.v * 100)}%)` +
+      `${ok.length ? `. A favor: ${ok.join(' i ')}` : ''}.`;
+  }
+  out.innerHTML = txt + `<br><button type="button" id="askDay">Veure aquest dia</button>${spots.length && bestDay.score >= 0.15 ? '<button type="button" id="askGo">Anar al millor lloc</button>' : ''}`;
+  $('askDay').addEventListener('click', () => { state.t = clamp(bestDay.d * 24 + 10, +timeInput.min, +timeInput.max); timeInput.value = state.t; });
+  if ($('askGo')) $('askGo').addEventListener('click', () => { state.t = clamp(bestDay.d * 24 + 10, +timeInput.min, +timeInput.max); timeInput.value = state.t; refreshDay(true); goToSpot(state.spots[0] || spots[0]); });
+  state.t = clamp(bestDay.d * 24 + 10, +timeInput.min, +timeInput.max); timeInput.value = state.t;
+}
+$('askForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = $('askInput').value.trim();
+  if (q) answer(q).catch(err => { console.error(err); $('askAnswer').textContent = 'No he pogut respondre aquesta pregunta.'; });
+});
+
+// ---------------------------------------------------------------------------
+// Camins i senders d'OpenStreetMap, dibuixats sobre el relleu
+// ---------------------------------------------------------------------------
+const TRAIL_STYLE = {
+  track:     { w: 3.2, c: [0.62, 0.5, 0.36] },   // pista
+  path:      { w: 1.6, c: [0.85, 0.32, 0.22] },  // sender
+  footway:   { w: 1.6, c: [0.85, 0.32, 0.22] },
+  bridleway: { w: 2.0, c: [0.75, 0.45, 0.25] },
+  steps:     { w: 1.4, c: [0.85, 0.32, 0.22] },
+};
+const trailMat = new THREE.MeshBasicMaterial({ vertexColors: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3 });
+const trailMesh = new THREE.Mesh(new THREE.BufferGeometry(), trailMat);
+trailMesh.frustumCulled = false; trailMesh.renderOrder = 2;
+scene.add(trailMesh);
+$('trailsShow').addEventListener('change', e => { trailMesh.visible = e.target.checked; });
+async function loadTrails(token) {
+  Z.trails = [];
+  buildTrails();
+  $('trailsInfo').textContent = 'Buscant camins…';
+  const [n, w] = worldToLatLon(Z.detOrigin[0], Z.detOrigin[1]);
+  const [sLat, e] = worldToLatLon(Z.detOrigin[0] + Z.detSize, Z.detOrigin[1] + Z.detSize);
+  const bbox = `${sLat.toFixed(4)},${w.toFixed(4)},${n.toFixed(4)},${e.toFixed(4)}`;
+  const q = `[out:json][timeout:25];way["highway"~"^(path|track|footway|bridleway|steps)$"](${bbox});out geom;`;
+  let data = null;
+  for (const url of OVERPASS) {
+    try {
+      const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 25000);
+      const r = await fetch(url, { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ctrl.signal, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      clearTimeout(timer);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      data = await r.json();
+      break;
+    } catch (err) { console.warn('Camins: Overpass no disponible a', url, err); }
+  }
+  if (token !== loadToken) return;
+  if (!data) { $('trailsInfo').textContent = 'No s\'han pogut carregar els camins ara mateix (el servidor d\'OpenStreetMap va saturat).'; return; }
+  Z.trails = (data.elements || []).filter(el => el.geometry && TRAIL_STYLE[el.tags?.highway]).map(el => ({
+    kind: el.tags.highway, name: el.tags.name || el.tags.ref || null,
+    pts: el.geometry.map(g => latLonToWorld(g.lat, g.lon)),
+  }));
+  const km = Z.trails.reduce((a, t) => a + t.pts.reduce((s, p, i) => (i ? s + Math.hypot(p[0] - t.pts[i - 1][0], p[1] - t.pts[i - 1][1]) : 0), 0), 0) / 1000;
+  $('trailsInfo').textContent = `${fmtNum(km)} km de camins i senders a la zona.`;
+  buildTrails();
+}
+// Una cinta per camí, que segueix el relleu cada 12 m.
+function buildTrails() {
+  const pos = [], col = [], idx = [];
+  for (const t of Z.trails || []) {
+    const st = TRAIL_STYLE[t.kind], half = st.w / 2;
+    const S = [];
+    for (let i = 0; i < t.pts.length; i++) {
+      const [ax, az] = t.pts[i], b = t.pts[i + 1];
+      if (!b) { S.push([ax, az]); break; }
+      const n = Math.max(1, Math.ceil(Math.hypot(b[0] - ax, b[1] - az) / 12));
+      for (let k = 0; k < n; k++) S.push([ax + (b[0] - ax) * k / n, az + (b[1] - az) * k / n]);
+    }
+    if (S.length < 2) continue;
+    const base = pos.length / 3;
+    for (let i = 0; i < S.length; i++) {
+      const a = S[Math.max(0, i - 1)], b = S[Math.min(S.length - 1, i + 1)];
+      let dx = b[0] - a[0], dz = b[1] - a[1]; const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l;
+      const y = heightAt(S[i][0], S[i][1]) + 0.35;
+      pos.push(S[i][0] - dz * half, y, S[i][1] + dx * half, S[i][0] + dz * half, y, S[i][1] - dx * half);
+      col.push(...st.c, ...st.c);
+      if (i) { const k = base + i * 2; idx.push(k - 2, k - 1, k, k, k - 1, k + 1); }
+    }
+  }
+  trailMesh.geometry.dispose();
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setIndex(idx);
+  trailMesh.geometry = g;
 }
 
 // ---------------------------------------------------------------------------
@@ -3085,7 +3482,7 @@ function applyCompass(dt) {
 const player = { x: 0, z: 0, y: 1500, yaw: 0, pitch: -0.3, vy: 0, step: 0 };
 const keys = new Set();
 addEventListener('keydown', e => {
-  if ($('fitxa').open || $('picker').open) return;
+  if ($('fitxa').open || $('picker').open || $('diari').open || e.target.tagName === 'INPUT' && e.target.type === 'text') return;
   if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
   keys.add(e.code);
   if (route.flight) stopRouteFlight();
@@ -3309,6 +3706,7 @@ async function loadZone(zone) {
   scheduleWeek();
   loadGbif();
   loadNatura(token);
+  loadTrails(token);
   setLoading(1, 'Llest');
   setTimeout(() => $('loading').classList.add('off'), Z.sampleWeather ? 2500 : 300);
 }
@@ -3378,7 +3776,7 @@ else {
   $('zone').value = startZone;
   firstLoad = loadZone(ZONES[startZone]);
 }
-firstLoad.then(() => requestAnimationFrame(frame)).catch(e => console.error(e));
+firstLoad.then(() => { requestAnimationFrame(frame); checkZones(); }).catch(e => console.error(e));
 
 // Ganxos per a proves automàtiques.
 window.__mico = { Z, state, player, setMode, goToSpot, teleport, heightAt, addRoutePoint, startRouteFlight, route };
