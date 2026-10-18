@@ -92,6 +92,22 @@
   #help { position: fixed; left: 50%; top: 46px; transform: translateX(-50%); z-index: 4; font-size: 11px; color: rgba(255,255,255,.75);
     text-shadow: 0 1px 3px #000; pointer-events: none; text-align: center; }
 
+  dialog#fitxa { max-width: 640px; width: calc(100vw - 32px); max-height: calc(100vh - 40px); overflow: auto; color: var(--text);
+    padding: 18px 22px; background: rgba(18, 22, 17, .94); }
+  dialog#fitxa::backdrop { background: rgba(0,0,0,.45); }
+  dialog#fitxa h1 { font-size: 18px; letter-spacing: .12em; }
+  dialog#fitxa p { margin: 0 0 6px; font-size: 12.5px; line-height: 1.55; }
+  dialog#fitxa .close { position: sticky; float: right; top: 0; }
+  .fhead { display: flex; gap: 16px; align-items: center; }
+  .fhead .ilus { width: 170px; flex: none; background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), rgba(255,255,255,0) 70%); border-radius: 10px; }
+  .fhead .ilus svg { width: 100%; display: block; }
+  .badge { display: inline-block; margin: 6px 0 4px; padding: 2px 8px; border-radius: 999px; font-size: 11px; background: rgba(120,190,90,.2); border: 1px solid rgba(120,190,90,.5); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+  #fConf { margin: 0 0 8px; padding-left: 18px; font-size: 12.5px; line-height: 1.5; }
+  #fConf li { margin-bottom: 4px; }
+  #fConf b { color: #ff9a7a; font-weight: 600; }
+  .clau { border-left: 3px solid var(--accent); padding: 4px 10px !important; background: rgba(240,176,74,.08); }
+  @media (max-width: 560px) { .fhead { flex-direction: column; align-items: flex-start; } .cols { grid-template-columns: 1fr; } }
   #toggleSide { display: none; }
   @media (max-width: 760px) {
     #side { width: auto; right: 14px; max-height: 48vh; top: auto; bottom: 120px; }
@@ -125,6 +141,7 @@
     <h2>Bolet</h2>
     <select id="species"></select>
     <div id="speciesInfo" class="small muted" style="margin-top:4px"></div>
+    <div class="row" style="margin-top:6px"><button type="button" id="openFitxa">Fitxa tècnica</button></div>
     <h2>Probabilitat estimada</h2>
     <div class="legend"></div>
     <div class="legend-l"><span>baixa</span><span>alta</span></div>
@@ -193,6 +210,28 @@
 </div>
 </section>
 
+
+<dialog id="fitxa" class="glass" aria-labelledby="fTitle">
+  <button type="button" class="close" id="closeFitxa" aria-label="Tancar">✕</button>
+  <div class="fhead">
+    <div class="ilus" id="fIlus"></div>
+    <div>
+      <h1 id="fTitle"></h1>
+      <div class="small muted"><i id="fLlati"></i></div>
+      <div class="badge" id="fComest"></div>
+      <div class="small muted" id="fNoms"></div>
+    </div>
+  </div>
+  <h2>Descripció</h2><p id="fDesc"></p>
+  <div class="cols">
+    <div><h2>Hàbitat</h2><p id="fHab"></p></div>
+    <div><h2>Temporada</h2><p id="fTemp"></p></div>
+  </div>
+  <h2>Com el busca aquest model</h2><p id="fModel" class="small"></p>
+  <h2>Amb què es pot confondre</h2><ul id="fConf"></ul>
+  <p class="clau" id="fClau"></p>
+  <p class="small muted">Aquestes fitxes són divulgatives i esquemàtiques. No cullis ni mengis cap bolet si no n'estàs totalment segur: en cas de dubte, consulta una societat micològica o un expert. Talla'l pel peu, fes servir cistella i respecta la normativa de cada espai natural.</p>
+</dialog>
 
 <div id="loading">
   <div class="card">
