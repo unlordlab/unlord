@@ -333,6 +333,7 @@ const Z = {
   sampleWeather: false,
   geo: null,                      // { cx, cy, res }: conversió entre metres i lat/lon (zoom de detall)
   places: [],                     // cims, pobles i refugis
+  xema: [], xemaState: 'none',    // estacions del Meteocat amb la pluja diària mesurada
   natura: [],                     // espais Natura 2000: { code, name, polys: [[[x, z], …], …] }
   gbif: [],                       // trobades registrades de l'espècie triada
   gbifState: 'none',
@@ -1733,7 +1734,7 @@ function openFitxa() {
   if (ft) {
     const lic = ft.llicenciaUrl ? `<a href="${ft.llicenciaUrl}" target="_blank" rel="noopener">${ft.llicencia}</a>` : ft.llicencia;
     $('fIlus').innerHTML = `<img src="img/${b.id}.jpg" alt="${ft.peu}" loading="lazy">
-      <div class="credit"><i>${ft.peu}</i> · <a href="${ft.font}" target="_blank" rel="noopener">${ft.autor}</a>, ${lic}, via Wikimedia Commons</div>`;
+      <div class="credit"><i>${ft.peu}</i> · <a href="${ft.font}" target="_blank" rel="noopener">${ft.autor}</a>, ${lic}, via ${ft.via || 'Wikimedia Commons'}</div>`;
     // Si la foto no carrega, la il·lustració.
     $('fIlus').querySelector('img').onerror = () => { $('fIlus').innerHTML = ilus; };
   } else $('fIlus').innerHTML = ilus;
@@ -2105,7 +2106,8 @@ function diagnosis(k, day, sp) {
     if (r > best) { best = r; bestD = d; }
   }
   const when = bestD >= 0 ? fmtShortDay.format(new Date(W.times[bestD * 24 + 12])) : '';
-  if (f.rainScore > 0.75) out.push(['ok', `Va ploure ${fmtNum(best)} mm el ${when}`]);
+  const src = Z.xemaState === 'ok' && Z.xema.length ? ' (Meteocat)' : '';
+  if (f.rainScore > 0.75) out.push(['ok', `Va ploure ${fmtNum(best)} mm el ${when}${src}`]);
   else if (f.rainScore > 0.3) out.push(['mid', `Pluja justa: ${fmtNum(f.rain20)} mm en 20 dies (en vol uns ${sp.pluja})`]);
   else out.push(['ko', `Falta pluja: ${fmtNum(f.rain20)} mm en 20 dies (en vol uns ${sp.pluja})`]);
   // Humitat de la terra.
@@ -2178,7 +2180,7 @@ function drawChart() {
   g.fillRect((todayD + 1 - d0) * bw, 0, (d1 - todayD - 1) * bw, h);
   for (let d = d0; d < d1; d++) {
     const r = P.dRain[d], bh = r / maxR * (h - 14);
-    g.fillStyle = d > todayD ? 'rgba(120,170,230,.45)' : 'rgba(120,170,230,.85)';
+    g.fillStyle = d > todayD ? 'rgba(120,170,230,.45)' : P.obsDays ? 'rgba(110,200,190,.9)' : 'rgba(120,170,230,.85)';
     g.fillRect((d - d0) * bw + 1, h - 12 - bh, Math.max(1, bw - 2), bh);
   }
   g.strokeStyle = 'rgba(240,176,74,.9)'; g.lineWidth = 1.5; g.beginPath();
@@ -2191,8 +2193,8 @@ function drawChart() {
   g.stroke();
   g.fillStyle = 'rgba(255,255,255,.55)'; g.font = '10px ui-monospace, monospace';
   for (let d = d0; d < d1; d += Math.max(1, Math.round(n / 8))) g.fillText(fmtDay.format(new Date(W.times[d * 24 + 12])), (d - d0) * bw + 2, h - 1);
-  g.fillText(`pluja (fins a ${fmtNum(maxR)} mm/dia)`, 4, 10);
-  g.fillStyle = 'rgba(240,176,74,.9)'; g.fillText('temperatura del sòl', 4 + g.measureText(`pluja (fins a ${fmtNum(maxR)} mm/dia)`).width + 12, 10);
+  g.fillText(`pluja${P.obsDays ? ' mesurada (Meteocat) i prevista' : ''} (fins a ${fmtNum(maxR)} mm/dia)`, 4, 10);
+  g.fillStyle = 'rgba(240,176,74,.9)'; g.fillText('temperatura del sòl', 4 + g.measureText(`pluja${P.obsDays ? ' mesurada (Meteocat) i prevista' : ''} (fins a ${fmtNum(maxR)} mm/dia)`).width + 12, 10);
   const xs = (state.t / 24 - d0) * bw;
   g.fillStyle = '#fff'; g.fillRect(xs - 1, 12, 2, h - 24);
 }
@@ -2516,6 +2518,13 @@ function drawMinimap() {
     g.strokeStyle = '#3fa9ff'; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath();
     route.pts.forEach((q, i) => { const [qx, qy] = toPx(q.x, q.z); i ? g.lineTo(qx, qy) : g.moveTo(qx, qy); }); g.stroke();
     route.pts.forEach((q, i) => { const [qx, qy] = toPx(q.x, q.z); g.fillStyle = i === 0 ? '#3fa9ff' : '#fff'; g.beginPath(); g.arc(qx, qy, 3.5, 0, 7); g.fill(); });
+  }
+  // Estacions del Meteocat.
+  for (const st of Z.xema || []) {
+    const [px, py] = toPx(st.x, st.z);
+    if (px < -6 || py < -6 || px > W + 6 || py > H + 6) continue;
+    g.fillStyle = '#3cc7b8'; g.strokeStyle = '#fff'; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(px, py - 5); g.lineTo(px + 4.5, py + 3.5); g.lineTo(px - 4.5, py + 3.5); g.closePath(); g.fill(); g.stroke();
   }
   // Les teves sortides (diari).
   for (const e of store.get(DIARI, [])) {
@@ -3280,6 +3289,90 @@ $('cmpMode').addEventListener('change', updateCompare);
 })();
 
 // ---------------------------------------------------------------------------
+// Pluja mesurada per les estacions del Meteocat (XEMA, dades obertes de la Generalitat)
+// ---------------------------------------------------------------------------
+// Els dies passats, la pluja d'Open-Meteo (un model) es corregeix amb la que han mesurat les
+// estacions de menys de 20 km; els dies de previsió es queden amb el model.
+const XEMA = 'https://analisi.transparenciacatalunya.cat/resource';
+const socrata = async (id, params) => {
+  const r = await fetch(`${XEMA}/${id}.json?` + new URLSearchParams(params));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+};
+async function xemaStations() {
+  const c = store.get('cacabolets-xema-estacions', null);
+  if (c && Date.now() - c.t < 30 * 864e5) return c.s;
+  const rows = await socrata('yqwd-vj5e', { $select: 'codi_estacio,nom_estacio,latitud,longitud,altitud', $where: "nom_estat_ema='Operativa'", $limit: 500 });
+  const st = rows.map(r => ({ code: r.codi_estacio, name: r.nom_estacio, lat: +r.latitud, lon: +r.longitud, alt: +r.altitud }));
+  store.set('cacabolets-xema-estacions', { t: Date.now(), s: st });
+  return st;
+}
+async function loadXema(token) {
+  Z.xema = []; Z.xemaState = 'loading';
+  $('xemaText').textContent = 'Buscant estacions del Meteocat…';
+  const W = Z.weather;
+  try {
+    const all = await xemaStations();
+    // Estacions de menys de 25 km del centre de la zona (com a molt 10).
+    const near = all.map(st => { const [x, z] = latLonToWorld(st.lat, st.lon); return { ...st, x, z, d: Math.hypot(x, z) }; })
+      .filter(st => st.d < 25000).sort((a, b) => a.d - b.d).slice(0, 10);
+    if (!near.length) throw new Error('Cap estació a prop');
+    const codes = near.map(st => `'${st.code}'`).join(',');
+    const days = []; for (let d = 0; d < W.nD; d++) days.push(isoDay(W.times[d * 24 + 12]));
+    const today = Math.floor(W.nowIdx / 24);
+    const rain = new Map(near.map(st => [st.code, new Array(W.nD).fill(null)]));
+    // Diari (fins fa dos dies) …
+    const daily = await socrata('7bvh-jvq2', { $select: 'codi_estacio,data_lectura,valor', $where: `codi_variable='1300' AND codi_estacio in(${codes}) AND data_lectura >= '${days[0]}T00:00:00'`, $limit: 5000 });
+    let lastDaily = -1;
+    for (const r of daily) {
+      const d = days.indexOf(r.data_lectura.slice(0, 10));
+      if (d >= 0 && d <= today) { rain.get(r.codi_estacio)[d] = +r.valor; lastDaily = Math.max(lastDaily, d); }
+    }
+    // … i els últims dies, sumant les lectures semihoràries.
+    const from = days[Math.max(0, lastDaily + 1)];
+    const semi = await socrata('nzvn-apee', { $select: 'codi_estacio,data_lectura,valor_lectura', $where: `codi_variable='35' AND codi_estacio in(${codes}) AND data_lectura >= '${from}T00:00:00'`, $limit: 20000 });
+    const semiSum = new Map();
+    for (const r of semi) {
+      const d = days.indexOf(isoDay(Date.parse(r.data_lectura + 'Z')));   // hora UTC → dia local
+      if (d <= lastDaily || d < 0 || d > today) continue;
+      const k = r.codi_estacio + '|' + d;
+      semiSum.set(k, (semiSum.get(k) || 0) + (+r.valor_lectura || 0));
+    }
+    for (const [k, v] of semiSum) { const [code, d] = k.split('|'); rain.get(code)[+d] = v; }
+    if (token !== loadToken) return;
+    Z.xema = near.map(st => ({ ...st, rain: rain.get(st.code) })).filter(st => st.rain.some(v => v != null));
+    // Correcció dels 9 punts del temps: mitjana ponderada (1/d²) de les estacions a menys de 20 km.
+    let corrected = 0;
+    for (const P of W.P) {
+      if (!P.dRainModel) P.dRainModel = Float32Array.from(P.dRain);
+      const ws = Z.xema.map(st => ({ st, w: 1 / Math.max(500, Math.hypot(st.x - P.x, st.z - P.z)) ** 2, d: Math.hypot(st.x - P.x, st.z - P.z) })).filter(o => o.d < 20000);
+      if (!ws.length) continue;
+      P.obsDays = 0;
+      for (let d = 0; d <= today; d++) {
+        let s = 0, sw = 0;
+        for (const { st, w } of ws) if (st.rain[d] != null) { s += st.rain[d] * w; sw += w; }
+        if (sw > 0) { P.dRain[d] = s / sw; P.obsDays++; }
+      }
+      corrected++;
+    }
+    Z.xemaState = 'ok';
+    aggCache.clear(); trendKey = '';
+    refreshDay(true); scheduleWeek();
+    const nearest = Z.xema[0];
+    const r20 = nearest ? nearest.rain.slice(Math.max(0, today - 19), today + 1).reduce((a, v) => a + (v || 0), 0) : 0;
+    $('xemaText').textContent = Z.xema.length
+      ? `${Z.xema.length} estacions del Meteocat a menys de 25 km. La més propera, ${nearest.name} (${fmtNum(nearest.d / 1000, 1)} km del centre), ha recollit ${fmtNum(r20, 1)} mm en 20 dies. Els dies passats el model fa servir aquesta pluja mesurada.`
+      : 'Cap estació amb dades recents a prop.';
+    void corrected;
+  } catch (err) {
+    console.warn('XEMA no disponible:', err);
+    if (token !== loadToken) return;
+    Z.xemaState = 'error';
+    $('xemaText').textContent = 'No s\'han pogut carregar les dades del Meteocat: es fa servir la pluja del model.';
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Mode sortida: ruta sobre el relleu amb perfil, temps, hores de llum i probabilitat
 // ---------------------------------------------------------------------------
 const route = { on: false, pts: [], samples: [], stats: null, flight: null };
@@ -3800,6 +3893,7 @@ async function loadZone(zone) {
   loadGbif();
   loadNatura(token);
   loadTrails(token);
+  if (!Z.sampleWeather) loadXema(token); else $('xemaText').textContent = '—';
   setLoading(1, 'Llest');
   setTimeout(() => $('loading').classList.add('off'), Z.sampleWeather ? 2500 : 300);
 }
