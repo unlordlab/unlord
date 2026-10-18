@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Micoclima 3D</title>
+<meta name="description" content="Relleu real de Catalunya en 3D amb el temps dels últims dies i una estimació d'on poden sortir bolets.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root {
+    --bg: rgba(14, 18, 14, 0.66);
+    --border: rgba(255, 255, 255, 0.13);
+    --text: #eef1ea;
+    --muted: #a9b3a2;
+    --accent: #f0b04a;
+    --good: #e8732c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #10140f; color: var(--text);
+    font: 13px/1.45 "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+  canvas#c { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; touch-action: none; }
+  .glass { background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  button, select { font: inherit; font-size: 12px; color: var(--text); background: rgba(255,255,255,.06);
+    border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+  select { width: 100%; padding: 5px 6px; }
+  select option { background: #1b2119; }
+  button:hover, select:hover { border-color: var(--accent); }
+  button.on { background: rgba(240,176,74,.22); border-color: var(--accent); }
+  h1 { margin: 0; font-size: 15px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; }
+  h2 { margin: 12px 0 6px; font-size: 10px; font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+  .muted { color: var(--muted); }
+  .small { font-size: 11px; }
+
+  #side { position: fixed; left: 14px; top: 14px; width: 292px; max-height: calc(100vh - 150px); overflow: auto; padding: 14px; z-index: 5; }
+  #side .sub { margin: 4px 0 6px; color: var(--muted); font-size: 11px; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .row + .row { margin-top: 6px; }
+  .bolet { display: flex; align-items: center; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+  input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+  label.check { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 11px; margin-top: 6px; }
+  label.check input { accent-color: var(--accent); margin: 0; }
+  #spots { list-style: none; padding: 0; margin: 0; }
+  #spots li { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-top: 1px solid var(--border); cursor: pointer; font-size: 11px; }
+  #spots li:hover { color: var(--accent); }
+  #spots li:first-child { border-top: 0; }
+  .legend { height: 8px; border-radius: 4px; margin: 6px 0 2px;
+    background: linear-gradient(90deg, rgba(255,242,160,.15), #fff2a0 20%, #ffb33a 45%, #f05a1c 70%, #b0103f); }
+  .legend-l { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+
+  #info { position: fixed; right: 14px; top: 14px; width: 290px; padding: 12px 14px; z-index: 5; font-size: 12px; }
+  #info .big { font-size: 26px; line-height: 1.1; }
+  #info dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 8px 0 0; font-size: 11px; }
+  #info dt { color: var(--muted); white-space: nowrap; }
+  #info dd { margin: 0; text-align: right; }
+  .verdict { font-size: 11px; margin-top: 2px; }
+
+  #timeline { position: fixed; left: 14px; right: 14px; bottom: 14px; padding: 8px 12px 10px; z-index: 5; }
+  #timeline .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 4px; }
+  #date { font-size: 13px; }
+  #chart { width: 100%; height: 58px; display: block; cursor: pointer; }
+  #credits { position: fixed; right: 16px; bottom: 112px; z-index: 4; font-size: 10px; color: rgba(255,255,255,.55); text-align: right; text-shadow: 0 1px 2px #000; }
+  #credits a { color: inherit; }
+
+  #labels { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
+  .pin { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; pointer-events: auto; cursor: pointer;
+    font-size: 11px; padding: 3px 7px; border-radius: 999px; background: rgba(10,12,10,.7); border: 1px solid rgba(255,255,255,.25); }
+  .pin:hover { border-color: var(--accent); }
+
+  #loading { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: #10140f; transition: opacity .6s; }
+  #loading.off { opacity: 0; pointer-events: none; }
+  #loading .card { text-align: center; max-width: 440px; padding: 20px; }
+  #loading .bar { height: 2px; background: rgba(255,255,255,.1); margin: 16px auto 8px; width: 220px; overflow: hidden; border-radius: 2px; }
+  #loading .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  #notice { margin-top: 8px; font-size: 11px; color: #ffb36b; }
+  #help { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); z-index: 4; font-size: 11px; color: rgba(255,255,255,.75);
+    text-shadow: 0 1px 3px #000; pointer-events: none; text-align: center; }
+
+  #toggleSide { display: none; }
+  @media (max-width: 760px) {
+    #side { width: auto; right: 14px; max-height: 48vh; top: auto; bottom: 120px; }
+    #side.collapsed .body { display: none; }
+    #toggleSide { display: inline-block; float: right; }
+    #info { width: auto; left: 14px; right: 14px; top: 14px; padding: 8px 12px; }
+    #info dl { display: none; }
+    #help, #credits { display: none; }
+  }
+</style>
+<script type="importmap">
+{ "imports": { "three": "../nieve/lib/three.module.min.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="labels"></div>
+
+<aside id="side" class="glass">
+  <button id="toggleSide" type="button">−</button>
+  <h1>Micoclima 3D</h1>
+  <div class="sub">Relleu real, temps real i on poden sortir bolets</div>
+  <div class="body">
+    <h2>Zona</h2>
+    <select id="zone"></select>
+    <h2>Bolet</h2>
+    <select id="species"></select>
+    <div id="speciesInfo" class="small muted" style="margin-top:4px"></div>
+    <h2>Probabilitat estimada</h2>
+    <div class="legend"></div>
+    <div class="legend-l"><span>baixa</span><span>alta</span></div>
+    <label class="check"><input type="checkbox" id="overlay" checked> Mostrar-la sobre el terreny</label>
+    <h2>Millors llocs avui</h2>
+    <ul id="spots"></ul>
+    <h2>Vista</h2>
+    <div class="row">
+      <button type="button" id="modeFly" class="on">Volar</button>
+      <button type="button" id="modeWalk">Caminar</button>
+      <button type="button" id="sound">So: no</button>
+    </div>
+    <p class="small muted" style="margin:10px 0 0">Model orientatiu fet amb pluja, temperatura i humitat del sòl, altitud, orientació i un bosc estimat. No és una previsió oficial: respecta la regulació de cada espai natural.</p>
+  </div>
+</aside>
+
+<section id="info" class="glass">
+  <div class="small muted" id="here">—</div>
+  <div class="big" id="hereIdx">—</div>
+  <div class="verdict" id="hereVerdict"></div>
+  <dl>
+    <dt>Ara</dt><dd id="wNow">—</dd>
+    <dt>Pluja (últims 20 dies)</dt><dd id="wRain">—</dd>
+    <dt>Temperatura del sòl</dt><dd id="wSoilT">—</dd>
+    <dt>Humitat del sòl</dt><dd id="wSoilM">—</dd>
+    <dt>Nits de glaçada (7 dies)</dt><dd id="wFrost">—</dd>
+    <dt>Altitud</dt><dd id="wAlt">—</dd>
+  </dl>
+</section>
+
+<div id="help">Arrossega per mirar · W A S D per moure't · Q / E baixar i pujar · Maj. més ràpid · doble clic al terreny per anar-hi</div>
+
+<section id="timeline" class="glass">
+  <div class="top">
+    <div><span id="date">—</span> <span id="rel" class="small muted"></span></div>
+    <div class="row">
+      <button type="button" id="play">▶ Reproduir</button>
+      <button type="button" id="today">Avui</button>
+    </div>
+  </div>
+  <canvas id="chart"></canvas>
+  <input type="range" id="time" min="0" max="1" step="1" value="0" aria-label="Data i hora">
+</section>
+
+<div id="credits">
+  Temps: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) ·
+  Relleu: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, SRTM, EU-DEM, ICGC…)
+</div>
+
+<div id="loading">
+  <div class="card">
+    <h1>Micoclima 3D</h1>
+    <div class="bar"><i id="progress"></i></div>
+    <div id="loadText" class="small muted">Preparant…</div>
+    <div id="notice"></div>
+    <p class="small"><a href="/" style="color:var(--muted)">← tornar al blog</a></p>
+  </div>
+</div>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>
