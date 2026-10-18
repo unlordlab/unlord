@@ -366,20 +366,95 @@ function loadImage(url) {
   });
 }
 
+// Descodificador PNG propi (RGB/RGBA/paleta de 8 bits, sense entrellaçat). Les alçades NO es poden
+// llegir amb un canvas: alguns navegadors (Brave, Firefox o Safari amb protecció antirastreig) hi
+// afegeixen soroll aleatori, i en aquest format un error d'1 al canal vermell són 256 m d'alçada.
+async function decodePng(buf) {
+  const d = new DataView(buf), u8 = new Uint8Array(buf);
+  if (d.getUint32(0) !== 0x89504e47) throw new Error('No és un PNG');
+  let p = 8, w = 0, h = 0, ct = 0, depth = 0, inter = 0, pal = null;
+  const idat = [];
+  while (p < u8.length) {
+    const len = d.getUint32(p), type = String.fromCharCode(...u8.subarray(p + 4, p + 8)), data = u8.subarray(p + 8, p + 8 + len);
+    if (type === 'IHDR') { w = d.getUint32(p + 8); h = d.getUint32(p + 12); depth = u8[p + 16]; ct = u8[p + 17]; inter = u8[p + 20]; }
+    else if (type === 'PLTE') pal = data;
+    else if (type === 'IDAT') idat.push(data);
+    else if (type === 'IEND') break;
+    p += 12 + len;
+  }
+  if (depth !== 8 || inter || ![2, 3, 6].includes(ct)) throw new Error('Format PNG no suportat');
+  const raw = new Uint8Array(await new Response(new Blob(idat).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer());
+  const bpp = ct === 2 ? 3 : ct === 6 ? 4 : 1, stride = w * bpp;
+  const out = new Uint8Array(w * h * bpp);
+  for (let y = 0, q = 0; y < h; y++) {
+    const f = raw[q++], row = y * stride, prev = row - stride;
+    for (let x = 0; x < stride; x++) {
+      const a = x >= bpp ? out[row + x - bpp] : 0, b = y ? out[prev + x] : 0, c = x >= bpp && y ? out[prev + x - bpp] : 0;
+      let v = raw[q++];
+      if (f === 1) v += a; else if (f === 2) v += b; else if (f === 3) v += (a + b) >> 1;
+      else if (f === 4) { const pp = a + b - c, pa = Math.abs(pp - a), pb = Math.abs(pp - b), pc = Math.abs(pp - c); v += pa <= pb && pa <= pc ? a : pb <= pc ? b : c; }
+      out[row + x] = v & 255;
+    }
+  }
+  // Sempre RGB.
+  if (bpp === 3) return { w, h, rgb: out };
+  const rgb = new Uint8Array(w * h * 3);
+  for (let k = 0; k < w * h; k++) {
+    if (bpp === 4) { rgb[k * 3] = out[k * 4]; rgb[k * 3 + 1] = out[k * 4 + 1]; rgb[k * 3 + 2] = out[k * 4 + 2]; }
+    else { const c = out[k] * 3; rgb[k * 3] = pal[c]; rgb[k * 3 + 1] = pal[c + 1]; rgb[k * 3 + 2] = pal[c + 2]; }
+  }
+  return { w, h, rgb };
+}
+async function loadTileHeights(url, H, ox, oy) {
+  let rgb;
+  try {
+    if (typeof DecompressionStream !== 'function') throw new Error('Sense DecompressionStream');
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    rgb = (await decodePng(await r.arrayBuffer())).rgb;
+  } catch (e) {
+    // Navegadors antics: per canvas (i el filtre de pics de després n'arregla el soroll).
+    const img = await loadImage(url), cv = document.createElement('canvas');
+    cv.width = cv.height = 256;
+    const g = cv.getContext('2d', { willReadFrequently: true });
+    g.drawImage(img, 0, 0);
+    const px = g.getImageData(0, 0, 256, 256).data;
+    rgb = new Uint8Array(256 * 256 * 3);
+    for (let k = 0; k < 256 * 256; k++) { rgb[k * 3] = px[k * 4]; rgb[k * 3 + 1] = px[k * 4 + 1]; rgb[k * 3 + 2] = px[k * 4 + 2]; }
+  }
+  for (let y = 0; y < 256; y++) for (let x = 0; x < 256; x++) {
+    const k = (y * 256 + x) * 3;
+    H[(oy + y) * TEX + ox + x] = rgb[k] * 256 + rgb[k + 1] + rgb[k + 2] / 256 - 32768;
+  }
+}
+// Elimina pics o forats d'un sol píxel: si un punt queda per sobre (o per sota) de tots els veïns
+// per més de 40 m, és un error de dades i es substitueix per la mediana dels veïns.
+function despike(H) {
+  const nb = new Float32Array(8);
+  let fixed = 0;
+  for (let y = 1; y < TEX - 1; y++) for (let x = 1; x < TEX - 1; x++) {
+    const k = y * TEX + x, h = H[k];
+    let n = 0, lo = Infinity, hi = -Infinity;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      if (!dx && !dy) continue;
+      const v = H[k + dy * TEX + dx]; nb[n++] = v; lo = Math.min(lo, v); hi = Math.max(hi, v);
+    }
+    if (h - hi > 40 || lo - h > 40) { nb.sort(); H[k] = (nb[3] + nb[4]) / 2; fixed++; }
+  }
+  return fixed;
+}
+
 async function loadLayer(zone, z, onTile) {
   const cx = lonToPx(zone.lon, z), cy = latToPx(zone.lat, z);
   const tx0 = Math.round(cx / 256 - TILES / 2), ty0 = Math.round(cy / 256 - TILES / 2);
-  const cv = document.createElement('canvas');
-  cv.width = cv.height = TEX;
-  const g = cv.getContext('2d', { willReadFrequently: true });
+  const H = new Float32Array(TEX * TEX);
   const jobs = [];
   for (let j = 0; j < TILES; j++) for (let i = 0; i < TILES; i++) {
-    jobs.push(loadImage(TILE_URL(z, tx0 + i, ty0 + j)).then(img => { g.drawImage(img, i * 256, j * 256); onTile(); }));
+    jobs.push(loadTileHeights(TILE_URL(z, tx0 + i, ty0 + j), H, i * 256, j * 256).then(onTile));
   }
   await Promise.all(jobs);
-  const px = g.getImageData(0, 0, TEX, TEX).data;
-  const H = new Float32Array(TEX * TEX);
-  for (let k = 0; k < H.length; k++) H[k] = (px[k * 4] * 256 + px[k * 4 + 1] + px[k * 4 + 2] / 256) - 32768;
+  const fixed = despike(H) + despike(H);
+  if (fixed) console.info(`Relleu (zoom ${z}): ${fixed} pics corregits`);
   // Metres per píxel a la latitud de la zona (Mercator).
   const res = 40075016.686 * Math.cos(zone.lat * Math.PI / 180) / (256 * 2 ** z);
   const origin = [(tx0 * 256 - cx) * res, (ty0 * 256 - cy) * res];
@@ -1798,6 +1873,7 @@ function stateParams() {
   p.set('bolet', BOLETS[state.species].id);
   p.set('data', isoLocal(Z.weather.times[0] + Math.round(state.t) * 36e5));
   p.set('vista', [player.x, player.y, player.z].map(v => Math.round(v)).join(',') + ',' + player.yaw.toFixed(2) + ',' + player.pitch.toFixed(2) + ',' + mode);
+  if (route.pts.length) p.set('ruta', route.pts.map(q => worldToLatLon(q.x, q.z).map(v => v.toFixed(5)).join(',')).join(';'));
   return p;
 }
 let lastUrl = '';
@@ -1814,9 +1890,17 @@ $('share').addEventListener('click', async () => {
   setTimeout(() => { btn.textContent = 'Copiar enllaç'; }, 1800);
 });
 // Es fa servir una sola vegada, en la primera càrrega.
-let pendingView = qs.get('vista'), pendingDate = qs.get('data');
+let pendingView = qs.get('vista'), pendingDate = qs.get('data'), pendingRoute = qs.get('ruta');
 function applyPendingState() {
   const W = Z.weather;
+  if (pendingRoute) {
+    for (const pair of pendingRoute.split(';')) {
+      const [lat, lon] = pair.split(',').map(Number);
+      if (Number.isFinite(lat) && Number.isFinite(lon)) { const [x, z] = latLonToWorld(lat, lon); route.pts.push({ x, z }); }
+    }
+    pendingRoute = null;
+    rebuildRoute();
+  }
   if (pendingDate) {
     for (let i = W.firstShown; i < W.nH; i++) if (isoLocal(W.times[i]) === pendingDate) { state.t = i; timeInput.value = i; break; }
     pendingDate = null;
@@ -1878,6 +1962,7 @@ function refreshDay(force = false) {
   propsDirty = true;
   drawChart();
   renderWeek();
+  if (route.pts.length) rebuildRoute();
 }
 
 function renderSpots() {
@@ -2362,6 +2447,12 @@ function drawMinimap() {
     else { g.beginPath(); g.arc(px, py, p.kind === 'town' ? 3 : 2, 0, 7); g.stroke(); g.fill(); }
     if (p.name && (p.kind !== 'peak' || p.ele > 0)) { g.strokeText(p.name, px, py - 5); g.fillText(p.name, px, py - 5); }
   }
+  // Ruta de la sortida.
+  if (route.pts.length) {
+    g.strokeStyle = '#3fa9ff'; g.lineWidth = 3; g.lineJoin = 'round'; g.beginPath();
+    route.pts.forEach((q, i) => { const [qx, qy] = toPx(q.x, q.z); i ? g.lineTo(qx, qy) : g.moveTo(qx, qy); }); g.stroke();
+    route.pts.forEach((q, i) => { const [qx, qy] = toPx(q.x, q.z); g.fillStyle = i === 0 ? '#3fa9ff' : '#fff'; g.beginPath(); g.arc(qx, qy, 3.5, 0, 7); g.fill(); });
+  }
   // Trobades registrades (GBIF).
   for (const o of Z.gbif) {
     const [px, py] = toPx(o.x, o.z);
@@ -2399,6 +2490,7 @@ minimap.addEventListener('click', e => {
     const S = Math.min(r.width, r.height), ox = (r.width - S) / 2, oy = (r.height - S) / 2;
     x = Z.detOrigin[0] + (e.clientX - r.left - ox) / S * Z.detSize; z = Z.detOrigin[1] + (e.clientY - r.top - oy) / S * Z.detSize;
   }
+  if (route.on) { addRoutePoint(x, z); return; }
   if (mode === 'fly') teleport(x, z, Math.max(150, player.y - heightAt(player.x, player.z)));
   else teleport(x, z, 0);
 });
@@ -2596,6 +2688,296 @@ function updateTowns(cx, cz) {
 }
 
 // ---------------------------------------------------------------------------
+// Mode sortida: ruta sobre el relleu amb perfil, temps, hores de llum i probabilitat
+// ---------------------------------------------------------------------------
+const route = { on: false, pts: [], samples: [], stats: null, flight: null };
+const routeMat = new THREE.MeshBasicMaterial({ color: 0x3fa9ff, transparent: true, opacity: 0.9, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 });
+const routeMesh = new THREE.Mesh(new THREE.BufferGeometry(), routeMat);
+routeMesh.frustumCulled = false; routeMesh.renderOrder = 3;
+scene.add(routeMesh);
+const flagMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.6, 0.6, 1, 6).translate(0, 0.5, 0), new THREE.MeshBasicMaterial({ color: 0xffffff }), 60);
+flagMesh.count = 0; flagMesh.frustumCulled = false;
+scene.add(flagMesh);
+
+function setRouteMode(on) {
+  route.on = on;
+  $('routeMode').classList.toggle('rec', on);
+  $('routeMode').textContent = on ? 'Acabar de marcar' : route.pts.length ? 'Afegir punts' : 'Planificar sortida';
+  canvas.style.cursor = on ? 'crosshair' : '';
+  if (on && !route.pts.length) $('routeInfo').textContent = 'Fes clic al minimapa o al terreny per posar el punt de sortida i els següents.';
+}
+function addRoutePoint(x, z) {
+  if (route.pts.length >= 60) return;
+  route.pts.push({ x, z });
+  rebuildRoute();
+}
+function clearRoute() {
+  route.pts = []; route.samples = []; route.stats = null;
+  stopRouteFlight();
+  rebuildRoute();
+}
+$('routeMode').addEventListener('click', () => setRouteMode(!route.on));
+$('routeUndo').addEventListener('click', () => { route.pts.pop(); rebuildRoute(); });
+$('routeClear').addEventListener('click', clearRoute);
+$('routeGpx').addEventListener('click', exportGpx);
+$('routeFly').addEventListener('click', () => (route.flight ? stopRouteFlight() : startRouteFlight()));
+
+function rebuildRoute() {
+  // Mostres cada 10 m al llarg dels trams.
+  const S = [];
+  let dist = 0;
+  for (let i = 0; i < route.pts.length; i++) {
+    const a = route.pts[i], b = route.pts[i + 1];
+    if (!b) { S.push({ x: a.x, z: a.z, d: dist }); break; }
+    const len = Math.hypot(b.x - a.x, b.z - a.z), n = Math.max(1, Math.ceil(len / 10));
+    for (let k = 0; k < n; k++) S.push({ x: a.x + (b.x - a.x) * k / n, z: a.z + (b.z - a.z) * k / n, d: dist + len * k / n });
+    dist += len;
+  }
+  for (const p of S) { p.h = heightAt(p.x, p.z); const [u, v] = gridUV(p.x, p.z); p.idx = Z.index && u >= 0 && v >= 0 && u <= 1 && v <= 1 ? sampleClamp(Z.index, GRID, u, v) : 0; }
+  route.samples = S;
+  route.stats = S.length > 1 ? routeStats(S) : null;
+  buildRouteMesh();
+  drawRouteProfile();
+  renderRouteInfo();
+  const has = route.pts.length > 0, line = S.length > 1;
+  $('routeUndo').disabled = $('routeClear').disabled = !has;
+  $('routeGpx').disabled = $('routeFly').disabled = !line;
+  setRouteMode(route.on);
+  lastUrl = '';
+}
+function buildRouteMesh() {
+  const S = route.samples, pos = [], idx = [];
+  const half = 3;   // cinta de 6 m d'ample, una mica per sobre del terra
+  for (let i = 0; i < S.length; i++) {
+    const a = S[Math.max(0, i - 1)], b = S[Math.min(S.length - 1, i + 1)];
+    let dx = b.x - a.x, dz = b.z - a.z; const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l;
+    const y = S[i].h + 1.2;
+    pos.push(S[i].x - dz * half, y, S[i].z + dx * half, S[i].x + dz * half, y, S[i].z - dx * half);
+    if (i) { const k = i * 2; idx.push(k - 2, k - 1, k, k, k - 1, k + 1); }
+  }
+  routeMesh.geometry.dispose();
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  routeMesh.geometry = g;
+  // Banderoles als punts marcats: més altes com més lluny, perquè es vegin.
+  route.pts.forEach((p, i) => {
+    tmpM.compose(tmpP.set(p.x, heightAt(p.x, p.z), p.z), tmpQ.identity(), tmpS.set(1, 25, 1));
+    flagMesh.setMatrixAt(i, tmpM);
+  });
+  flagMesh.count = route.pts.length;
+  flagMesh.instanceMatrix.needsUpdate = true;
+}
+function routeStats(S) {
+  // Desnivell amb una petita histèresi perquè el soroll del relleu no sumi metres falsos.
+  let up = 0, down = 0, ref = S[0].h, hmin = Infinity, hmax = -Infinity;
+  for (const p of S) {
+    hmin = Math.min(hmin, p.h); hmax = Math.max(hmax, p.h);
+    if (p.h - ref > 3) { up += p.h - ref; ref = p.h; } else if (ref - p.h > 3) { down += ref - p.h; ref = p.h; }
+  }
+  const dist = S[S.length - 1].d;
+  // Temps a l'estil MIDE: 4 km/h en pla, 400 m/h de pujada i 600 m/h de baixada.
+  const th = dist / 4000, tv = up / 400 + down / 600;
+  const hours = Math.max(th, tv) + Math.min(th, tv) / 2;
+  // El tram de 500 m amb més probabilitat.
+  let best = { v: 0, a: 0, b: 0 };
+  for (let i = 0, j = 0, sum = 0; i < S.length; i++) {
+    sum += S[i].idx;
+    while (S[i].d - S[j].d > 500) sum -= S[j++].idx;
+    const v = sum / (i - j + 1);
+    if (v > best.v) best = { v, a: S[j].d, b: S[i].d };
+  }
+  const mean = S.reduce((a, p) => a + p.idx, 0) / S.length;
+  return { dist, up, down, hmin, hmax, hours, best, mean };
+}
+// Sortida i posta de sol del dia triat (quan el sol passa per -0,83°).
+const fmtHM = new Intl.DateTimeFormat('ca-ES', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid' });
+function daylight(dayIdx) {
+  const W = Z.weather, noon = W.times[Math.min(dayIdx * 24 + 12, W.nH - 1)];
+  const lim = Math.sin(-0.833 * Math.PI / 180);
+  let rise = null, set = null, prev = null;
+  for (let m = -12 * 60; m <= 12 * 60; m += 4) {
+    const ms = noon + m * 6e4, y = sunDirection(ms, Z.zone.lat, Z.zone.lon).y;
+    if (prev !== null) { if (prev < lim && y >= lim) rise = ms; if (prev >= lim && y < lim) set = ms; }
+    prev = y;
+  }
+  return { rise, set };
+}
+const fmtDur = h => { const m = Math.round(h * 60); return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`; };
+const fmtKm = m => (m < 1000 ? `${fmtNum(Math.round(m / 10) * 10)} m` : `${fmtNum(m / 1000, 1)} km`);
+function renderRouteInfo() {
+  const st = route.stats;
+  if (!st) {
+    if (!route.on) $('routeInfo').textContent = route.pts.length ? 'Afegeix un segon punt per tenir la ruta.' : 'Activa-ho i fes clic al minimapa o al terreny per marcar el recorregut.';
+    return;
+  }
+  const dl = daylight(Math.floor(state.t / 24));
+  let light = '';
+  if (dl.rise && dl.set) {
+    const latest = dl.set - st.hours * 36e5;
+    light = `<br>Llum: ${fmtHM.format(dl.rise)}–${fmtHM.format(dl.set)}. ` +
+      (latest > dl.rise ? `Per tornar amb llum, surt abans de les <b>${fmtHM.format(latest)}</b>.` : 'No hi ha prou hores de llum per fer-la sencera.');
+  }
+  const best = st.best.v > 0.05 ? `<br>Tram amb més probabilitat: km ${fmtNum(st.best.a / 1000, 1)}–${fmtNum(st.best.b / 1000, 1)} (<b>${Math.round(st.best.v * 100)}%</b>).` : '';
+  $('routeInfo').innerHTML = `<b>${fmtKm(st.dist)}</b> · ↑ ${fmtNum(st.up)} m · ↓ ${fmtNum(st.down)} m · <b>≈ ${fmtDur(st.hours)}</b>` +
+    `<br>Entre ${fmtNum(st.hmin)} i ${fmtNum(st.hmax)} m. Probabilitat mitjana: ${Math.round(st.mean * 100)}%.` + best + light;
+}
+function drawRouteProfile() {
+  const cv = $('routeProfile'), S = route.samples;
+  cv.classList.toggle('on', S.length > 1);
+  if (S.length < 2) return;
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const g = cv.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const st = route.stats, span = Math.max(20, st.hmax - st.hmin);
+  const X = d => d / st.dist * (w - 2) + 1, Y = hh => h - 12 - (hh - st.hmin) / span * (h - 18);
+  const ramp = x => x < 0.1 ? 'rgba(255,255,255,.12)' : x < 0.4 ? 'rgba(255,214,110,.75)' : x < 0.7 ? 'rgba(240,120,40,.85)' : 'rgba(190,20,60,.9)';
+  // Àrea sota el perfil acolorida amb la probabilitat de cada tram.
+  for (let i = 1; i < S.length; i++) {
+    g.fillStyle = ramp(S[i].idx);
+    g.beginPath(); g.moveTo(X(S[i - 1].d), h - 12); g.lineTo(X(S[i - 1].d), Y(S[i - 1].h)); g.lineTo(X(S[i].d), Y(S[i].h)); g.lineTo(X(S[i].d), h - 12); g.fill();
+  }
+  g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.beginPath();
+  S.forEach((p, i) => (i ? g.lineTo(X(p.d), Y(p.h)) : g.moveTo(X(p.d), Y(p.h)))); g.stroke();
+  g.fillStyle = 'rgba(255,255,255,.6)'; g.font = '9px ui-monospace, monospace';
+  g.textAlign = 'left'; g.fillText(`${fmtNum(st.hmax)} m`, 2, 9);
+  g.textAlign = 'right'; g.fillText(fmtKm(st.dist), w - 2, h - 1);
+  if (route.flight) { const x = X(route.flight.s); g.fillStyle = '#3fa9ff'; g.fillRect(x - 1, 0, 2, h - 12); }
+}
+function exportGpx() {
+  const S = route.samples;
+  const pts = S.filter((p, i) => i % 3 === 0 || i === S.length - 1).map(p => {
+    const [lat, lon] = worldToLatLon(p.x, p.z);
+    return `      <trkpt lat="${lat.toFixed(6)}" lon="${lon.toFixed(6)}"><ele>${p.h.toFixed(1)}</ele></trkpt>`;
+  }).join('\n');
+  const gpx = `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="CaçaBolets" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata><name>Sortida CaçaBolets · ${ZONES[state.zone].nom}</name></metadata>
+  <trk><name>Sortida CaçaBolets</name><trkseg>
+${pts}
+  </trkseg></trk>
+</gpx>`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([gpx], { type: 'application/gpx+xml' }));
+  a.download = 'cacabolets-sortida.gpx';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+// Recórrer la ruta: vol baix seguint el traçat, mirant endavant.
+function startRouteFlight() {
+  if (route.samples.length < 2) return;
+  setRouteMode(false);
+  setMode('fly');
+  route.flight = { s: 0 };
+  $('routeFly').textContent = 'Aturar';
+}
+function stopRouteFlight() {
+  if (!route.flight) return;
+  route.flight = null;
+  $('routeFly').textContent = 'Recórrer en 3D';
+  drawRouteProfile();
+}
+function routeAt(d) {
+  const S = route.samples;
+  let i = 1; while (i < S.length - 1 && S[i].d < d) i++;
+  const a = S[i - 1], b = S[i], t = clamp((d - a.d) / Math.max(1e-3, b.d - a.d));
+  return { x: a.x + (b.x - a.x) * t, z: a.z + (b.z - a.z) * t };
+}
+function updateRouteFlight(dt) {
+  const f = route.flight;
+  if (!f) return;
+  const total = route.stats.dist;
+  f.s = Math.min(total, f.s + Math.max(25, total / 60) * dt);   // com a mínim, tota la ruta en un minut
+  const p = routeAt(f.s), ahead = routeAt(Math.min(total, f.s + 120));
+  player.x = p.x; player.z = p.z;
+  const target = Math.max(heightAt(p.x, p.z), heightAt(ahead.x, ahead.z)) + 70;
+  player.y += (target - player.y) * Math.min(1, dt * 2);
+  const yaw = Math.atan2(-(ahead.x - p.x), -(ahead.z - p.z));
+  let dy = yaw - player.yaw; dy = ((dy + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+  player.yaw += dy * Math.min(1, dt * 2.5);
+  player.pitch += (-0.35 - player.pitch) * Math.min(1, dt * 2);
+  if (Math.floor(f.s / 50) !== Math.floor((f.s - 1) / 50)) drawRouteProfile();
+  if (f.s >= total) stopRouteFlight();
+}
+
+// ---------------------------------------------------------------------------
+// Al bosc amb el mòbil: GPS (on sóc) i brúixola per orientar la càmera
+// ---------------------------------------------------------------------------
+const gps = { watch: null, first: true, last: null };
+$('gpsBtn').addEventListener('click', () => {
+  if (gps.watch !== null) { navigator.geolocation.clearWatch(gps.watch); gps.watch = null; $('gpsBtn').classList.remove('rec'); $('gpsBtn').textContent = 'On sóc'; $('gpsInfo').textContent = ''; return; }
+  if (!navigator.geolocation) { $('gpsInfo').textContent = 'Aquest navegador no pot saber on ets.'; return; }
+  gps.first = true;
+  $('gpsInfo').textContent = 'Buscant la teva posició…';
+  gps.watch = navigator.geolocation.watchPosition(onGps, err => {
+    $('gpsInfo').textContent = err.code === 1 ? 'Cal donar permís d\'ubicació al navegador.' : 'No s\'ha pogut obtenir la posició.';
+  }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
+  $('gpsBtn').classList.add('rec');
+  $('gpsBtn').textContent = 'Deixar de seguir-me';
+});
+async function onGps(pos) {
+  stopRouteFlight();
+  const { latitude: lat, longitude: lon, accuracy } = pos.coords;
+  gps.last = { lat, lon, accuracy };
+  const [x, z] = latLonToWorld(lat, lon);
+  const [u, v] = gridUV(x, z);
+  const inside = u > 0.02 && v > 0.02 && u < 0.98 && v < 0.98;
+  if (!inside) {
+    if (!gps.first) return;
+    if (!inCatalonia(lat, lon)) { $('gpsInfo').textContent = 'Ets fora de Catalunya: l\'eina només cobreix Catalunya.'; return; }
+    $('gpsInfo').textContent = 'Carregant la zona on ets…';
+    gps.first = false;
+    await goToPoint(lat, lon);
+    return onGps(pos);
+  }
+  if (gps.first) setMode('walk');
+  gps.first = false;
+  player.x = x; player.z = z;
+  if (mode === 'walk') player.y = heightAt(x, z);
+  propsDirty = true;
+  $('gpsInfo').textContent = `Et seguim pel GPS (precisió ±${Math.round(accuracy)} m).`;
+}
+// Brúixola: el mòbil fa de finestra; on l'apuntes, mira la càmera.
+const compassState = { on: false, yaw: null, pitch: null };
+function onOrientation(e) {
+  let heading = null;
+  if (typeof e.webkitCompassHeading === 'number') heading = e.webkitCompassHeading;          // iOS
+  else if (e.absolute && typeof e.alpha === 'number') heading = (360 - e.alpha) % 360;          // Android
+  if (heading === null) return;
+  const scr = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+  compassState.yaw = -THREE.MathUtils.degToRad(heading + scr);
+  if (typeof e.beta === 'number' && !scr) compassState.pitch = THREE.MathUtils.degToRad(clamp(e.beta - 90, -80, 60));
+}
+$('compassBtn').addEventListener('click', async () => {
+  if (compassState.on) {
+    compassState.on = false;
+    removeEventListener('deviceorientationabsolute', onOrientation); removeEventListener('deviceorientation', onOrientation);
+    $('compassBtn').classList.remove('rec'); $('gpsInfo').textContent = '';
+    return;
+  }
+  if (!('DeviceOrientationEvent' in window)) { $('gpsInfo').textContent = 'Aquest dispositiu no té brúixola.'; return; }
+  try {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function' && await DeviceOrientationEvent.requestPermission() !== 'granted') {
+      $('gpsInfo').textContent = 'Cal donar permís per fer servir la brúixola.'; return;
+    }
+  } catch (err) { $('gpsInfo').textContent = 'No s\'ha pogut activar la brúixola.'; return; }
+  compassState.on = true; compassState.yaw = null;
+  stopRouteFlight();
+  addEventListener('deviceorientationabsolute', onOrientation);
+  addEventListener('deviceorientation', onOrientation);
+  $('compassBtn').classList.add('rec');
+  $('gpsInfo').textContent = 'Apunta el mòbil: la vista segueix cap on mires.';
+  setTimeout(() => { if (compassState.on && compassState.yaw === null) $('gpsInfo').textContent = 'No arriben dades de la brúixola: en un ordinador no n\'hi ha.'; }, 3000);
+});
+function applyCompass(dt) {
+  if (!compassState.on || compassState.yaw === null) return;
+  let dy = compassState.yaw - player.yaw; dy = ((dy + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+  player.yaw += dy * Math.min(1, dt * 8);
+  if (compassState.pitch !== null) player.pitch += (compassState.pitch - player.pitch) * Math.min(1, dt * 8);
+}
+
+// ---------------------------------------------------------------------------
 // Càmera: volar i caminar
 // ---------------------------------------------------------------------------
 const player = { x: 0, z: 0, y: 1500, yaw: 0, pitch: -0.3, vy: 0, step: 0 };
@@ -2604,6 +2986,7 @@ addEventListener('keydown', e => {
   if ($('fitxa').open || $('picker').open) return;
   if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
   keys.add(e.code);
+  if (route.flight) stopRouteFlight();
   if (e.code === 'KeyF') setMode(mode === 'fly' ? 'walk' : 'fly');
   if (e.code === 'Space' && mode === 'walk' && player.vy === 0) player.vy = 4;
 });
@@ -2629,17 +3012,32 @@ canvas.addEventListener('wheel', e => {
   }
 }, { passive: false });
 // Doble clic: anar al punt del terreny assenyalat.
-canvas.addEventListener('dblclick', e => {
-  const ndc = new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+// Punt del terreny sota el cursor (marxa del raig sobre el relleu).
+function terrainUnder(cx, cy) {
+  const ndc = new THREE.Vector2(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1);
   const ray = new THREE.Raycaster(); ray.setFromCamera(ndc, camera);
   const o = ray.ray.origin, d = ray.ray.direction;
   let t = 1;
   for (let i = 0; i < 400 && t < 60000; i++) {
     const p = o.clone().addScaledVector(d, t);
     const hh = heightAt(p.x, p.z);
-    if (p.y < hh) { teleport(p.x, p.z, mode === 'fly' ? 200 : 0); return; }
+    if (p.y < hh) return p;
     t += Math.max(1, (p.y - hh) * 0.5);
   }
+  return null;
+}
+canvas.addEventListener('dblclick', e => {
+  if (route.on) return;
+  const p = terrainUnder(e.clientX, e.clientY);
+  if (p) teleport(p.x, p.z, mode === 'fly' ? 200 : 0);
+});
+// En mode sortida, un clic (sense arrossegar) afegeix un punt a la ruta.
+let downAt = null;
+canvas.addEventListener('pointerdown', e => { downAt = [e.clientX, e.clientY]; });
+canvas.addEventListener('pointerup', e => {
+  if (!route.on || !downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 4) return;
+  const p = terrainUnder(e.clientX, e.clientY);
+  if (p) addRoutePoint(p.x, p.z);
 });
 let touchStick = null;
 canvas.addEventListener('touchstart', e => { if (e.touches.length === 2) touchStick = { y: (e.touches[0].clientY + e.touches[1].clientY) / 2 }; }, { passive: true });
@@ -2738,6 +3136,7 @@ async function loadZone(zone) {
   Z.detOrigin = det.origin; Z.detSize = det.size;
   Z.ctxOrigin = ctx.origin; Z.ctxSize = ctx.size;
   Z.geo = { cx: det.cx, cy: det.cy, res: det.res };
+  if (!pendingRoute) clearRoute();
   Z.places = [];
   renderPlaceLabels();
   if (U.uDetTex.value) U.uDetTex.value.dispose();
@@ -2828,6 +3227,8 @@ function frame(now) {
     timeInput.value = Math.round(state.t);
   }
   refreshDay();
+  updateRouteFlight(dt);
+  applyCompass(dt);
   updatePlayer(dt);
   updateWeatherAndLight(dt);
   updateClipmap(camera.position.x, camera.position.z);
@@ -2877,4 +3278,4 @@ else {
 firstLoad.then(() => requestAnimationFrame(frame)).catch(e => console.error(e));
 
 // Ganxos per a proves automàtiques.
-window.__mico = { Z, state, player, setMode, goToSpot, teleport, heightAt };
+window.__mico = { Z, state, player, setMode, goToSpot, teleport, heightAt, addRoutePoint, startRouteFlight, route };
