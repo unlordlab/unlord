@@ -129,9 +129,78 @@ export const FITXES = {
     ],
     clau: 'És difícil de confondre amb cap espècie tòxica: buida, negra i sense làmines.',
   },
+  fredolic: {
+    noms: 'Fredolic',
+    llati: 'Tricholoma terreum',
+    comest: 'Comestible bo',
+    descripcio: "Barret petit, de 3 a 7 cm, gris ratolí, cobert de fibretes o escames fines com de feltre, convex amb un mugró baix. Làmines blanquinoses o grisenques, escotades. Peu blanc i fràgil, sense anell. Carn prima, sense olor de farina.",
+    habitat: 'Pinedes de pi blanc, pinyer i pi roig, sovint en grups nombrosos entre la fullaraca i la molsa.',
+    temporada: "D'octubre a gener: surt amb el fred, d'aquí el nom, i aguanta glaçades suaus.",
+    confusio: [
+      ['Tricholoma pardinum', 'Més gros i robust, barret gris clar amb escates fosques i olor de farina. Tòxic.'],
+      ['Tricholoma virgatum', 'Barret cònic i gris amb fibres fosques i gust amarg o picant. No comestible.'],
+    ],
+    clau: 'Petit, gris i com de feltre, sense olor de farina ni gust amarg.',
+  },
+  moixerno: {
+    noms: 'Moixernó, bolet de Sant Jordi',
+    llati: 'Calocybe gambosa',
+    comest: 'Comestible excel·lent',
+    descripcio: "Bolet carnós, de 5 a 12 cm, blanc o crema, de barret convex i marge enrotllat de jove. Làmines blanques i molt atapeïdes. Peu gruixut i blanc. Olor intensa de farina fresca.",
+    habitat: 'Prats de muntanya, marges, clarianes i vores de bosc, sovint fent rotllanes; també sota arç blanc i rosers silvestres.',
+    temporada: "A la primavera, d'abril a juny, quan la terra s'escalfa després de les pluges.",
+    confusio: [
+      ['Inocybe erubescens', "Surt a la mateixa època i llocs; barret fibrós i cònic que es taca de vermell. Molt tòxic: és la confusió més perillosa."],
+      ['Entoloma sinuatum', 'Làmines que es tornen rosades amb l\'edat. Tòxic.'],
+    ],
+    clau: 'Làmines blanques molt atapeïdes que no es tornen rosades i olor de farina; si es taca de vermell, no.',
+  },
+  murgula: {
+    noms: 'Múrgola',
+    llati: 'Morchella esculenta, M. elata i espècies properes',
+    comest: 'Comestible molt bo, sempre ben cuit (cru és tòxic)',
+    descripcio: "Barret de 4 a 12 cm, ovoide o cònic, ple d'alvèols com un rusc, de color ocre, bru o gairebé negre. Barret i peu formen una sola cavitat buida de dalt a baix. Peu blanquinós i granulós.",
+    habitat: 'Vores de rius i boscos de ribera, rouredes, pinedes, marges i llocs cremats o remoguts.',
+    temporada: 'De març a maig.',
+    confusio: [
+      ['Gyromitra esculenta (falsa múrgola)', 'Barret com un cervell, amb plecs i no alvèols, i interior amb cambres de cotó. Molt tòxica.'],
+      ['Verpa bohemica', 'Barret com un didal, enganxat només a dalt de tot del peu. Tòxica.'],
+    ],
+    clau: "Alvèols com un rusc i tota buida per dins d'una peça. I sempre ben cuita.",
+  },
+  camasec: {
+    noms: 'Cama-sec, carrerola',
+    llati: 'Marasmius oreades',
+    comest: 'Comestible molt bo',
+    descripcio: "Petit, de 2 a 5 cm, barret ocre clar amb un mugró, que s'asseca i es reviu amb la pluja. Làmines separades i clares. Peu prim, fibrós i molt resistent: es pot torçar sense trencar-se.",
+    habitat: 'Prats, marges de camins i gespes, en rotllanes que van creixent any rere any.',
+    temporada: "D'abril a novembre, després de cada pluja.",
+    confusio: [
+      ['Clitocybe rivulosa i C. dealbata', 'Blancs, de làmines atapeïdes que baixen pel peu, als mateixos prats. Molt tòxics (muscarina).'],
+    ],
+    clau: 'Peu que es retorça sense trencar-se i làmines separades. Les petites blanques de làmines atapeïdes, mai.',
+  },
+  oudereig: {
+    noms: 'Ou de reig, reig',
+    llati: 'Amanita caesarea',
+    comest: 'Comestible excel·lent, però de risc per a qui comença',
+    descripcio: "Surt com un ou blanc (la volva) del qual neix un barret taronja viu, llis, de 8 a 18 cm, amb el marge estriat. Làmines, anell i peu de color groc. A la base, una volva blanca gran com una bossa.",
+    habitat: 'Alzinars, sureres, rouredes i castanyedes, en sòls àcids i llocs assolellats.',
+    temporada: "De juliol a octubre, amb calor i després de tempestes d'estiu.",
+    confusio: [
+      ['Amanita muscaria (reig bord)', 'Barret vermell amb berrugues blanques, làmines i peu blancs. Tòxica.'],
+      ['Amanita phalloides (farinera borda)', "En estat d'ou es pot confondre. Barret verdós, làmines blanques. Mortal."],
+    ],
+    clau: 'Làmines i peu grocs, i volva blanca. En estat d\'ou, no el cullis mai: no es pot distingir de la farinera borda.',
+  },
 };
 
 export const ILUSTRACIONS = ILUS;
+// Il·lustració genèrica (barret i peu) per a les espècies que no en tenen una de pròpia.
+export const ilustracioGenerica = color => svg(`
+  <path d="M88 136 L86 92 L114 92 L112 136 Z" fill="#efe8da"/>
+  <path d="M34 92 Q38 52 100 48 Q162 52 166 92 Q100 102 34 92 Z" fill="${color}"/>
+  <path d="M40 92 Q100 102 160 92 L114 96 L86 96 Z" fill="#f4efe4"/>`);
 
 // Fotos de Wikimedia Commons, desades a img/ (reduïdes, sense altres canvis).
 export const FOTOS = {
