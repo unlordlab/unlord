@@ -37,7 +37,42 @@ const VEG = [
   { id: 'pinegre',  nom: 'Pineda de pi negre',          tree: 'pine' },
   { id: 'prat',     nom: 'Prats alpins',                tree: null },
   { id: 'roca',     nom: 'Roca i tarteres',             tree: null },
+  { id: 'matollar', nom: 'Matollar',                    tree: null },
+  { id: 'urba',     nom: 'Zona urbana',                 tree: null },
+  { id: 'aigua',    nom: 'Aigua',                       tree: null },
 ];
+
+// Mapa de cobertes del sòl de Catalunya 2024 (ICGC): codi, nom, color exacte de la llegenda del WMS,
+// família de bosc (con: coníferes, dec: caducifolis, scl: esclerofil·les) i densitat d'arbres.
+const COBERTES = [
+  [111, 'Conreus herbacis', [255, 255, 0]], [112, 'Horta, vivers i conreus forçats', [204, 255, 51]],
+  [113, 'Vinyes', [175, 91, 21]], [114, 'Oliverars', [128, 128, 0]], [115, 'Altres conreus llenyosos', [205, 205, 0]],
+  [116, 'Conreus en transformació', [255, 255, 204]],
+  [221, 'Bosc dens de coníferes', [51, 204, 51], 'con', 1], [222, 'Bosc dens de caducifolis', [102, 255, 51], 'dec', 1],
+  [223, "Bosc dens d'esclerofil·les", [104, 144, 24], 'scl', 1], [224, 'Matollar', [150, 125, 95]],
+  [225, 'Bosc clar de coníferes', [25, 230, 30], 'con', 0.45], [226, 'Bosc clar de caducifolis', [180, 255, 155], 'dec', 0.45],
+  [227, "Bosc clar d'esclerofil·les", [170, 165, 0], 'scl', 0.45], [228, 'Prats i herbassars', [195, 195, 160]],
+  [229, 'Bosc de ribera', [0, 255, 155], 'dec', 0.7], [230, 'Sòl nu forestal', [255, 150, 50]],
+  [231, 'Zona cremada', [40, 40, 40]], [232, 'Roquissars i congestes', [121, 121, 122]], [233, 'Platja', [245, 223, 120]],
+  [234, 'Zona humida', [50, 150, 255]],
+  [341, 'Casc urbà', [255, 0, 125]], [342, 'Eixample', [255, 83, 205]], [343, 'Zona urbana laxa', [255, 164, 226]],
+  [344, 'Edificacions aïllades', [255, 200, 226]], [345, 'Zona residencial aïllada', [255, 180, 180]], [346, 'Zona verda', [15, 55, 0]],
+  [347, 'Zona industrial o comercial', [115, 0, 85]], [348, "Zona esportiva o d'oci", [98, 0, 196]], [349, "Zona d'extracció o abocador", [74, 149, 149]],
+  [350, 'Zona en transformació', [255, 0, 240]], [351, 'Xarxa viària', [173, 170, 202]], [352, 'Sòl nu urbà', [255, 230, 230]],
+  [353, 'Zona aeroportuària', [103, 98, 154]], [354, 'Xarxa ferroviària', [74, 70, 110]], [355, 'Zona portuària', [47, 45, 70]],
+  [461, 'Embassament', [111, 111, 255]], [462, 'Llac o llacuna', [0, 0, 220]], [463, "Curs d'aigua", [0, 0, 100]],
+  [464, 'Bassa', [24, 95, 148]], [465, 'Canal artificial', [18, 70, 109]], [466, 'Mar', [0, 0, 128]],
+].map(([code, nom, rgb, fam, dens]) => ({ code, nom, rgb, fam: fam || null, dens: dens || 0 }));
+const NO_COVER = 255;
+// Tipus de vegetació (no forestal) de cada classe de coberta.
+function coverVeg(c, h) {
+  if (c.code < 200) return VI.conreu;
+  if (c.code === 224 || c.code === 231) return VI.matollar;
+  if (c.code === 228 || c.code === 234) return h > 1500 ? VI.prat : VI.conreu;
+  if (c.code === 230 || c.code === 232 || c.code === 233) return VI.roca;
+  if (c.code < 400) return VI.urba;
+  return VI.aigua;
+}
 const VI = Object.fromEntries(VEG.map((v, i) => [v.id, i]));
 
 // Bolets: hàbitat (afinitat per tipus de bosc), temperatura del sòl òptima,
@@ -345,7 +380,85 @@ async function loadLayer(zone, z, onTile) {
   // Metres per píxel a la latitud de la zona (Mercator).
   const res = 40075016.686 * Math.cos(zone.lat * Math.PI / 180) / (256 * 2 ** z);
   const origin = [(tx0 * 256 - cx) * res, (ty0 * 256 - cy) * res];
-  return { H, origin, size: TEX * res, res, cx, cy };
+  return { H, origin, size: TEX * res, res, cx, cy, tx0, ty0 };
+}
+
+// Cobertes del sòl: una imatge del WMS de l'ICGC exactament sobre el requadre de detall (1024², ~14 m/píxel).
+// Cada color de la llegenda és una classe; els píxels sense dades (fora de Catalunya) queden en blanc.
+async function loadCobertes(det) {
+  const R = 20037508.342789244, s = 2 * R / (256 * 2 ** Z_DET);
+  const minx = det.tx0 * 256 * s - R, maxx = (det.tx0 + TILES) * 256 * s - R;
+  const maxy = R - det.ty0 * 256 * s, miny = R - (det.ty0 + TILES) * 256 * s;
+  const url = 'https://geoserveis.icgc.cat/servei/catalunya/cobertes-sol/wms?' + new URLSearchParams({
+    SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetMap', LAYERS: 'cobertes_2024', STYLES: '', CRS: 'EPSG:3857',
+    BBOX: [minx, miny, maxx, maxy].map(v => v.toFixed(2)).join(','), WIDTH: TEX, HEIGHT: TEX, FORMAT: 'image/png',
+  });
+  const img = await loadImage(url);
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = TEX;
+  const g = cv.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, 0, 0);
+  const px = g.getImageData(0, 0, TEX, TEX).data;
+  const cls = new Uint8Array(TEX * TEX).fill(NO_COVER);
+  const lut = new Map();
+  let found = 0;
+  for (let k = 0; k < TEX * TEX; k++) {
+    if (px[k * 4 + 3] < 128) continue;
+    const key = (px[k * 4] << 16) | (px[k * 4 + 1] << 8) | px[k * 4 + 2];
+    let c = lut.get(key);
+    if (c === undefined) {
+      // El color més proper de la llegenda (les vores poden venir suavitzades).
+      let bd = 1e9; c = NO_COVER;
+      COBERTES.forEach((cb, i) => { const d = (cb.rgb[0] - px[k * 4]) ** 2 + (cb.rgb[1] - px[k * 4 + 1]) ** 2 + (cb.rgb[2] - px[k * 4 + 2]) ** 2; if (d < bd) { bd = d; c = i; } });
+      if (bd > 2500) c = NO_COVER;
+      lut.set(key, c);
+    }
+    cls[k] = c;
+    if (c !== NO_COVER) found++;
+  }
+  if (found < TEX * TEX * 0.05) throw new Error('Zona sense cobertes del sòl');
+  return cls;
+}
+function coverClassAt(x, z) {
+  if (!Z.cls) return NO_COVER;
+  const [u, v] = gridUV(x, z);
+  if (u < 0 || v < 0 || u >= 1 || v >= 1) return NO_COVER;
+  return Z.cls[Math.floor(v * TEX) * TEX + Math.floor(u * TEX)];
+}
+// Passa les classes (1024²) a la graella del model (256²): densitat de bosc, família dominant i coberta principal.
+function applyCobertes(cls) {
+  Z.cls = cls;
+  const B = TEX / GRID;
+  const fam = { con: 0, dec: 0, scl: 0 };
+  const counts = new Map();
+  for (let j = 0; j < GRID; j++) for (let i = 0; i < GRID; i++) {
+    const k = j * GRID + i;
+    fam.con = fam.dec = fam.scl = 0;
+    counts.clear();
+    let none = 0, dens = 0;
+    for (let b = 0; b < B; b++) for (let a = 0; a < B; a++) {
+      const c = cls[(j * B + b) * TEX + i * B + a];
+      if (c === NO_COVER) { none++; continue; }
+      const cb = COBERTES[c];
+      if (cb.fam) { fam[cb.fam] += cb.dens; dens += cb.dens; }
+      counts.set(c, (counts.get(c) || 0) + 1);
+    }
+    if (none > B * B / 2) continue;                       // sense dades: es queda l'ortofoto o l'estimació
+    const n = B * B - none;
+    const forest = dens / n;
+    let main = 0, mc = -1;
+    for (const [c, m] of counts) if (m > mc) { mc = m; main = c; }
+    Z.vegReal[k] = 1;
+    Z.clsMain[k] = main;
+    if (forest >= 0.2) {
+      const f = fam.con >= fam.dec && fam.con >= fam.scl ? 'con' : fam.dec >= fam.scl ? 'dec' : 'scl';
+      Z.veg[k] = f === 'con' ? Z.conType[k] : f === 'dec' ? Z.decType[k] : VI.alzinar;
+      Z.cover[k] = clamp(forest * 1.1);
+    } else {
+      Z.veg[k] = coverVeg(COBERTES[main], Z.gh[k]);
+      Z.cover[k] = 0;
+    }
+  }
 }
 
 // Ortofoto de l'ICGC: les mateixes teselles que el relleu, al zoom 14 (detall, ~7 m/píxel) i 11 (context).
@@ -586,6 +699,11 @@ function buildVegetation() {
   Z.north = new Float32Array(GRID * GRID);
   Z.slope = new Float32Array(GRID * GRID);
   Z.vegTree = new Uint8Array(GRID * GRID);
+  Z.conType = new Uint8Array(GRID * GRID);
+  Z.decType = new Uint8Array(GRID * GRID);
+  Z.vegReal = new Uint8Array(GRID * GRID);
+  Z.clsMain = new Uint8Array(GRID * GRID).fill(NO_COVER);
+  Z.cls = null;
   const cell = Z.detSize / GRID;
   // Humitat de la zona: més fagedes cap al nord-est (Montseny, Garrotxa, Ripollès).
   const humidZone = clamp((z.lon - 1.0) / 1.5) * 0.7 + clamp((z.lat - 41.5) / 1.2) * 0.3;
@@ -623,6 +741,9 @@ function buildVegetation() {
     }
     Z.veg[k] = best;
     Z.vegTree[k] = bestTree;
+    // El millor tipus dins de cada família, per quan el mapa de cobertes digui quina família hi ha.
+    Z.conType[k] = [VI.pinblanc, VI.piroig, VI.avetosa, VI.pinegre].reduce((a, b) => scores[b] > scores[a] ? b : a);
+    Z.decType[k] = scores[VI.fageda] > scores[VI.roureda] ? VI.fageda : VI.roureda;
     const isForest = VEG[best].tree != null;
     // Clarianes i densitat del bosc.
     Z.cover[k] = isForest ? clamp(scores[best] * 1.4) * smooth(0.2, 0.42, n(11)) * (1 - smooth(0.9, 1.3, slope)) : 0;
@@ -730,6 +851,9 @@ function groundColor(v, phase, n) {
     case 'conreu': return [0.2 + 0.1 * n, 0.19 + 0.05 * n, 0.1];
     case 'prat': return [0.17 + 0.05 * n, 0.15, 0.08];
     case 'roca': return [0.2, 0.19, 0.17];
+    case 'matollar': return [0.13, 0.12, 0.07];
+    case 'urba': return [0.25, 0.24, 0.23];
+    case 'aigua': return [0.02, 0.05, 0.08];
     default: return [0.12, 0.1, 0.07];
   }
 }
@@ -1153,8 +1277,15 @@ function updateProps(cx, cz, date) {
     if (Math.hypot(x - cx, z - cz) > TREE_R) continue;
     const k = gridCell(x, z);
     if (k < 0) continue;
-    const v = Z.veg[k], kind = VEG[v].tree;
-    if (!kind || hash3(i, j, 3) > Z.cover[k] * 0.85) continue;
+    let v = Z.veg[k];
+    const ci = coverClassAt(x, z);
+    if (ci !== NO_COVER) {
+      // Amb mapa de cobertes, l'arbre hi és si aquell punt (14 m) és bosc, amb la densitat de la classe.
+      const cb = COBERTES[ci];
+      if (!cb.fam || hash3(i, j, 3) > cb.dens * 0.85) continue;
+      v = cb.fam === 'con' ? Z.conType[k] : cb.fam === 'dec' ? Z.decType[k] : VI.alzinar;
+    } else if (!VEG[v].tree || hash3(i, j, 3) > Z.cover[k] * 0.85) continue;
+    const kind = VEG[v].tree;
     const mesh = TREES[kind];
     if (counts[kind] >= mesh.instanceMatrix.count) continue;
     const s = 0.6 + hash3(i, j, 4) * 0.7;
@@ -1577,6 +1708,8 @@ function updateInfo() {
   $('wSoilM').textContent = `${fmtNum(soilM * 100)} %`;
   $('wFrost').textContent = String(frosts);
   $('wAlt').textContent = `${fmtNum(h)} m`;
+  const ci = coverClassAt(x, z);
+  $('wCover').textContent = ci !== NO_COVER ? `${COBERTES[ci].nom} (ICGC 2024)` : Z.hasOrtho && k >= 0 ? 'segons l\'ortofoto' : 'estimada';
   const [lat, lon] = worldToLatLon(x, z);
   $('wPos').textContent = `${lat.toFixed(4).replace('.', ',')}° N, ${Math.abs(lon).toFixed(4).replace('.', ',')}° ${lon >= 0 ? 'E' : 'O'}`;
   $('gmaps').href = `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(5)},${lon.toFixed(5)}`;
@@ -2126,6 +2259,14 @@ async function loadZone(zone) {
     Z.hasOrtho = false;
   }
   setTerrainStyle(Z.hasOrtho && terrainStyle === 'orto' ? 'orto' : 'est');
+  setLoading(0.76, 'Descarregant el mapa de cobertes del sòl de l\'ICGC…');
+  try {
+    const cls = await loadCobertes(det);
+    if (token !== loadToken) return;
+    applyCobertes(cls);
+  } catch (e) {
+    console.warn('Sense cobertes del sòl:', e);
+  }
   loadPlaces(zone, token);
   setLoading(0.75, 'Descarregant el temps d\'Open-Meteo…');
   await loadWeather();
