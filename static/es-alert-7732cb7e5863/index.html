@@ -57,6 +57,13 @@ button.push {
 button.push:active, button.push.on { transform: translateY(8px); box-shadow: 0 2px 0 #5c0b07, 0 4px 10px rgba(0,0,0,.5); }
 button.push.on { animation: pulse 1s infinite; }
 button.push:focus-visible { outline: 3px solid var(--amber); outline-offset: 6px; }
+.ring.small { width: min(150px, 42vw); }
+button.push.yellow {
+  background: radial-gradient(circle at 40% 32%, #ffe27a, var(--amber) 45%, #b07c0c);
+  box-shadow: 0 8px 0 #6e4c05, 0 12px 20px rgba(0,0,0,.55);
+  color: #2a1d00; font-size: .85rem; line-height: 1.15;
+}
+button.push.yellow:active, button.push.yellow.on { transform: translateY(6px); box-shadow: 0 2px 0 #6e4c05, 0 4px 10px rgba(0,0,0,.5); }
 @keyframes pulse { 50% { filter: brightness(1.35); } }
 @media (prefers-reduced-motion: reduce) { button.push.on { animation: none; } }
 .status { font-size: .8rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
@@ -83,6 +90,9 @@ button.push:focus-visible { outline: 3px solid var(--amber); outline-offset: 6px
   </div>
   <div class="ring">
     <button class="push" id="push" aria-pressed="false">PULSAR</button>
+  </div>
+  <div class="ring small">
+    <button class="push yellow" id="voice">ALERTA<br>MÁXIMA</button>
   </div>
   <div class="status"><span class="dot"></span><span id="st">En espera</span></div>
   <div class="row">
@@ -134,6 +144,24 @@ function stop() {
   btn.textContent = 'PULSAR'; st.textContent = 'En espera';
 }
 btn.addEventListener('click', () => playing ? stop() : start());
+
+// Botón amarillo: dice «alerta máxima» con la voz del navegador
+const vbtn = document.getElementById('voice');
+function pickVoice() {
+  const vs = speechSynthesis.getVoices();
+  return vs.find(v => v.lang === 'es-ES') || vs.find(v => v.lang && v.lang.startsWith('es'));
+}
+vbtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) { st.textContent = 'Este navegador no puede hablar'; return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance('¡Alerta máxima!');
+  u.lang = 'es-ES'; u.rate = 0.9; u.pitch = 0.8; u.volume = Math.min(1, vol.value / 70);
+  const v = pickVoice(); if (v) u.voice = v;
+  u.onstart = () => vbtn.classList.add('on');
+  u.onend = u.onerror = () => vbtn.classList.remove('on');
+  speechSynthesis.speak(u);
+});
+if ('speechSynthesis' in window) speechSynthesis.getVoices();
 </script>
 </body>
 </html>
