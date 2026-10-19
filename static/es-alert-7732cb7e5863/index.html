@@ -57,7 +57,19 @@ button.push {
 button.push:active, button.push.on { transform: translateY(8px); box-shadow: 0 2px 0 #5c0b07, 0 4px 10px rgba(0,0,0,.5); }
 button.push.on { animation: pulse 1s infinite; }
 button.push:focus-visible { outline: 3px solid var(--amber); outline-offset: 6px; }
-.ring.small { width: min(150px, 42vw); }
+.pads { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ring.small { width: 100%; }
+.pads button.push { font-size: clamp(.62rem, 2.6vw, .8rem); line-height: 1.15; }
+button.push.blue {
+  background: radial-gradient(circle at 40% 32%, #7fb4ff, #2f6fd6 45%, #183d7a);
+  box-shadow: 0 8px 0 #0f2550, 0 12px 20px rgba(0,0,0,.55);
+}
+button.push.white {
+  background: radial-gradient(circle at 40% 32%, #ffffff, #d5d9e0 45%, #8a909c);
+  box-shadow: 0 8px 0 #4a4f59, 0 12px 20px rgba(0,0,0,.55); color: #1c1f25;
+}
+button.push.blue:active, button.push.blue.on { transform: translateY(6px); box-shadow: 0 2px 0 #0f2550, 0 4px 10px rgba(0,0,0,.5); }
+button.push.white:active, button.push.white.on { transform: translateY(6px); box-shadow: 0 2px 0 #4a4f59, 0 4px 10px rgba(0,0,0,.5); }
 button.push.yellow {
   background: radial-gradient(circle at 40% 32%, #ffe27a, var(--amber) 45%, #b07c0c);
   box-shadow: 0 8px 0 #6e4c05, 0 12px 20px rgba(0,0,0,.55);
@@ -91,8 +103,10 @@ button.push.yellow:active, button.push.yellow.on { transform: translateY(6px); b
   <div class="ring">
     <button class="push" id="push" aria-pressed="false">PULSAR</button>
   </div>
-  <div class="ring small">
-    <button class="push yellow" id="voice">ALERTA<br>MÁXIMA</button>
+  <div class="pads">
+    <div class="ring small"><button class="push yellow" id="voice">ALERTA<br>MÁXIMA</button></div>
+    <div class="ring small"><button class="push blue" id="kick">BOMBO</button></div>
+    <div class="ring small"><button class="push white" id="clap">CLAP</button></div>
   </div>
   <div class="status"><span class="dot"></span><span id="st">En espera</span></div>
   <div class="row">
@@ -162,6 +176,63 @@ vbtn.addEventListener('click', () => {
   speechSynthesis.speak(u);
 });
 if ('speechSynthesis' in window) speechSynthesis.getVoices();
+
+// Batería: bombo y clap sintetizados
+function drumOut() {
+  if (!ctx) { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.connect(ctx.destination); setVol(); }
+  ctx.resume();
+  const g = ctx.createGain(); g.gain.value = (vol.value / 100) * 1.4; g.connect(ctx.destination);
+  return g;
+}
+function flash(el) { el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 120); }
+
+function kick() {
+  const out = drumOut(), t = ctx.currentTime;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(160, t);
+  o.frequency.exponentialRampToValueAtTime(42, t + 0.14);
+  g.gain.setValueAtTime(1, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+  o.connect(g); g.connect(out); o.start(t); o.stop(t + 0.52);
+  // golpe inicial
+  const c = ctx.createOscillator(), cg = ctx.createGain();
+  c.type = 'triangle'; c.frequency.value = 1200;
+  cg.gain.setValueAtTime(0.35, t); cg.gain.exponentialRampToValueAtTime(0.001, t + 0.02);
+  c.connect(cg); cg.connect(out); c.start(t); c.stop(t + 0.03);
+}
+
+let noiseBuf;
+function clap() {
+  const out = drumOut(), t = ctx.currentTime;
+  if (!noiseBuf) {
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+  const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1400; bp.Q.value = 0.9;
+  const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 600;
+  const g = ctx.createGain();
+  // tres palmadas rápidas y una cola
+  g.gain.setValueAtTime(0, t);
+  [0, 0.012, 0.024].forEach(o => {
+    g.gain.setValueAtTime(0.9, t + o);
+    g.gain.exponentialRampToValueAtTime(0.15, t + o + 0.01);
+  });
+  g.gain.setValueAtTime(0.8, t + 0.036);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+  src.connect(bp); bp.connect(hp); hp.connect(g); g.connect(out);
+  src.start(t); src.stop(t + 0.32);
+}
+
+const kbtn = document.getElementById('kick'), cbtn = document.getElementById('clap');
+kbtn.addEventListener('pointerdown', () => { kick(); flash(kbtn); });
+cbtn.addEventListener('pointerdown', () => { clap(); flash(cbtn); });
+// teclado: Enter/Espacio en el botón enfocado
+[[kbtn, kick], [cbtn, clap]].forEach(([b, f]) => b.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f(); flash(b); }
+}));
 </script>
 </body>
 </html>
