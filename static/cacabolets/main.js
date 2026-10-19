@@ -10,6 +10,8 @@
 // Coordenades del món: metres, x cap a l'est, z cap al sud, origen al centre de la zona.
 import * as THREE from 'three';
 import { FITXES, ILUSTRACIONS, FOTOS, ilustracioGenerica } from './fitxes.js';
+import { createAtmos, GLSL_CLOUDMAP } from './atmos.js';
+import { makeFoliageTexture, makeBarkTexture, makeGroundTextures, groundCoverGeometry, shrubGeometry, buildTree, bakeImpostors, KINDS, VARIANTS } from './vegetation.js';
 
 // ---------------------------------------------------------------------------
 // Configuració
@@ -144,7 +146,7 @@ const fixedQuality = parseFloat(qs.get('q'));
 let pixelRatio = fixedQuality > 0 ? fixedQuality : Math.min(window.devicePixelRatio || 1, 1.5);
 renderer.setPixelRatio(pixelRatio);
 renderer.setSize(innerWidth, innerHeight, false);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMapping = THREE.NoToneMapping;   // el to es fa al postprocés (atmos.js)
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -168,6 +170,7 @@ const U = {
   uNoiseTex: { value: null },
   uDetN: { value: null }, uCtxN: { value: null },
   uOrthoDet: { value: null }, uOrthoCtx: { value: null }, uUseOrtho: { value: 0 },
+  uGLitter: { value: null }, uGNeedle: { value: null }, uGGrass: { value: null }, uGRock: { value: null },
   uNatTex: { value: null }, uShowNat: { value: 1 },
   uVegTex: { value: null },
   uIndexTex: { value: null },
@@ -193,6 +196,7 @@ const U = {
   uHaze: { value: 1 / 60000 },
   uWindDir: { value: new THREE.Vector2(1, 0) },
   uWindStr: { value: 0 },
+  uCloudBase: { value: 1500 }, uCloudTop: { value: 2500 }, uCloudCov: { value: 0 }, uCloudWind: { value: new THREE.Vector2() },
 };
 
 // ---------------------------------------------------------------------------
@@ -640,6 +644,7 @@ U.uNoiseTex.value = noiseTex;
 // Temps: Open-Meteo
 // ---------------------------------------------------------------------------
 const HOURLY = ['temperature_2m', 'relative_humidity_2m', 'precipitation', 'snowfall', 'cloud_cover',
+  'cloud_cover_low', 'cloud_cover_mid', 'cloud_cover_high',
   'wind_speed_10m', 'wind_direction_10m', 'soil_temperature_6cm', 'soil_moisture_3_to_9cm'];
 
 function gridPoints() {
@@ -708,7 +713,9 @@ function sampleWeather(pts) {
       hourly.relative_humidity_2m.push(clamp(70 + pr * 6 - (temp - 10) * 1.5, 30, 100));
       hourly.precipitation.push(pr);
       hourly.snowfall.push(temp < 0.5 ? pr * 0.7 : 0);
-      hourly.cloud_cover.push(clamp(30 + pr * 25 + 30 * Math.sin(day * 1.3), 0, 100));
+      const cc = clamp(30 + pr * 25 + 30 * Math.sin(day * 1.3), 0, 100);
+      hourly.cloud_cover.push(cc);
+      hourly.cloud_cover_low.push(cc * 0.7); hourly.cloud_cover_mid.push(cc * 0.5); hourly.cloud_cover_high.push(clamp(40 + 40 * Math.sin(day * 0.7), 0, 100));
       hourly.wind_speed_10m.push(8 + 10 * Math.abs(Math.sin(h * 0.05)));
       hourly.wind_direction_10m.push(300 + 40 * Math.sin(h * 0.02));
       hourly.soil_temperature_6cm.push(base + 1.5 + 1.5 * Math.sin((hr - 12) / 24 * 2 * Math.PI));
@@ -1081,17 +1088,17 @@ function injectCommon(shader, { sway = false, snow = false } = {}) {
   shader.fragmentShader = shader.fragmentShader
     .replace('#include <common>', `#include <common>
       uniform sampler2D uShadowTex; uniform vec2 uDetOrigin; uniform float uDetSize; uniform vec3 uAmbient;
-      uniform float uSnowLine; uniform float uSnowAmt; uniform sampler2D uNoiseTex; uniform float uWet;
+      uniform float uSnowLine; uniform float uSnowAmt; uniform sampler2D uNoiseTex; uniform float uWet; uniform vec3 uLightDir;
       varying vec3 vWPos; varying vec3 vLPos;
       ${GLSL_HASH}
-      ${GLSL_SKY}
+      ${GLSL_CLOUDMAP}
       float terrainShadowAt(vec3 wp) {
         vec2 uv = (wp.xz - uDetOrigin) / uDetSize;
         if (any(lessThan(uv, vec2(0.0))) || any(greaterThan(uv, vec2(1.0)))) return 1.0;
         return texture(uShadowTex, uv).r;
       }`)
     .replace('#include <normal_fragment_begin>', `#include <normal_fragment_begin>
-      float tShadow = terrainShadowAt(vWPos);
+      float tShadow = terrainShadowAt(vWPos) * cloudShadow(vWPos, uLightDir, uNoiseTex);
       ${snow ? `
       vec3 wN = normalize((vec4(normal, 0.0) * viewMatrix).xyz);
       float sn = texture(uNoiseTex, vLPos.xz * 0.37 + vLPos.y * 0.21).r;
@@ -1101,8 +1108,6 @@ function injectCommon(shader, { sway = false, snow = false } = {}) {
     .replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
       reflectedLight.directDiffuse *= tShadow;
       reflectedLight.directSpecular *= tShadow;`)
-    .replace('#include <opaque_fragment>', `outgoingLight = applyFog(outgoingLight, vWPos);
-      #include <opaque_fragment>`)
     .replace('#include <fog_fragment>', '');
 }
 
@@ -1156,9 +1161,10 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
       .replace('#include <packing>', `#include <packing>
         uniform vec2 uPrevOrigin; uniform float uPrevHalf; uniform float uScaleF;
         uniform sampler2D uVegTex; uniform sampler2D uIndexTex; uniform float uOverlay; uniform vec3 uIdxColor;
-        uniform vec3 uLightDir; uniform vec3 uLightCol; uniform float uNight;
+        uniform vec3 uLightCol; uniform float uNight;
         uniform sampler2D uDetN; uniform sampler2D uCtxN;
         uniform sampler2D uOrthoDet; uniform sampler2D uOrthoCtx; uniform float uUseOrtho;
+        uniform sampler2D uGLitter; uniform sampler2D uGNeedle; uniform sampler2D uGGrass; uniform sampler2D uGRock;
         uniform sampler2D uNatTex; uniform float uShowNat;
         ${GLSL_TERRAIN.replace('uniform sampler2D uNoiseTex;', '').replace('uniform vec2 uDetOrigin;', '').replace('uniform float uDetSize;', '')}
         vec3 heatRamp(float x) {
@@ -1169,7 +1175,7 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
       .replace('#include <clipping_planes_fragment>', `
         if (uPrevHalf > 0.0) { vec2 pd = abs(vWPos.xz - uPrevOrigin); if (max(pd.x, pd.y) < uPrevHalf - uScaleF * 0.6) discard; }
         #include <clipping_planes_fragment>`)
-      .replace('float tShadow = terrainShadowAt(vWPos);', `float tShadow = terrainShadowAt(vWPos);
+      .replace('float tShadow = terrainShadowAt(vWPos) * cloudShadow(vWPos, uLightDir, uNoiseTex);', `float tShadow = terrainShadowAt(vWPos) * cloudShadow(vWPos, uLightDir, uNoiseTex);
         vec2 p = vWPos.xz;
         float camDist = length(vWPos - cameraPosition);
         vec2 sl = mix(texture(uCtxN, (p - uCtxOrigin) / uCtxSize).rg, texture(uDetN, (p - uDetOrigin) / uDetSize).rg, detWeight(p));
@@ -1200,6 +1206,21 @@ for (let L = 0; L < CLIP_LEVELS; L++) {
         alb *= mix(0.85 + 0.3 * n2, 0.8 + 0.6 * n2 * n1, forest);
         float steep = 1.0 - smoothstep(0.55, 0.8, N.y);
         alb = mix(alb, vec3(0.16, 0.15, 0.14) * (0.7 + 0.6 * n1), steep * 0.8);
+        // De prop: textura del terra (fullaraca i pinassa sota el bosc, herba als prats, roca als pendents).
+        float nearK = 1.0 - smoothstep(60.0, 240.0, camDist);
+        if (nearK > 0.001) {
+          float m = texture(uNoiseTex, p / 19.0).r, m2 = texture(uNoiseTex, p / 6.1 + 0.5).r;
+          vec3 tl = texture(uGLitter, p / 2.2).rgb, tn = texture(uGNeedle, p / 2.6 + 0.37).rgb;
+          vec3 tg = texture(uGGrass, p / 1.9).rgb, tgm = textureLod(uGGrass, p / 1.9, 9.0).rgb;
+          vec3 tr = texture(uGRock, p / 3.7).rgb;
+          float fo = smoothstep(0.12, 0.45, forest);
+          vec3 floorC = mix(tl, tn, smoothstep(0.35, 0.65, m)) * (0.75 + 0.5 * m2);
+          // Prat: el to de la zona (foto o estimació) amb el detall de l'herba.
+          vec3 openC = alb * mix(vec3(1.0), tg / max(tgm, vec3(0.02)), 0.75);
+          vec3 det = mix(openC, floorC * 0.8, fo);
+          det = mix(det, tr * 0.6 * (0.8 + 0.4 * m2), clamp(steep * 1.2 + smoothstep(0.72, 0.9, m) * (1.0 - fo) * 0.5, 0.0, 1.0));
+          alb = mix(alb, det, nearK);
+        }
         if (hh < 0.6) alb = vec3(0.02, 0.05, 0.08);       // mar
         // Neu per sobre de la cota de neu.
         float snow = uSnowAmt * smoothstep(uSnowLine - 100.0, uSnowLine + 100.0, hh + (n1 - 0.5) * 160.0);
@@ -1246,51 +1267,9 @@ function updateClipmap(cx, cz) {
 // ---------------------------------------------------------------------------
 // Cel
 // ---------------------------------------------------------------------------
-const sky = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24), new THREE.ShaderMaterial({
-  uniforms: U, side: THREE.BackSide, depthWrite: false, depthTest: false,
-  vertexShader: `varying vec3 vDir; void main() { vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-  fragmentShader: /* glsl */`
-    uniform float uTime; uniform float uNight; uniform float uCloud; uniform vec2 uCloudOff;
-    uniform vec3 uLightCol; uniform vec3 uAmbient; uniform vec3 uLightDir;
-    varying vec3 vDir;
-    ${GLSL_HASH}
-    ${GLSL_SKY}
-    float vnoise(vec2 x) { vec2 i = floor(x), f = fract(x); vec2 u = f * f * (3.0 - 2.0 * f);
-      return mix(mix(nzHash12(i), nzHash12(i + vec2(1, 0)), u.x), mix(nzHash12(i + vec2(0, 1)), nzHash12(i + vec2(1, 1)), u.x), u.y); }
-    float fbm(vec2 p) { float a = 0.0, b = 0.5; for (int i = 0; i < 6; i++) { a += b * vnoise(p); p = p * 2.03 + 17.1; b *= 0.5; } return a; }
-    void main() {
-      vec3 rd = normalize(vDir);
-      vec3 col = skyBase(rd);
-      float mu = dot(rd, uSunDir);
-      col += uSunGlow * smoothstep(0.99985, 0.99995, mu) * 60.0 * (1.0 - uCloud * 0.9);
-      if (uNight > 0.01 && rd.y > 0.0) {
-        vec2 g = floor(vec2(atan(rd.z, rd.x) * 160.0, asin(rd.y) * 160.0));
-        float s = nzHash12(g);
-        col += vec3(0.85, 0.9, 1.0) * smoothstep(0.996, 1.0, s) * (0.7 + 0.3 * sin(uTime * 3.0 + s * 50.0)) * uNight * 0.9 * smoothstep(0.0, 0.15, rd.y) * (1.0 - uCloud);
-        float mm = dot(rd, uLightDir);
-        col += vec3(0.8, 0.85, 0.95) * smoothstep(0.9997, 0.99985, mm) * uNight * 3.0 * (1.0 - uCloud * 0.9);
-      }
-      if (rd.y > 0.0) {
-        vec2 cp = rd.xz / (rd.y + 0.06) * 1.3 + uCloudOff;
-        float n = fbm(cp * 0.9);
-        float cov = mix(0.78, 0.22, uCloud);
-        float c = smoothstep(cov - 0.1, cov + 0.3, n);
-        c = mix(c, 1.0, smoothstep(0.8, 1.0, uCloud) * 0.85);
-        float thick = smoothstep(cov, cov + 0.5, fbm(cp * 0.9 + vec2(0.4, 0.2)));
-        vec3 cLit = uAmbient * 1.15 + uLightCol * 0.35 * (1.0 - thick * 0.7) * (0.6 + 0.6 * pow(max(mu, 0.0), 6.0));
-        float fade = smoothstep(0.0, 0.12, rd.y);
-        col = mix(col, mix(cLit, uAmbient * 0.6, thick * 0.6), c * fade);
-        col = mix(col, fogColorFor(rd), (1.0 - fade) * c * 0.6);
-      }
-      gl_FragColor = vec4(col, 1.0);
-      #include <tonemapping_fragment>
-      #include <colorspace_fragment>
-    }`,
-}));
-sky.scale.setScalar(80000);
-sky.renderOrder = -10;
-sky.frustumCulled = false;
-scene.add(sky);
+// El cel, l'atmosfera, els núvols i el postprocés són a atmos.js.
+const qualityLow = matchMedia('(pointer: coarse)').matches || qs.has('baixa');
+const atmos = createAtmos(renderer, U, { quality: qualityLow ? 0.4 : 1 });
 
 const sun = new THREE.DirectionalLight(0xffffff, 1);
 sun.castShadow = true;
@@ -1306,81 +1285,146 @@ scene.add(hemi);
 // ---------------------------------------------------------------------------
 // Arbres i bolets (instanciats al voltant de la càmera)
 // ---------------------------------------------------------------------------
-function mergeParts(parts) {
-  const pos = [], col = [], idx = [];
-  for (const { geo, color, matrix } of parts) {
-    const g = geo.index ? geo : geo;
-    const p = g.attributes.position, base = pos.length / 3;
-    const v = new THREE.Vector3();
-    for (let i = 0; i < p.count; i++) {
-      v.fromBufferAttribute(p, i).applyMatrix4(matrix);
-      pos.push(v.x, v.y, v.z);
-      const c = typeof color === 'function' ? color(v) : color;
-      col.push(c[0], c[1], c[2]);
-    }
-    if (g.index) for (let i = 0; i < g.index.count; i++) idx.push(base + g.index.getX(i));
-    else for (let i = 0; i < p.count; i++) idx.push(base + i);
-  }
-  const out = new THREE.BufferGeometry();
-  out.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  out.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
-  out.setIndex(idx);
-  out.computeVertexNormals();
-  return out;
+// Arbres procedurals (vegetation.js): de prop, tronc, branques i targetes de fullatge; de lluny, impostors.
+const foliageTex = makeFoliageTexture(), barkTex = makeBarkTexture();
+{
+  const gt = makeGroundTextures();
+  U.uGLitter.value = gt.litter; U.uGNeedle.value = gt.needles; U.uGGrass.value = gt.grass; U.uGRock.value = gt.rock;
 }
-const M4 = (x, y, z, sx, sy, sz, ry = 0) => new THREE.Matrix4().compose(new THREE.Vector3(x, y, z),
-  new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), ry), new THREE.Vector3(sx, sy, sz));
-function lumpy(geo, amp, seed) {
-  const p = geo.attributes.position, r = mulberry(seed);
-  const o = [r() * 9, r() * 9, r() * 9];
-  for (let i = 0; i < p.count; i++) {
-    const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
-    const k = 1 + amp * (Math.sin(x * 3.1 + o[0]) * Math.sin(y * 2.7 + o[1]) * Math.sin(z * 3.3 + o[2]));
-    p.setXYZ(i, x * k, y * k, z * k);
-  }
-  return geo;
-}
-const BARK = [0.06, 0.04, 0.03];
-// Conífera alta (pi roig, pi negre): tronc nu i capçada a dalt.
-function pineGeo() {
-  const parts = [{ geo: new THREE.CylinderGeometry(0.16, 0.3, 11, 7), color: [0.12, 0.06, 0.035], matrix: M4(0, 5.5, 0, 1, 1, 1) }];
-  for (let t = 0; t < 4; t++) parts.push({ geo: lumpy(new THREE.IcosahedronGeometry(1, 1), 0.18, t + 1), color: [0.075, 0.115, 0.05],
-    matrix: M4(Math.sin(t * 2.1) * 0.5, 8.5 + t * 1.3, Math.cos(t * 2.1) * 0.5, 2.3 - t * 0.35, 1.3, 2.3 - t * 0.35) });
-  return mergeParts(parts);
-}
-// Avet: con dens fins a baix.
-function firGeo() {
-  const parts = [{ geo: new THREE.CylinderGeometry(0.12, 0.28, 3, 6), color: BARK, matrix: M4(0, 1.5, 0, 1, 1, 1) }];
-  for (let t = 0; t < 6; t++) parts.push({ geo: new THREE.ConeGeometry(2.6 - t * 0.38, 3.2, 9), color: [0.05, 0.085, 0.05], matrix: M4(0, 2.4 + t * 1.75, 0, 1, 1, 1, t) });
-  return mergeParts(parts);
-}
-// Pi pinyer / pi blanc: capçada ampla i aplanada.
-function umbrellaGeo() {
-  const parts = [{ geo: new THREE.CylinderGeometry(0.18, 0.3, 7, 7), color: [0.1, 0.06, 0.035], matrix: M4(0, 3.5, 0, 1, 1, 1) }];
-  for (let t = 0; t < 4; t++) parts.push({ geo: lumpy(new THREE.IcosahedronGeometry(1, 1), 0.2, 10 + t), color: [0.09, 0.13, 0.05],
-    matrix: M4(Math.cos(t * 1.6) * 1.6, 7.2 + (t % 2) * 0.4, Math.sin(t * 1.6) * 1.6, 2.4, 1.0, 2.4) });
-  return mergeParts(parts);
-}
-// Planifoli (alzina, roure, faig): capçada arrodonida de blocs. El color ve de la instància.
-function broadGeo() {
-  const parts = [{ geo: new THREE.CylinderGeometry(0.2, 0.35, 5, 7), color: [0.3, 0.27, 0.24], matrix: M4(0, 2.5, 0, 1, 1, 1) }];
-  for (let t = 0; t < 6; t++) parts.push({ geo: lumpy(new THREE.IcosahedronGeometry(1, 1), 0.25, 20 + t), color: [1, 1, 1],
-    matrix: M4(Math.cos(t * 1.1) * 1.5, 5.6 + Math.sin(t * 2.3) * 1.0, Math.sin(t * 1.1) * 1.5, 2.0, 1.7, 2.0) });
-  return mergeParts(parts);
-}
-function propMaterial(sway) {
-  const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
-  m.onBeforeCompile = s => injectCommon(s, { sway, snow: true });
-  m.customProgramCacheKey = () => 'mico-prop' + sway;
+const LOD_R = +qs.get('lod') || (qualityLow ? 70 : 110);
+// Fosa entre l'arbre de prop i l'impostor: es descarten píxels segons la distància (sense salts).
+const GLSL_LODFADE = /* glsl */`
+float lodHash(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }`;
+function treeMaterial(leaf, lodR = LOD_R, grass = false) {
+  const m = new THREE.MeshStandardMaterial(leaf
+    ? { map: foliageTex, alphaTest: 0.5, alphaToCoverage: true, side: THREE.DoubleSide, vertexColors: true, roughness: 0.8, metalness: 0 }
+    : { map: barkTex, vertexColors: true, roughness: 0.95, metalness: 0 });
+  m.onBeforeCompile = sh => {
+    injectCommon(sh, { sway: true, snow: leaf });
+    sh.uniforms.uLodR = { value: lodR };
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', `#include <common>
+        uniform float uLodR; varying float vLodFade;`)
+      .replace('vLPos = position;', `vLPos = position;
+        #ifdef USE_INSTANCING
+          vec3 ic = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+          vLodFade = smoothstep(uLodR - 18.0, uLodR, distance(cameraPosition.xz, ic.xz));
+          ${grass ? `transformed.xz += uWindDir * position.y * position.y * (0.15 + 0.25 * uWindStr) * (0.6 + 0.4 * sin(uTime * 2.3 + ic.x * 0.7 + ic.z * 0.5));` : ''}
+          ${leaf ? `// Les fulles tremolen una mica amb el vent.
+          transformed += normal * sin(uTime * 4.0 + dot(position, vec3(3.1, 1.7, 2.3)) + ic.x) * 0.04 * (0.3 + uWindStr);` : ''}
+        #else
+          vLodFade = 0.0;
+        #endif`);
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+        uniform vec3 uLightCol; varying float vLodFade;
+        ${GLSL_LODFADE}`)
+      .replace('#include <clipping_planes_fragment>', `if (lodHash(gl_FragCoord.xy) < vLodFade) discard;
+        #include <clipping_planes_fragment>`)
+      .replace('#include <alphatest_fragment>', `#ifdef USE_MAP
+          { vec2 dx = dFdx(vMapUv * 1024.0), dy = dFdy(vMapUv * 1024.0);
+            diffuseColor.a *= 1.0 + max(0.0, 0.5 * log2(max(dot(dx, dx), dot(dy, dy)))) * 0.3; }
+        #endif
+        #include <alphatest_fragment>`);
+    if (leaf) sh.fragmentShader = sh.fragmentShader
+      // Les normals del fullatge són les de la capçada: no s'han de girar a la cara de darrere.
+      .replace('#include <normal_fragment_maps>', `normal = normalize(vNormal); nonPerturbedNormal = normal;
+        #include <normal_fragment_maps>`)
+      .replace('#include <lights_fragment_end>', `#include <lights_fragment_end>
+        {
+          // Llum que travessa les fulles (més quan es mira cap al sol).
+          vec3 Vw = normalize(cameraPosition - vWPos);
+          float back = pow(max(dot(-Vw, uLightDir), 0.0), 3.0);
+          reflectedLight.directDiffuse += diffuseColor.rgb * uLightCol * tShadow * (0.06 + 0.35 * back);
+        }`);
+  };
+  m.customProgramCacheKey = () => 'mico-tree' + leaf + lodR + grass;
   return m;
 }
-const TREES = {
-  pine: new THREE.InstancedMesh(pineGeo(), propMaterial(true), 6000),
-  fir: new THREE.InstancedMesh(firGeo(), propMaterial(true), 6000),
-  umbrella: new THREE.InstancedMesh(umbrellaGeo(), propMaterial(true), 6000),
-  broad: new THREE.InstancedMesh(broadGeo(), propMaterial(true), 8000),
-};
-for (const m of Object.values(TREES)) { m.frustumCulled = false; m.count = 0; m.castShadow = true; m.receiveShadow = true; scene.add(m); }
+const leafMat = treeMaterial(true), barkMat = treeMaterial(false);
+const TREE_GEO = {};
+const TREES = {};       // TREES[kind][variant] = { bark, leaf } (InstancedMesh de prop)
+for (const kind of KINDS) {
+  TREES[kind] = [];
+  for (let v = 0; v < VARIANTS; v++) {
+    const t = buildTree(kind, v);
+    TREE_GEO[kind + v] = t;
+    const cap = qualityLow ? 600 : 1500;
+    const pair = { bark: new THREE.InstancedMesh(t.bark, barkMat, cap), leaf: new THREE.InstancedMesh(t.leaf, leafMat, cap) };
+    for (const m of [pair.bark, pair.leaf]) { m.frustumCulled = false; m.count = 0; m.castShadow = true; m.receiveShadow = true; scene.add(m); }
+    TREES[kind].push(pair);
+  }
+}
+// Vegetació baixa de prop: herba i mates (s'esvaeix entre 40 i 58 m).
+const COVER_R = qualityLow ? 35 : 58, COVER_CELL = qualityLow ? 1.1 : 0.75;
+const grassMesh = new THREE.InstancedMesh(groundCoverGeometry(), treeMaterial(true, COVER_R, true), qualityLow ? 4000 : 22000);
+const shrubMesh = new THREE.InstancedMesh(shrubGeometry(), treeMaterial(true, COVER_R), qualityLow ? 800 : 3000);
+for (const m of [grassMesh, shrubMesh]) { m.frustumCulled = false; m.count = 0; m.receiveShadow = true; m.castShadow = false; scene.add(m); }
+shrubMesh.castShadow = true;
+// Impostors.
+const IMP = bakeImpostors(renderer, foliageTex, barkTex, KINDS.flatMap(k => [...Array(VARIANTS).keys()].map(v => TREE_GEO[k + v])));
+const impGeo = new THREE.PlaneGeometry(1, 1);
+const impSlot = new THREE.InstancedBufferAttribute(new Float32Array(qualityLow ? 14000 : 42000), 1);
+impGeo.setAttribute('aSlot', impSlot);
+const impMat = new THREE.ShaderMaterial({
+  uniforms: { ...U, uAlb: { value: IMP.albedo }, uNor: { value: IMP.normal }, uSizes: { value: IMP.sizes }, uSlots: { value: IMP.n }, uLodR: { value: LOD_R } },
+  alphaToCoverage: true,
+  vertexShader: /* glsl */`
+    attribute float aSlot;
+    uniform float uSizes[${IMP.n * 2}]; uniform float uSlots; uniform float uLodR;
+    varying vec2 vUv; varying vec3 vWPos; varying vec3 vRight; varying vec3 vToCam; varying vec3 vTint; varying float vFade;
+    void main() {
+      vec3 c = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+      float sw = length(instanceMatrix[0].xyz), sh = length(instanceMatrix[1].xyz);
+      int k = int(aSlot + 0.5);
+      vec2 sz = vec2(uSizes[k * 2], uSizes[k * 2 + 1]) * vec2(sw, sh);
+      vec3 toCam = cameraPosition - c; toCam.y = 0.0; toCam = normalize(toCam);
+      vec3 right = vec3(toCam.z, 0.0, -toCam.x);
+      vec3 wp = c + right * (position.x * sz.x) + vec3(0.0, (position.y + 0.5) * sz.y, 0.0);
+      vUv = vec2((uv.x + aSlot) / uSlots, uv.y);
+      vWPos = wp; vRight = right; vToCam = toCam;
+      #ifdef USE_INSTANCING_COLOR
+        vTint = instanceColor;
+      #else
+        vTint = vec3(1.0);
+      #endif
+      vFade = smoothstep(uLodR - 18.0, uLodR, distance(cameraPosition.xz, c.xz));
+      gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
+    }`,
+  fragmentShader: /* glsl */`
+    uniform sampler2D uAlb; uniform sampler2D uNor; uniform sampler2D uShadowTex; uniform vec2 uDetOrigin; uniform float uDetSize;
+    uniform vec3 uLightDir; uniform vec3 uLightCol; uniform vec3 uAmbient; uniform sampler2D uNoiseTex;
+    varying vec2 vUv; varying vec3 vWPos; varying vec3 vRight; varying vec3 vToCam; varying vec3 vTint; varying float vFade;
+    ${GLSL_CLOUDMAP}
+    ${GLSL_LODFADE}
+    float terrainShadowAt(vec3 wp) {
+      vec2 uv = (wp.xz - uDetOrigin) / uDetSize;
+      if (any(lessThan(uv, vec2(0.0))) || any(greaterThan(uv, vec2(1.0)))) return 1.0;
+      return texture(uShadowTex, uv).r;
+    }
+    void main() {
+      vec4 a = texture2D(uAlb, vUv);
+      // El fons és negre i transparent: dividir per l'alfa recupera el color als mipmaps; i l'alfa es
+      // reescala amb el nivell de mip perquè els arbres llunyans no s'aprimin (mètode de B. Golus).
+      vec2 tsz = vec2(${IMP.n * 256}.0, 512.0);
+      vec2 dx = dFdx(vUv * tsz), dy = dFdy(vUv * tsz);
+      float mip = max(0.0, 0.5 * log2(max(dot(dx, dx), dot(dy, dy))));
+      float alpha = a.a * (1.0 + mip * 0.35);
+      if (alpha < 0.5 || lodHash(gl_FragCoord.xy) >= vFade) discard;
+      vec3 c0 = a.rgb / max(a.a, 0.02);
+      vec3 alb = c0 * c0 * vTint;
+      vec3 n = texture2D(uNor, vUv).xyz * 2.0 - 1.0;
+      vec3 N = normalize(vRight * n.x + vec3(0.0, n.y, 0.0) + vToCam * n.z);
+      float sh = terrainShadowAt(vWPos) * cloudShadow(vWPos, uLightDir, uNoiseTex);
+      vec3 hemiC = mix(uAmbient * 0.5, uAmbient * 1.05, 0.5 + 0.5 * N.y);
+      float back = pow(max(dot(-normalize(cameraPosition - vWPos), uLightDir), 0.0), 3.0);
+      vec3 col = alb / 3.14159265 * (uLightCol * max(dot(N, uLightDir), 0.0) * sh + hemiC) + alb * uLightCol * sh * (0.06 + 0.35 * back);
+      gl_FragColor = vec4(col, 1.0);
+    }`,
+});
+const impMesh = new THREE.InstancedMesh(impGeo, impMat, impSlot.count);
+impMesh.frustumCulled = false; impMesh.count = 0;
+scene.add(impMesh);
 
 // Bolet: barret + peu. El barret pren el color de l'espècie; el peu és clar.
 const capGeo = (() => { const g = new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2); g.scale(1, 0.55, 1); g.translate(0, 0.9, 0); return g; })();
@@ -1394,58 +1438,125 @@ for (const m of [capMesh, stemMesh]) {
   scene.add(m);
 }
 
+const ZERO_M = new THREE.Matrix4().makeScale(0, 0, 0), tmpC2 = new THREE.Color();
 const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3(), yAxis = new THREE.Vector3(0, 1, 0), tmpC = new THREE.Color();
 let propCenter = { x: 1e9, z: 1e9 }, propsDirty = true;
-const TREE_R = 420, TREE_CELL = 6.5, SHROOM_R = 45, SHROOM_CELL = 1.3;
+const TREE_R = qualityLow ? 450 : 650, TREE_CELL = 6.5, SHROOM_R = 45, SHROOM_CELL = 1.3;
+const BARE = new Set(['roureda', 'fageda']);   // perden la fulla a l'hivern
 
 function updateProps(cx, cz, date) {
   if (!propsDirty && Math.hypot(cx - propCenter.x, cz - propCenter.z) < 25) return;
   propsDirty = false;
   propCenter = { x: cx, z: cz };
-  const counts = { pine: 0, fir: 0, umbrella: 0, broad: 0 };
+  const counts = {};
+  for (const kind of KINDS) counts[kind] = new Array(VARIANTS).fill(0);
+  let nImp = 0;
   const phase = autumnPhase(date);
   const r = Math.ceil(TREE_R / TREE_CELL), ci = Math.floor(cx / TREE_CELL), cj = Math.floor(cz / TREE_CELL);
+  // Marges de 30 m perquè, fins que no es tornen a col·locar (cada 25 m), cap arbre quedi sense versió visible.
+  const near2 = (LOD_R + 30) ** 2, far2 = TREE_R ** 2, impFrom2 = (LOD_R - 48) ** 2;
   for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i++) {
     const x = (i + hash3(i, j, 1)) * TREE_CELL, z = (j + hash3(i, j, 2)) * TREE_CELL;
-    if (Math.hypot(x - cx, z - cz) > TREE_R) continue;
+    const d2 = (x - cx) ** 2 + (z - cz) ** 2;
+    if (d2 > far2) continue;
     const k = gridCell(x, z);
     if (k < 0) continue;
     let v = Z.veg[k];
-    const ci = coverClassAt(x, z);
-    if (ci !== NO_COVER) {
+    const cc = coverClassAt(x, z);
+    if (cc !== NO_COVER) {
       // Amb mapa de cobertes, l'arbre hi és si aquell punt (14 m) és bosc, amb la densitat de la classe.
-      const cb = COBERTES[ci];
+      const cb = COBERTES[cc];
       if (!cb.fam || hash3(i, j, 3) > cb.dens * 0.85) continue;
       v = cb.fam === 'con' ? Z.conType[k] : cb.fam === 'dec' ? Z.decType[k] : VI.alzinar;
     } else if (!VEG[v].tree || hash3(i, j, 3) > Z.cover[k] * 0.85) continue;
-    const kind = VEG[v].tree;
-    const mesh = TREES[kind];
-    if (counts[kind] >= mesh.instanceMatrix.count) continue;
-    const s = 0.6 + hash3(i, j, 4) * 0.7;
+    const kind = VEG[v].tree, variant = hash3(i, j, 8) < 0.5 ? 0 : 1;
+    const s = 0.65 + hash3(i, j, 4) * 0.6;
     tmpP.set(x, heightAt(x, z) - 0.3, z);
     tmpQ.setFromAxisAngle(yAxis, hash3(i, j, 5) * Math.PI * 2);
     tmpS.set(s, s * (0.85 + hash3(i, j, 6) * 0.35), s);
     tmpM.compose(tmpP, tmpQ, tmpS);
     const n = hash3(i, j, 7);
+    const bare = BARE.has(VEG[v].id) && phase > 1.55;
     if (kind === 'broad') {
-      const c = canopyColor(v, phase, n);
-      const k2 = 2.2;   // la copa es veu més clara que la mitjana del bosc des de dalt
+      const c = canopyColor(v, phase, n), k2 = 3.5;
       tmpC.setRGB(c[0] * k2, c[1] * k2, c[2] * k2);
     } else {
-      const t = 0.8 + n * 0.45;
+      const t = 0.8 + n * 0.4;
       tmpC.setRGB(t, t, t);
     }
-    mesh.setMatrixAt(counts[kind], tmpM);
-    mesh.setColorAt(counts[kind], tmpC);
-    counts[kind]++;
+    // De prop, l'arbre sencer; a la franja de transició, tots dos (es fonen per píxels); més enllà, l'impostor.
+    if (d2 < near2) {
+      const pair = TREES[kind][variant], c = counts[kind][variant];
+      if (c < pair.bark.instanceMatrix.count) {
+        pair.bark.setMatrixAt(c, tmpM); pair.leaf.setMatrixAt(c, bare ? ZERO_M : tmpM);
+        pair.leaf.setColorAt(c, tmpC);
+        const b = 0.75 + n * 0.5; pair.bark.setColorAt(c, tmpC2.setRGB(b, b, b));
+        counts[kind][variant]++;
+      }
+    }
+    if (d2 > impFrom2 && nImp < impMesh.instanceMatrix.count) {
+      impMesh.setMatrixAt(nImp, tmpM);
+      impMesh.setColorAt(nImp, bare ? tmpC2.setRGB(0.55, 0.45, 0.4) : kind === 'broad' ? tmpC : tmpC2.setRGB(0.95, 0.95, 0.95));
+      impSlot.array[nImp] = KINDS.indexOf(kind) * VARIANTS + variant;
+      nImp++;
+    }
   }
-  for (const [kind, m] of Object.entries(TREES)) {
-    m.count = counts[kind];
-    m.instanceMatrix.needsUpdate = true;
-    if (m.instanceColor) m.instanceColor.needsUpdate = true;
-  }
+  for (const kind of KINDS) TREES[kind].forEach((pair, v) => {
+    for (const m of [pair.bark, pair.leaf]) {
+      m.count = counts[kind][v];
+      m.instanceMatrix.needsUpdate = true;
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+    }
+  });
+  impMesh.count = nImp;
+  impMesh.instanceMatrix.needsUpdate = true;
+  if (impMesh.instanceColor) impMesh.instanceColor.needsUpdate = true;
+  impSlot.needsUpdate = true;
+  updateGroundCover(cx, cz, phase);
   updateShrooms(cx, cz);
   updateTowns(cx, cz);
+}
+
+function updateGroundCover(cx, cz, phase) {
+  let ng = 0, ns = 0;
+  const r = Math.ceil(COVER_R / COVER_CELL), ci = Math.floor(cx / COVER_CELL), cj = Math.floor(cz / COVER_CELL);
+  for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i++) {
+    const x = (i + hash3(i, j, 41)) * COVER_CELL, z = (j + hash3(i, j, 42)) * COVER_CELL;
+    if ((x - cx) ** 2 + (z - cz) ** 2 > COVER_R * COVER_R) continue;
+    const k = gridCell(x, z);
+    if (k < 0) continue;
+    const cc = coverClassAt(x, z), cb = cc !== NO_COVER ? COBERTES[cc] : null;
+    const forest = cb ? (cb.fam ? cb.dens : 0) : Z.cover[k] * (VEG[Z.veg[k]].tree ? 1 : 0);
+    // Ni herba ni mates a les zones urbanes, a l'aigua, a la roca ni a la platja.
+    if (cb && ((cb.code >= 341 && cb.code !== 346) || (cb.code >= 231 && cb.code <= 234))) continue;
+    const shrubby = cb ? cb.code === 224 : VEG[Z.veg[k]].id === 'matollar';
+    const h = heightAt(x, z);
+    if (h < 1) continue;
+    const n = hash3(i, j, 43);
+    // Herba: densa als prats, escassa sota el bosc.
+    if (n < 0.85 - forest * 0.7 && ng < grassMesh.instanceMatrix.count) {
+      const s = 0.35 + hash3(i, j, 44) * 0.45;
+      tmpP.set(x, h - 0.05, z); tmpQ.setFromAxisAngle(yAxis, hash3(i, j, 45) * 6.28); tmpS.set(s, s * (0.7 + hash3(i, j, 46) * 0.8), s);
+      tmpM.compose(tmpP, tmpQ, tmpS);
+      grassMesh.setMatrixAt(ng, tmpM);
+      // Verd a la primavera, groguenc a l'estiu i a la tardor.
+      const g = groundColor(Z.veg[k], phase, n), b = 4.2 * (0.8 + hash3(i, j, 47) * 0.4);
+      grassMesh.setColorAt(ng, tmpC.setRGB(Math.min(1.4, g[0] * b + 0.15), Math.min(1.4, g[1] * b + 0.2), Math.min(1.4, g[2] * b + 0.05)));
+      ng++;
+    }
+    // Mates: sotabosc i matollars.
+    if (hash3(i, j, 48) < (shrubby ? 0.35 : 0.04 + forest * 0.05) && ns < shrubMesh.instanceMatrix.count) {
+      const s = 0.6 + hash3(i, j, 49) * 0.9;
+      tmpP.set(x, h - 0.1, z); tmpQ.setFromAxisAngle(yAxis, hash3(i, j, 50) * 6.28); tmpS.set(s, s * (0.7 + hash3(i, j, 51) * 0.5), s);
+      tmpM.compose(tmpP, tmpQ, tmpS);
+      shrubMesh.setMatrixAt(ns, tmpM);
+      shrubMesh.setColorAt(ns, tmpC.setRGB(0.2, 0.28, 0.12).multiplyScalar(0.8 + hash3(i, j, 52) * 0.5));
+      ns++;
+    }
+  }
+  grassMesh.count = mode === 'walk' || camera.position.y - heightAt(cx, cz) < 80 ? ng : 0;
+  shrubMesh.count = grassMesh.count ? ns : 0;
+  for (const m of [grassMesh, shrubMesh]) { m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; }
 }
 
 function updateShrooms(cx, cz) {
@@ -1509,7 +1620,7 @@ const PRECIP_FS = /* glsl */`
     #endif
     if (a < 0.004) discard;
     vec3 col = 0.9 * (uAmbient * 0.42 + uLightCol * 0.25);
-    gl_FragColor = vec4(applyFog(col, vW), a);
+    gl_FragColor = vec4(col, a);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }`;
@@ -1581,8 +1692,10 @@ function sunDirection(ms, lat, lon) {
 // ---------------------------------------------------------------------------
 const C = (r, g, b) => new THREE.Color().setRGB(r, g, b);
 const lerpC = (a, b, t) => a.clone().lerp(b, clamp(t));
+const skyLight = { ambTop: null, ambBottom: null, cirrus: 0, overcast: 0, exposure: 1, nightLight: 0.02 };
 const wx = { temp: 10, rh: 70, pr: 0, snow: 0, cloud: 30, wind: 5, wdir: 0, soilT: 10, soilM: 0.2 };
 
+let lastCloudT = 0;
 function updateWeatherAndLight(dt) {
   const W = Z.weather, h = Math.round(state.t);
   const x = camera.position.x, z = camera.position.z;
@@ -1602,20 +1715,23 @@ function updateWeatherAndLight(dt) {
   const cloud = clamp(Math.max(wx.cloud / 100, precipOvercast));
   const overcast = smooth(0.4, 1.0, cloud);
 
-  const sunCol = lerpC(C(1.0, 0.95, 0.88), C(1.0, 0.5, 0.24), golden).multiplyScalar(smooth(-0.04, 0.1, sunDir.y) * 3.2);
-  let zen = lerpC(C(0.004, 0.007, 0.018), C(0.09, 0.2, 0.5), day);
-  let hor = lerpC(C(0.012, 0.018, 0.035), C(0.5, 0.62, 0.78), day);
-  hor = lerpC(hor, C(0.85, 0.5, 0.35), golden * 0.55);
-  zen = lerpC(zen, C(0.18, 0.2, 0.36), golden * 0.35);
+  // Llum del sol i colors del cel a partir del model d'atmosfera (la calitja creix amb la humitat).
+  const mie = 1 + 2.5 * smooth(55, 100, wx.rh) + 2 * smooth(0, 3, wx.pr);
+  atmos.updateLUTs(mie);
+  const lt = atmos.lighting(sunDir, camera.position.y, mie);
+  const sunCol = lt.sunCol;
+  let zen = lt.zen.clone().add(C(0.004, 0.007, 0.018).multiplyScalar(night));
+  let hor = lt.hor.clone().add(C(0.012, 0.018, 0.035).multiplyScalar(night));
   const glow = lerpC(C(1.0, 0.9, 0.75), C(1.0, 0.45, 0.2), golden).multiplyScalar(day * (1 - overcast * 0.8) * 1.6);
-  const grey = (hor.r + hor.g + hor.b) / 3 * 0.85 + (zen.r + zen.g + zen.b) / 3 * 0.15;
+  // Cel tapat: la llum que arriba és la difusa dels núvols, grisa.
+  const grey = (hor.r + hor.g + hor.b) / 3 * 0.85 + (zen.r + zen.g + zen.b) / 3 * 0.15 + (sunCol.r + sunCol.g + sunCol.b) / 3 * 0.05 * day;
   zen = lerpC(zen, C(grey * 0.92, grey * 0.96, grey * 1.04), overcast * 0.9);
   hor = lerpC(hor, C(grey, grey * 1.02, grey * 1.06), overcast * 0.85);
   const moonDir = new THREE.Vector3(-sunDir.x, Math.max(0.45, -sunDir.y), -sunDir.z).normalize();
   const useMoon = sunDir.y < -0.02;
   const lightDir = useMoon ? moonDir : sunDir;
   const lightCol = useMoon ? C(0.32, 0.4, 0.62).multiplyScalar(0.5 * night) : sunCol.clone();
-  lightCol.multiplyScalar(1 - overcast * 0.8);
+  lightCol.multiplyScalar(1 - overcast * 0.55);
   if (useMoon) { zen.add(C(0.006, 0.01, 0.022).multiplyScalar(night)); hor.add(C(0.01, 0.014, 0.028).multiplyScalar(night)); }
   const amb = lerpC(zen, hor, 0.55).multiplyScalar(1.6);
   U.uZenith.value.copy(zen); U.uHorizon.value.copy(hor); U.uSunGlow.value.copy(glow);
@@ -1624,15 +1740,37 @@ function updateWeatherAndLight(dt) {
   sun.color.copy(lightCol);
   hemi.color.copy(amb).multiplyScalar(1.05);
   hemi.groundColor.copy(amb).multiplyScalar(0.5);
-  renderer.toneMappingExposure = useMoon ? 1.9 : 1.0;
   updateTerrainShadow(lightDir);
 
+  // Núvols: la base al nivell de condensació (de la temperatura i la humitat), el gruix i la
+  // cobertura de les capes baixa i mitjana d'Open-Meteo.
+  const low = hourlyAt(x, z, h, 'cloud_cover_low') / 100, mid = hourlyAt(x, z, h, 'cloud_cover_mid') / 100;
+  const high = hourlyAt(x, z, h, 'cloud_cover_high') / 100;
+  const gam = Math.log(Math.max(wx.rh, 5) / 100) + 17.62 * wx.temp / (243.12 + wx.temp);
+  const dew = 243.12 * gam / (17.62 - gam);
+  let base = gElev + clamp(125 * (wx.temp - dew), 120, 2800);
+  let cov = Math.max(low, mid * 0.85, precipOvercast);
+  let thick = 450 + 1300 * Math.max(low, precipOvercast) + 2200 * smooth(0.2, 4, wx.pr);
+  if (low < mid * 0.6 && precipOvercast < 0.3) { base = Math.max(base, gElev + 2400); thick = 350 + 500 * mid; }   // altocúmuls
+  const kC = Math.min(1, dt * 2);
+  U.uCloudBase.value += (base - U.uCloudBase.value) * kC;
+  U.uCloudTop.value += (base + thick - U.uCloudTop.value) * kC;
+  U.uCloudCov.value += (cov - U.uCloudCov.value) * kC;
+  const skyAmb = amb.clone();
+  skyLight.ambTop = skyAmb;
+  skyLight.ambBottom = skyAmb.clone().multiplyScalar(0.3).add(sunCol.clone().multiplyScalar(0.06 * Math.max(sunDir.y, 0)));
+  skyLight.cirrus = high;
+  skyLight.overcast = overcast;
+  skyLight.exposure = useMoon ? 1.9 : 1.0;
+  skyLight.nightLight = 0.03 * night;
+
   // Boira: humitat alta i poc vent → boira de vall; la pluja i la neu treuen visibilitat.
+  // (La calitja de fons ja la fa l'atmosfera.)
   const fogK = smooth(88, 100, wx.rh) * (1 - smooth(10, 30, wx.wind));
   U.uFogDensity.value = fogK * 0.012;
   U.uFogBase.value = gElev - 150;
   U.uFogFalloff.value = 1 / 160;
-  U.uHaze.value = 1 / 70000 + smooth(0, 4, wx.pr) / 5000 + fogK / 15000;
+  U.uHaze.value = smooth(0, 4, wx.pr) / 5000 + fogK / 15000;
   U.uWet.value = clamp(precipOvercast + smooth(0.28, 0.4, wx.soilM) * 0.5);
 
   // Vent.
@@ -1641,6 +1779,9 @@ function updateWeatherAndLight(dt) {
   U.uWindDir.value.set(Math.sin(wd), -Math.cos(wd));
   U.uWindStr.value = clamp(ws / 12, 0, 1.5);
   U.uCloudOff.value.x += Math.sin(wd) * ws * dt * 0.00015; U.uCloudOff.value.y -= Math.cos(wd) * ws * dt * 0.00015;
+  // Els núvols es mouen amb el vent en altura (més fort que a 10 m), al ritme del temps simulat.
+  const simSec = dt + Math.abs(state.t - lastCloudT) * 3600; lastCloudT = state.t;
+  if (!qs.has('quiets')) U.uCloudWind.value.x -= Math.sin(wd) * ws * 2.2 * Math.min(simSec, 7200); if (!qs.has('quiets')) U.uCloudWind.value.y += Math.cos(wd) * ws * 2.2 * Math.min(simSec, 7200);
 
   // Precipitació: neu si fa fred a l'altura de la càmera.
   const isSnow = tCam < 0.8 || (wx.snow > 0.05 && tCam < 2);
@@ -3902,6 +4043,8 @@ async function loadZone(zone) {
 // Bucle
 // ---------------------------------------------------------------------------
 let last = performance.now(), simTime = 0, frames = 0, fpsT = last, infoT = 0, minimapT = 0, urlT = 0;
+const dbSize = new THREE.Vector2(), histPos = new THREE.Vector3();
+let histT = 0;
 function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min(0.05, (now - last) / 1000);
@@ -3919,24 +4062,30 @@ function frame(now) {
   applyCompass(dt);
   updatePlayer(dt);
   updateWeatherAndLight(dt);
+  // Si l'hora o la càmera salten, l'acumulació dels núvols de fotogrames anteriors ja no serveix.
+  if (Math.abs(state.t - histT) > 0.25 || camera.position.distanceTo(histPos) > 300) atmos.resetHistory();
+  histT = state.t; histPos.copy(camera.position);
   updateClipmap(camera.position.x, camera.position.z);
   updateProps(player.x, player.z, new Date(Z.weather.times[0] + state.t * 36e5));
-  sky.position.copy(camera.position);
   const ld = U.uLightDir.value, texel = (2 * SH) / sun.shadow.mapSize.x;
   const sx = Math.round(player.x / texel) * texel, sz = Math.round(player.z / texel) * texel;
   sun.target.position.set(sx, player.y, sz);
   sun.position.set(sx + ld.x * 700, player.y + ld.y * 700, sz + ld.z * 700);
   // Ombres de prop només quan es camina (de lluny no es veuen).
   sun.castShadow = mode === 'walk';
-  if (cmp.on) {
-    // Vista partida: a l'esquerra la data de la línia de temps, a la dreta la data de comparació.
-    const w = renderer.domElement.width / renderer.getPixelRatio(), h = renderer.domElement.height / renderer.getPixelRatio(), sx = Math.round(cmp.split * w);
-    renderer.setScissorTest(true);
-    renderer.setScissor(0, 0, sx, h); U.uIndexTex.value = indexTex; renderer.render(scene, camera);
-    renderer.setScissor(sx, 0, w - sx, h); U.uIndexTex.value = indexTexB; renderer.render(scene, camera);
-    renderer.setScissorTest(false);
-    U.uIndexTex.value = indexTex;
-  } else renderer.render(scene, camera);
+  renderer.getDrawingBufferSize(dbSize);
+  atmos.setSize(dbSize.x, dbSize.y);
+  atmos.render(camera, () => {
+    if (cmp.on) {
+      // Vista partida: a l'esquerra la data de la línia de temps, a la dreta la data de comparació.
+      const rt = atmos.sceneRT, sx = Math.round(cmp.split * rt.width);
+      rt.scissorTest = true;
+      rt.scissor.set(0, 0, sx, rt.height); U.uIndexTex.value = indexTex; renderer.setRenderTarget(rt); renderer.render(scene, camera);
+      rt.scissor.set(sx, 0, rt.width - sx, rt.height); U.uIndexTex.value = indexTexB; renderer.setRenderTarget(rt); renderer.render(scene, camera);
+      rt.scissorTest = false; rt.scissor.set(0, 0, rt.width, rt.height);
+      U.uIndexTex.value = indexTex;
+    } else renderer.render(scene, camera);
+  }, skyLight);
   updateLabels();
   updatePlaceLabels(now);
   drawCompass();
@@ -3980,4 +4129,4 @@ new ResizeObserver(syncTimelineH).observe($('timeline'));
 syncTimelineH();
 $('credits').addEventListener('click', e => { if (e.target.tagName !== 'A') $('credits').classList.toggle('open'); });
 
-window.__mico = { Z, state, player, setMode, goToSpot, teleport, heightAt, addRoutePoint, startRouteFlight, route };
+window.__mico = { atmos, renderer, IMP, TREES, impMesh, Z, state, player, setMode, goToSpot, teleport, heightAt, addRoutePoint, startRouteFlight, route };
