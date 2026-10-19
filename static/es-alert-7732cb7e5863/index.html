@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="Marc Escriba">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Pulsador ES-Alert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una sola pantalla, carcasa de pulsador industrial centrada con placa de rotulación */
+:root {
+  --bg: #16181c;
+  --plate: #23262c;
+  --edge: #353943;
+  --fg: #e9ebef;
+  --muted: #8d94a3;
+  --red: #d8261c;
+  --red-deep: #8e140e;
+  --amber: #f2b632;
+  --display: "Archivo Black", "Arial Black", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--mono);
+  display: flex; align-items: center; justify-content: center;
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  box-sizing: border-box;
+}
+.box {
+  width: 100%; max-width: 380px; background: var(--plate);
+  border: 1px solid var(--edge); border-radius: 14px;
+  padding: 28px 22px 22px; display: flex; flex-direction: column; align-items: center; gap: 26px;
+  background-image: repeating-linear-gradient(135deg, transparent 0 10px, rgba(242,182,50,.06) 10px 20px);
+}
+.label { text-align: center; display: grid; gap: 6px; }
+.label h1 { font-family: var(--display); font-size: 1.9rem; letter-spacing: .02em; margin: 0; }
+.label p { margin: 0; font-size: .75rem; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
+.ring {
+  width: min(240px, 66vw); aspect-ratio: 1; max-width: 100%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #3a3e47, #1b1d22 70%);
+  display: grid; place-items: center; box-shadow: inset 0 4px 12px rgba(0,0,0,.6);
+}
+button.push {
+  width: 78%; aspect-ratio: 1; border-radius: 50%; border: 0; cursor: pointer;
+  background: radial-gradient(circle at 40% 32%, #ff5a4c, var(--red) 45%, var(--red-deep));
+  box-shadow: 0 10px 0 #5c0b07, 0 16px 24px rgba(0,0,0,.55);
+  color: #fff; font-family: var(--display); font-size: 1.25rem; letter-spacing: .08em;
+  transition: transform .06s, box-shadow .06s; -webkit-tap-highlight-color: transparent;
+}
+button.push:active, button.push.on { transform: translateY(8px); box-shadow: 0 2px 0 #5c0b07, 0 4px 10px rgba(0,0,0,.5); }
+button.push.on { animation: pulse 1s infinite; }
+button.push:focus-visible { outline: 3px solid var(--amber); outline-offset: 6px; }
+@keyframes pulse { 50% { filter: brightness(1.35); } }
+@media (prefers-reduced-motion: reduce) { button.push.on { animation: none; } }
+.status { font-size: .8rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--edge); }
+.on-state .dot { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.row { width: 100%; display: flex; align-items: center; gap: 12px; font-size: .75rem; color: var(--muted); }
+.row input { flex: 1; accent-color: var(--red); }
+.row label { white-space: nowrap; }
+.credit {
+  width: 100%; border-top: 1px dashed var(--edge); padding-top: 16px;
+  display: grid; justify-items: center; gap: 4px;
+}
+.credit span { font-size: .7rem; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
+.credit strong { font-family: var(--display); font-weight: 400; font-size: 1.35rem; color: var(--amber); letter-spacing: .03em; }
+.spec { font-size: .7rem; color: var(--muted); text-align: center; line-height: 1.5; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="box" id="box">
+  <div class="label">
+    <p>Alerta de emergencia</p>
+    <h1>ES-ALERT</h1>
+  </div>
+  <div class="ring">
+    <button class="push" id="push" aria-pressed="false">PULSAR</button>
+  </div>
+  <div class="status"><span class="dot"></span><span id="st">En espera</span></div>
+  <div class="row">
+    <label for="vol">Volumen</label>
+    <input id="vol" type="range" min="0" max="100" value="70">
+  </div>
+  <p class="spec">853 + 960 Hz · 2 s, 1 s, 1 s · pulsa otra vez para parar</p>
+  <div class="credit"><span>Creado por</span><strong>Marc Escriba</strong></div>
+</div>
+
+<script>
+let ctx, master, timer = null, playing = false;
+const btn = document.getElementById('push'), st = document.getElementById('st'), box = document.getElementById('box'), vol = document.getElementById('vol');
+
+function setVol() { if (master) master.gain.value = (vol.value / 100) * 0.35; }
+vol.addEventListener('input', setVol);
+
+function tone(start, dur) {
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, start);
+  g.gain.linearRampToValueAtTime(1, start + 0.01);
+  g.gain.setValueAtTime(1, start + dur - 0.01);
+  g.gain.linearRampToValueAtTime(0, start + dur);
+  g.connect(master);
+  [853, 960].forEach(f => {
+    const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+    o.connect(g); o.start(start); o.stop(start + dur);
+  });
+}
+
+// Patrón: largo 2 s, corto 1 s, corto 1 s, con 0,5 s entre tonos; secuencia de 5,5 s
+function cycle() {
+  const t = ctx.currentTime + 0.05;
+  tone(t, 2); tone(t + 2.5, 1); tone(t + 4, 1);
+}
+
+function start() {
+  if (!ctx) { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.connect(ctx.destination); }
+  ctx.resume(); setVol();
+  playing = true; cycle(); timer = setInterval(cycle, 5500);
+  btn.classList.add('on'); box.classList.add('on-state'); btn.setAttribute('aria-pressed', 'true');
+  btn.textContent = 'PARAR'; st.textContent = 'Sonando';
+}
+function stop() {
+  playing = false; clearInterval(timer);
+  // Cortar los tonos ya programados
+  master.disconnect(); master = ctx.createGain(); master.connect(ctx.destination); setVol();
+  btn.classList.remove('on'); box.classList.remove('on-state'); btn.setAttribute('aria-pressed', 'false');
+  btn.textContent = 'PULSAR'; st.textContent = 'En espera';
+}
+btn.addEventListener('click', () => playing ? stop() : start());
+</script>
+</body>
+</html>

@@ -30,3 +30,7 @@
 # resolviera quedandose con una sola, esta no puede perder el noindex.
 /posts/cvmescribar.pdf
   X-Robots-Tag: noindex, noai, noimageai
+
+# Pulsador ES-Alert: accesible solo por enlace, fuera de buscadores.
+/es-alert-7732cb7e5863/*
+  X-Robots-Tag: noindex, nofollow, noarchive
